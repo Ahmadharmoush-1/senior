@@ -1,0 +1,22 @@
+{
+    "sourceFile": "index.html",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1759428144014,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1759428149120,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,13 +9,9 @@\n \r\n     <meta property=\"og:title\" content=\"CarFinder Hub - Car Marketplace Aggregator\" />\r\n     <meta property=\"og:description\" content=\"Find your perfect car across multiple platforms. Browse, compare, and buy with confidence.\" />\r\n     <meta property=\"og:type\" content=\"website\" />\r\n-    <meta property=\"og:image\" content=\"https://lovable.dev/opengraph-image-p98pqg.png\" />\r\n-\r\n-    <meta name=\"twitter:card\" content=\"summary_large_image\" />\r\n-    <meta name=\"twitter:site\" content=\"@lovable_dev\" />\r\n-    <meta name=\"twitter:image\" content=\"https://lovable.dev/opengraph-image-p98pqg.png\" />\r\n+   \r\n   </head>\r\n \r\n   <body>\r\n     <div id=\"root\"></div>\r\n"
+                }
+            ],
+            "date": 1759428144014,
+            "name": "Commit-0",
+            "content": "<!doctype html>\r\n<html lang=\"en\">\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <title>CarFinder Hub - Find Your Perfect Car</title>\r\n    <meta name=\"description\" content=\"Browse thousands of cars from multiple platforms in one place. Find the best deals on used and new cars from Edmunds, OLX, Facebook Marketplace, and more.\" />\r\n    <meta name=\"author\" content=\"CarFinder Hub\" />\r\n\r\n    <meta property=\"og:title\" content=\"CarFinder Hub - Car Marketplace Aggregator\" />\r\n    <meta property=\"og:description\" content=\"Find your perfect car across multiple platforms. Browse, compare, and buy with confidence.\" />\r\n    <meta property=\"og:type\" content=\"website\" />\r\n    <meta property=\"og:image\" content=\"https://lovable.dev/opengraph-image-p98pqg.png\" />\r\n\r\n    <meta name=\"twitter:card\" content=\"summary_large_image\" />\r\n    <meta name=\"twitter:site\" content=\"@lovable_dev\" />\r\n    <meta name=\"twitter:image\" content=\"https://lovable.dev/opengraph-image-p98pqg.png\" />\r\n  </head>\r\n\r\n  <body>\r\n    <div id=\"root\"></div>\r\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\r\n  </body>\r\n</html>"
+        }
+    ]
+}

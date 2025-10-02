@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/lib/validation.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759427996041,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759427996041,
+            "name": "Commit-0",
+            "content": "import { z } from \"zod\";\r\n\r\nexport const passwordSchema = z\r\n  .string()\r\n  .min(8, \"Password must be at least 8 characters\")\r\n  .regex(/[A-Z]/, \"Password must contain at least one uppercase letter\")\r\n  .regex(/[a-z]/, \"Password must contain at least one lowercase letter\")\r\n  .regex(/[0-9]/, \"Password must contain at least one number\");\r\n\r\nexport const getPasswordStrength = (password: string): {\r\n  strength: \"weak\" | \"medium\" | \"strong\";\r\n  score: number;\r\n} => {\r\n  let score = 0;\r\n\r\n  if (password.length >= 8) score++;\r\n  if (password.length >= 12) score++;\r\n  if (/[A-Z]/.test(password)) score++;\r\n  if (/[a-z]/.test(password)) score++;\r\n  if (/[0-9]/.test(password)) score++;\r\n  if (/[^A-Za-z0-9]/.test(password)) score++;\r\n\r\n  if (score <= 2) return { strength: \"weak\", score };\r\n  if (score <= 4) return { strength: \"medium\", score };\r\n  return { strength: \"strong\", score };\r\n};\r\n"
+        }
+    ]
+}

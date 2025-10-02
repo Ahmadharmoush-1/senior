@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/ImageCarousel.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759427907613,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759427907613,
+            "name": "Commit-0",
+            "content": "import {\r\n  Carousel,\r\n  CarouselContent,\r\n  CarouselItem,\r\n  CarouselNext,\r\n  CarouselPrevious,\r\n} from \"@/components/ui/carousel\";\r\n\r\ninterface ImageCarouselProps {\r\n  images: string[];\r\n  alt: string;\r\n}\r\n\r\nconst ImageCarousel = ({ images, alt }: ImageCarouselProps) => {\r\n  return (\r\n    <Carousel className=\"w-full\">\r\n      <CarouselContent>\r\n        {images.map((image, index) => (\r\n          <CarouselItem key={index}>\r\n            <div className=\"aspect-video overflow-hidden rounded-lg bg-muted\">\r\n              <img src={image} alt={`${alt} ${index + 1}`} className=\"h-full w-full object-cover\" />\r\n            </div>\r\n          </CarouselItem>\r\n        ))}\r\n      </CarouselContent>\r\n      <CarouselPrevious className=\"left-4\" />\r\n      <CarouselNext className=\"right-4\" />\r\n    </Carousel>\r\n  );\r\n};\r\n\r\nexport default ImageCarousel;\r\n"
+        }
+    ]
+}

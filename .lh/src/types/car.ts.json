@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/types/car.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759428075110,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759428075110,
+            "name": "Commit-0",
+            "content": "export interface Car {\r\n  id: string;\r\n  title: string;\r\n  brand: string;\r\n  model: string;\r\n  year: number;\r\n  price: number;\r\n  mileage: number;\r\n  location: string;\r\n  description: string;\r\n  condition: \"new\" | \"used\" | \"certified\";\r\n  fuelType?: \"gasoline\" | \"diesel\" | \"electric\" | \"hybrid\";\r\n  transmission?: \"automatic\" | \"manual\";\r\n  images: string[];\r\n  platform: Platform[];\r\n  seller: Seller;\r\n  createdAt: string;\r\n}\r\n\r\nexport interface Seller {\r\n  id: string;\r\n  name: string;\r\n  email: string;\r\n  phone: string;\r\n  avatar?: string;\r\n}\r\n\r\nexport interface Platform {\r\n  name: \"Edmunds\" | \"OLX\" | \"Facebook Marketplace\" | \"AutoTrader\" | \"Cars.com\";\r\n  url?: string;\r\n}\r\n\r\nexport interface User {\r\n  id: string;\r\n  name: string;\r\n  email: string;\r\n  avatar?: string;\r\n  phone?: string;\r\n}\r\n"
+        }
+    ]
+}

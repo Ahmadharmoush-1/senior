@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/contexts/ThemeContext.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759427948769,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759427948769,
+            "name": "Commit-0",
+            "content": "import React, { createContext, useContext, useEffect, useState } from \"react\";\r\n\r\ntype Theme = \"light\" | \"dark\";\r\n\r\ninterface ThemeContextType {\r\n  theme: Theme;\r\n  toggleTheme: () => void;\r\n}\r\n\r\nconst ThemeContext = createContext<ThemeContextType | undefined>(undefined);\r\n\r\nexport const useTheme = () => {\r\n  const context = useContext(ThemeContext);\r\n  if (!context) {\r\n    throw new Error(\"useTheme must be used within a ThemeProvider\");\r\n  }\r\n  return context;\r\n};\r\n\r\nexport const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {\r\n  const [theme, setTheme] = useState<Theme>(() => {\r\n    const stored = localStorage.getItem(\"carfinder_theme\");\r\n    return (stored as Theme) || \"light\";\r\n  });\r\n\r\n  useEffect(() => {\r\n    const root = document.documentElement;\r\n    if (theme === \"dark\") {\r\n      root.classList.add(\"dark\");\r\n    } else {\r\n      root.classList.remove(\"dark\");\r\n    }\r\n    localStorage.setItem(\"carfinder_theme\", theme);\r\n  }, [theme]);\r\n\r\n  const toggleTheme = () => {\r\n    setTheme((prev) => (prev === \"light\" ? \"dark\" : \"light\"));\r\n  };\r\n\r\n  return (\r\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\r\n      {children}\r\n    </ThemeContext.Provider>\r\n  );\r\n};\r\n"
+        }
+    ]
+}

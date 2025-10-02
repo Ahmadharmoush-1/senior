@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/contexts/ComparisonContext.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759427937294,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759427937294,
+            "name": "Commit-0",
+            "content": "import React, { createContext, useContext, useState } from \"react\";\r\nimport { Car } from \"@/types/car\";\r\n\r\ninterface ComparisonContextType {\r\n  comparisonList: Car[];\r\n  addToComparison: (car: Car) => boolean;\r\n  removeFromComparison: (carId: string) => void;\r\n  clearComparison: () => void;\r\n  isInComparison: (carId: string) => boolean;\r\n}\r\n\r\nconst ComparisonContext = createContext<ComparisonContextType | undefined>(undefined);\r\n\r\nexport const useComparison = () => {\r\n  const context = useContext(ComparisonContext);\r\n  if (!context) {\r\n    throw new Error(\"useComparison must be used within a ComparisonProvider\");\r\n  }\r\n  return context;\r\n};\r\n\r\nconst MAX_COMPARISON = 3;\r\n\r\nexport const ComparisonProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {\r\n  const [comparisonList, setComparisonList] = useState<Car[]>([]);\r\n\r\n  const addToComparison = (car: Car): boolean => {\r\n    if (comparisonList.length >= MAX_COMPARISON) {\r\n      return false;\r\n    }\r\n    if (comparisonList.find((c) => c.id === car.id)) {\r\n      return false;\r\n    }\r\n    setComparisonList((prev) => [...prev, car]);\r\n    return true;\r\n  };\r\n\r\n  const removeFromComparison = (carId: string) => {\r\n    setComparisonList((prev) => prev.filter((car) => car.id !== carId));\r\n  };\r\n\r\n  const clearComparison = () => {\r\n    setComparisonList([]);\r\n  };\r\n\r\n  const isInComparison = (carId: string) => {\r\n    return comparisonList.some((car) => car.id === carId);\r\n  };\r\n\r\n  return (\r\n    <ComparisonContext.Provider\r\n      value={{\r\n        comparisonList,\r\n        addToComparison,\r\n        removeFromComparison,\r\n        clearComparison,\r\n        isInComparison,\r\n      }}\r\n    >\r\n      {children}\r\n    </ComparisonContext.Provider>\r\n  );\r\n};\r\n"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/contexts/FavoritesContext.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759427942771,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759427942771,
+            "name": "Commit-0",
+            "content": "import React, { createContext, useContext, useState, useEffect } from \"react\";\r\nimport { Car } from \"@/types/car\";\r\n\r\ninterface FavoritesContextType {\r\n  favorites: string[];\r\n  toggleFavorite: (carId: string) => void;\r\n  isFavorite: (carId: string) => boolean;\r\n}\r\n\r\nconst FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);\r\n\r\nexport const useFavorites = () => {\r\n  const context = useContext(FavoritesContext);\r\n  if (!context) {\r\n    throw new Error(\"useFavorites must be used within a FavoritesProvider\");\r\n  }\r\n  return context;\r\n};\r\n\r\nexport const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {\r\n  const [favorites, setFavorites] = useState<string[]>(() => {\r\n    const stored = localStorage.getItem(\"carfinder_favorites\");\r\n    return stored ? JSON.parse(stored) : [];\r\n  });\r\n\r\n  useEffect(() => {\r\n    localStorage.setItem(\"carfinder_favorites\", JSON.stringify(favorites));\r\n  }, [favorites]);\r\n\r\n  const toggleFavorite = (carId: string) => {\r\n    setFavorites((prev) =>\r\n      prev.includes(carId) ? prev.filter((id) => id !== carId) : [...prev, carId]\r\n    );\r\n  };\r\n\r\n  const isFavorite = (carId: string) => favorites.includes(carId);\r\n\r\n  return (\r\n    <FavoritesContext.Provider value={{ favorites, toggleFavorite, isFavorite }}>\r\n      {children}\r\n    </FavoritesContext.Provider>\r\n  );\r\n};\r\n"
+        }
+    ]
+}

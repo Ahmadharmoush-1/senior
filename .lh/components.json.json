@@ -1,0 +1,18 @@
+{
+    "sourceFile": "components.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759428130187,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759428130187,
+            "name": "Commit-0",
+            "content": "{\r\n  \"$schema\": \"https://ui.shadcn.com/schema.json\",\r\n  \"style\": \"default\",\r\n  \"rsc\": false,\r\n  \"tsx\": true,\r\n  \"tailwind\": {\r\n    \"config\": \"tailwind.config.ts\",\r\n    \"css\": \"src/index.css\",\r\n    \"baseColor\": \"slate\",\r\n    \"cssVariables\": true,\r\n    \"prefix\": \"\"\r\n  },\r\n  \"aliases\": {\r\n    \"components\": \"@/components\",\r\n    \"utils\": \"@/lib/utils\",\r\n    \"ui\": \"@/components/ui\",\r\n    \"lib\": \"@/lib\",\r\n    \"hooks\": \"@/hooks\"\r\n  }\r\n}\r\n"
+        }
+    ]
+}

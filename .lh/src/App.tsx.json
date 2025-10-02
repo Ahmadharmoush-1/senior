@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/App.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759428094349,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759428094349,
+            "name": "Commit-0",
+            "content": "import { Toaster } from \"@/components/ui/toaster\";\r\nimport { Toaster as Sonner } from \"@/components/ui/sonner\";\r\nimport { TooltipProvider } from \"@/components/ui/tooltip\";\r\nimport { QueryClient, QueryClientProvider } from \"@tanstack/react-query\";\r\nimport { BrowserRouter, Routes, Route } from \"react-router-dom\";\r\nimport { AuthProvider } from \"@/contexts/AuthContext\";\r\nimport { ThemeProvider } from \"@/contexts/ThemeContext\";\r\nimport { FavoritesProvider } from \"@/contexts/FavoritesContext\";\r\nimport { ComparisonProvider } from \"@/contexts/ComparisonContext\";\r\nimport Navbar from \"@/components/Navbar\";\r\nimport Dashboard from \"./pages/Dashboard\";\r\nimport CarDetail from \"./pages/CarDetail\";\r\nimport Auth from \"./pages/Auth\";\r\nimport Profile from \"./pages/Profile\";\r\nimport SellCar from \"./pages/SellCar\";\r\nimport Compare from \"./pages/Compare\";\r\nimport Favorites from \"./pages/Favorites\";\r\nimport NotFound from \"./pages/NotFound\";\r\n\r\nconst queryClient = new QueryClient();\r\n\r\nconst App = () => (\r\n  <QueryClientProvider client={queryClient}>\r\n    <TooltipProvider>\r\n      <ThemeProvider>\r\n        <AuthProvider>\r\n          <FavoritesProvider>\r\n            <ComparisonProvider>\r\n              <Toaster />\r\n              <Sonner />\r\n              <BrowserRouter>\r\n                <Navbar />\r\n                <Routes>\r\n                  <Route path=\"/\" element={<Dashboard />} />\r\n                  <Route path=\"/car/:id\" element={<CarDetail />} />\r\n                  <Route path=\"/auth\" element={<Auth />} />\r\n                  <Route path=\"/profile\" element={<Profile />} />\r\n                  <Route path=\"/sell\" element={<SellCar />} />\r\n                  <Route path=\"/compare\" element={<Compare />} />\r\n                  <Route path=\"/favorites\" element={<Favorites />} />\r\n                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL \"*\" ROUTE */}\r\n                  <Route path=\"*\" element={<NotFound />} />\r\n                </Routes>\r\n              </BrowserRouter>\r\n            </ComparisonProvider>\r\n          </FavoritesProvider>\r\n        </AuthProvider>\r\n      </ThemeProvider>\r\n    </TooltipProvider>\r\n  </QueryClientProvider>\r\n);\r\n\r\nexport default App;\r\n"
+        }
+    ]
+}
