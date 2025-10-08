@@ -8,6 +8,7 @@ import { ArrowLeft, MapPin, Gauge, Calendar, Mail, Phone, Heart, GitCompare, Fue
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import ImageCarousel from "@/components/ImageCarousel";
+import MapDisplay from "@/components/MapDisplay";
 import CarCard from "@/components/CarCard";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useComparison } from "@/contexts/ComparisonContext";
@@ -179,8 +180,8 @@ const CarDetail = () => {
             </Card>
           </div>
 
-          {/* Sidebar - Seller Info */}
-          <div className="lg:col-span-1">
+          {/* Sidebar - Seller Info & Map */}
+          <div className="lg:col-span-1 space-y-6">
             <Card className="sticky top-24">
               <CardHeader>
                 <CardTitle>Seller Information</CardTitle>
@@ -222,6 +223,27 @@ const CarDetail = () => {
                 <Button variant="default" className="w-full" size="lg">
                   Contact Seller
                 </Button>
+              </CardContent>
+            </Card>
+
+            {/* Location Map */}
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  Car Location
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <MapDisplay
+                  lat={37.7749 + Math.random() * 0.1}
+                  lng={-122.4194 + Math.random() * 0.1}
+                  title={car.title}
+                />
+                <p className="mt-3 text-sm text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  {car.location}
+                </p>
               </CardContent>
             </Card>
           </div>

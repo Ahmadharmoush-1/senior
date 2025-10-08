@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1759428094349,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1759940855123,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,53 +1,1 @@\n-import { Toaster } from \"@/components/ui/toaster\";\r\n-import { Toaster as Sonner } from \"@/components/ui/sonner\";\r\n-import { TooltipProvider } from \"@/components/ui/tooltip\";\r\n-import { QueryClient, QueryClientProvider } from \"@tanstack/react-query\";\r\n-import { BrowserRouter, Routes, Route } from \"react-router-dom\";\r\n-import { AuthProvider } from \"@/contexts/AuthContext\";\r\n-import { ThemeProvider } from \"@/contexts/ThemeContext\";\r\n-import { FavoritesProvider } from \"@/contexts/FavoritesContext\";\r\n-import { ComparisonProvider } from \"@/contexts/ComparisonContext\";\r\n-import Navbar from \"@/components/Navbar\";\r\n-import Dashboard from \"./pages/Dashboard\";\r\n-import CarDetail from \"./pages/CarDetail\";\r\n-import Auth from \"./pages/Auth\";\r\n-import Profile from \"./pages/Profile\";\r\n-import SellCar from \"./pages/SellCar\";\r\n-import Compare from \"./pages/Compare\";\r\n-import Favorites from \"./pages/Favorites\";\r\n-import NotFound from \"./pages/NotFound\";\r\n-\r\n-const queryClient = new QueryClient();\r\n-\r\n-const App = () => (\r\n-  <QueryClientProvider client={queryClient}>\r\n-    <TooltipProvider>\r\n-      <ThemeProvider>\r\n-        <AuthProvider>\r\n-          <FavoritesProvider>\r\n-            <ComparisonProvider>\r\n-              <Toaster />\r\n-              <Sonner />\r\n-              <BrowserRouter>\r\n-                <Navbar />\r\n-                <Routes>\r\n-                  <Route path=\"/\" element={<Dashboard />} />\r\n-                  <Route path=\"/car/:id\" element={<CarDetail />} />\r\n-                  <Route path=\"/auth\" element={<Auth />} />\r\n-                  <Route path=\"/profile\" element={<Profile />} />\r\n-                  <Route path=\"/sell\" element={<SellCar />} />\r\n-                  <Route path=\"/compare\" element={<Compare />} />\r\n-                  <Route path=\"/favorites\" element={<Favorites />} />\r\n-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL \"*\" ROUTE */}\r\n-                  <Route path=\"*\" element={<NotFound />} />\r\n-                </Routes>\r\n-              </BrowserRouter>\r\n-            </ComparisonProvider>\r\n-          </FavoritesProvider>\r\n-        </AuthProvider>\r\n-      </ThemeProvider>\r\n-    </TooltipProvider>\r\n-  </QueryClientProvider>\r\n-);\r\n-\r\n-export default App;\r\n+App.tsx\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1759940861912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +0,0 @@\n-App.tsx\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1759428094349,

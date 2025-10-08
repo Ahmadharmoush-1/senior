@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/components/SplashScreen.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1759940743109,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1759940898695,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n       <div className=\"flex flex-col items-center gap-8 px-4\">\r\n         {/* Logo with zoom-in and fade-in animation */}\r\n         <div className=\"animate-[scale-in_0.8s_ease-out]\">\r\n           <img\r\n-            src=\"/carfinderhub-logo.png\"\r\n+            src=\"C:\\Users\\GamingCorner\\Desktop\\code\\senior\\public\\photos\\logo.png\"\r\n             alt=\"CarFinder Hub Logo\"\r\n             className=\"w-32 h-32 md:w-40 md:h-40 object-contain\"\r\n           />\r\n         </div>\r\n"
+                },
+                {
+                    "date": 1759940905074,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n       <div className=\"flex flex-col items-center gap-8 px-4\">\r\n         {/* Logo with zoom-in and fade-in animation */}\r\n         <div className=\"animate-[scale-in_0.8s_ease-out]\">\r\n           <img\r\n-            src=\"C:\\Users\\GamingCorner\\Desktop\\code\\senior\\public\\photos\\logo.png\"\r\n+            src=\"/photos\\logo.png\"\r\n             alt=\"CarFinder Hub Logo\"\r\n             className=\"w-32 h-32 md:w-40 md:h-40 object-contain\"\r\n           />\r\n         </div>\r\n"
+                },
+                {
+                    "date": 1759940971163,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,12 +40,13 @@\n       <div className=\"flex flex-col items-center gap-8 px-4\">\r\n         {/* Logo with zoom-in and fade-in animation */}\r\n         <div className=\"animate-[scale-in_0.8s_ease-out]\">\r\n           <img\r\n-            src=\"/photos\\logo.png\"\r\n-            alt=\"CarFinder Hub Logo\"\r\n-            className=\"w-32 h-32 md:w-40 md:h-40 object-contain\"\r\n-          />\r\n+  src=\"/photos/logo.png\"\r\n+  alt=\"CarFinder Hub Logo\"\r\n+  className=\"w-32 h-32 md:w-40 md:h-40 object-contain rounded-full border border-gray-300 shadow-md\"\r\n+/>\r\n+\r\n         </div>\r\n \r\n         {/* Welcome text with fade-in animation */}\r\n         <div\r\n"
+                }
+            ],
+            "date": 1759940743109,
+            "name": "Commit-0",
+            "content": "import { useEffect, useState } from \"react\";\r\n\r\ninterface SplashScreenProps {\r\n  onComplete: () => void;\r\n}\r\n\r\nconst SplashScreen = ({ onComplete }: SplashScreenProps) => {\r\n  const [showText, setShowText] = useState(false);\r\n  const [fadeOut, setFadeOut] = useState(false);\r\n\r\n  useEffect(() => {\r\n    // Show welcome text after logo animation starts\r\n    const textTimer = setTimeout(() => {\r\n      setShowText(true);\r\n    }, 500);\r\n\r\n    // Start fade out after 2.5 seconds\r\n    const fadeTimer = setTimeout(() => {\r\n      setFadeOut(true);\r\n    }, 2500);\r\n\r\n    // Complete splash screen after fade out\r\n    const completeTimer = setTimeout(() => {\r\n      onComplete();\r\n    }, 3200);\r\n\r\n    return () => {\r\n      clearTimeout(textTimer);\r\n      clearTimeout(fadeTimer);\r\n      clearTimeout(completeTimer);\r\n    };\r\n  }, [onComplete]);\r\n\r\n  return (\r\n    <div\r\n      className={`fixed inset-0 z-50 flex items-center justify-center bg-background transition-opacity duration-700 ${\r\n        fadeOut ? \"opacity-0\" : \"opacity-100\"\r\n      }`}\r\n    >\r\n      <div className=\"flex flex-col items-center gap-8 px-4\">\r\n        {/* Logo with zoom-in and fade-in animation */}\r\n        <div className=\"animate-[scale-in_0.8s_ease-out]\">\r\n          <img\r\n            src=\"/carfinderhub-logo.png\"\r\n            alt=\"CarFinder Hub Logo\"\r\n            className=\"w-32 h-32 md:w-40 md:h-40 object-contain\"\r\n          />\r\n        </div>\r\n\r\n        {/* Welcome text with fade-in animation */}\r\n        <div\r\n          className={`text-center transition-all duration-700 ${\r\n            showText\r\n              ? \"opacity-100 translate-y-0\"\r\n              : \"opacity-0 translate-y-4\"\r\n          }`}\r\n        >\r\n          <h1 className=\"text-2xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent\">\r\n            Welcome to CarFinder Hub\r\n          </h1>\r\n          <p className=\"mt-2 text-sm md:text-base text-muted-foreground\">\r\n            Find your perfect car across multiple platforms\r\n          </p>\r\n        </div>\r\n\r\n        {/* Loading indicator */}\r\n        <div\r\n          className={`transition-opacity duration-500 ${\r\n            showText ? \"opacity-100\" : \"opacity-0\"\r\n          }`}\r\n        >\r\n          <div className=\"flex gap-2\">\r\n            <div className=\"w-2 h-2 bg-primary rounded-full animate-[bounce_1s_infinite_0ms]\" />\r\n            <div className=\"w-2 h-2 bg-primary rounded-full animate-[bounce_1s_infinite_200ms]\" />\r\n            <div className=\"w-2 h-2 bg-accent rounded-full animate-[bounce_1s_infinite_400ms]\" />\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default SplashScreen;"
+        }
+    ]
+}

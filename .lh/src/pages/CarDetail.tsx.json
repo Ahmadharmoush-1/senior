@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1759428015711,
@@ -12,6 +12,14 @@
                 {
                     "date": 1759428263577,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -218,9 +218,9 @@\n                 </div>\r\n \r\n                 <Separator />\r\n \r\n-                <Button variant=\"accent\" className=\"w-full\" size=\"lg\">\r\n+                <Button variant=\"defaultsName=\"w-full\" size=\"lg\">\r\n                   Contact Seller\r\n                 </Button>\r\n               </CardContent>\r\n             </Card>\r\n"
+                },
+                {
+                    "date": 1759939538314,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,8 +7,9 @@\n import { ArrowLeft, MapPin, Gauge, Calendar, Mail, Phone, Heart, GitCompare, Fuel, Cog } from \"lucide-react\";\r\n import { Avatar, AvatarFallback } from \"@/components/ui/avatar\";\r\n import { Separator } from \"@/components/ui/separator\";\r\n import ImageCarousel from \"@/components/ImageCarousel\";\r\n+import MapDisplay from \"@/components/MapDisplay\";\r\n import CarCard from \"@/components/CarCard\";\r\n import { useFavorites } from \"@/contexts/FavoritesContext\";\r\n import { useComparison } from \"@/contexts/ComparisonContext\";\r\n import { toast } from \"@/hooks/use-toast\";\r\n@@ -178,10 +179,10 @@\n               </CardContent>\r\n             </Card>\r\n           </div>\r\n \r\n-          {/* Sidebar - Seller Info */}\r\n-          <div className=\"lg:col-span-1\">\r\n+          {/* Sidebar - Seller Info & Map */}\r\n+          <div className=\"lg:col-span-1 space-y-6\">\r\n             <Card className=\"sticky top-24\">\r\n               <CardHeader>\r\n                 <CardTitle>Seller Information</CardTitle>\r\n               </CardHeader>\r\n@@ -218,13 +219,34 @@\n                 </div>\r\n \r\n                 <Separator />\r\n \r\n-                <Button variant=\"defaultsName=\"w-full\" size=\"lg\">\r\n+                <Button variant=\"accent\" className=\"w-full\" size=\"lg\">\r\n                   Contact Seller\r\n                 </Button>\r\n               </CardContent>\r\n             </Card>\r\n+\r\n+            {/* Location Map */}\r\n+            <Card className=\"shadow-card\">\r\n+              <CardHeader>\r\n+                <CardTitle className=\"flex items-center gap-2\">\r\n+                  <MapPin className=\"h-5 w-5 text-primary\" />\r\n+                  Car Location\r\n+                </CardTitle>\r\n+              </CardHeader>\r\n+              <CardContent>\r\n+                <MapDisplay\r\n+                  lat={37.7749 + Math.random() * 0.1}\r\n+                  lng={-122.4194 + Math.random() * 0.1}\r\n+                  title={car.title}\r\n+                />\r\n+                <p className=\"mt-3 text-sm text-muted-foreground flex items-center gap-2\">\r\n+                  <MapPin className=\"h-4 w-4\" />\r\n+                  {car.location}\r\n+                </p>\r\n+              </CardContent>\r\n+            </Card>\r\n           </div>\r\n         </div>\r\n \r\n         {/* Similar Cars */}\r\n@@ -242,5 +264,5 @@\n     </div>\r\n   );\r\n };\r\n \r\n-export default CarDetail;\r\n+export default CarDetail;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1759939612387,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -219,9 +219,9 @@\n                 </div>\r\n \r\n                 <Separator />\r\n \r\n-                <Button variant=\"accent\" className=\"w-full\" size=\"lg\">\r\n+                <Button variant=\"default\" className=\"w-full\" size=\"lg\">\r\n                   Contact Seller\r\n                 </Button>\r\n               </CardContent>\r\n             </Card>\r\n"
                 }
             ],
             "date": 1759428015711,

@@ -8,8 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import MapPicker from "@/components/MapPicker";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft, Upload, MapPin, X } from "lucide-react";
 
 const platforms = [
   { id: "edmunds", name: "Edmunds" },
@@ -34,8 +35,12 @@ const SellCar = () => {
     condition: "",
     description: "",
     location: "",
+    latitude: 0,
+    longitude: 0,
     platforms: [] as string[],
   });
+
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -58,6 +63,31 @@ const SellCar = () => {
         ? prev.platforms.filter((p) => p !== platformId)
         : [...prev.platforms, platformId],
     }));
+  };
+
+  const handleLocationSelect = (lat: number, lng: number, address: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng,
+      location: address,
+    }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const newImages = Array.from(files).map((file) => URL.createObjectURL(file));
+      setSelectedImages((prev) => [...prev, ...newImages]);
+      toast({
+        title: "Images added",
+        description: `${files.length} image(s) ready for upload.`,
+      });
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleNext = () => {
@@ -239,14 +269,21 @@ const SellCar = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location *</Label>
-                    <Input
-                      id="location"
-                      placeholder="City, State"
-                      value={formData.location}
-                      onChange={(e) => handleInputChange("location", e.target.value)}
+                  <div className="space-y-3">
+                    <Label className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      Pick Location on Map *
+                    </Label>
+                    <MapPicker
+                      onLocationSelect={handleLocationSelect}
+                      initialLat={formData.latitude || 37.7749}
+                      initialLng={formData.longitude || -122.4194}
                     />
+                    {formData.location && (
+                      <p className="text-sm text-muted-foreground">
+                        Selected: {formData.location}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex gap-2">
@@ -305,15 +342,52 @@ const SellCar = () => {
                     </p>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Upload Images (Optional)</Label>
-                    <div className="flex items-center justify-center rounded-lg border-2 border-dashed p-8 text-center transition-smooth hover:border-primary">
-                      <div>
-                        <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                        <p className="text-sm text-muted-foreground">
-                          Click to upload car images
-                        </p>
-                      </div>
+                  <div className="space-y-3">
+                    <Label>Upload Images</Label>
+                    <div className="space-y-3">
+                      <label
+                        htmlFor="image-upload"
+                        className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-8 text-center transition-smooth hover:border-primary hover:bg-primary/5"
+                      >
+                        <div>
+                          <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                          <p className="text-sm font-medium text-muted-foreground">
+                            Click to upload car images
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Upload up to 10 images (JPG, PNG)
+                          </p>
+                        </div>
+                      </label>
+                      <input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleImageUpload}
+                      />
+
+                      {selectedImages.length > 0 && (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          {selectedImages.map((img, index) => (
+                            <div key={index} className="relative group animate-scale-in">
+                              <img
+                                src={img}
+                                alt={`Preview ${index + 1}`}
+                                className="h-24 w-full rounded-lg object-cover"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-destructive text-white opacity-0 group-hover:opacity-100 transition-smooth"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 

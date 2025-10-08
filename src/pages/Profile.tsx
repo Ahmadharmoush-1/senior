@@ -1,17 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { mockCars } from "@/lib/mockData";
-import { Mail, Edit, Trash2 } from "lucide-react";
-import { useEffect } from "react";
+import { Mail, Edit, Trash2, Camera, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "@/hooks/use-toast";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileName, setProfileName] = useState(user?.name || "");
+  const [profileEmail, setProfileEmail] = useState(user?.email || "");
 
   useEffect(() => {
     if (!user) {
@@ -23,12 +29,32 @@ const Profile = () => {
     return null;
   }
 
+  const handleProfilePictureUpload = () => {
+    toast({
+      title: "Upload feature",
+      description: "Profile picture upload will be available once connected to backend.",
+    });
+  };
+
+  const handleSaveProfile = () => {
+    toast({
+      title: "Profile updated",
+      description: "Your profile has been updated successfully.",
+    });
+    setIsEditingProfile(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/auth?mode=login");
+  };
+
   // Mock user's listed cars (in real app, filter by user ID)
   const userCars = mockCars.slice(0, 2);
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 animate-fade-in">
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Profile Info */}
           <div className="lg:col-span-1">
@@ -38,16 +64,57 @@ const Profile = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex flex-col items-center text-center">
-                  <Avatar className="h-24 w-24 mb-4">
-                    <AvatarFallback className="bg-primary text-primary-foreground text-3xl">
-                      {user.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h2 className="text-2xl font-bold">{user.name}</h2>
-                  <div className="flex items-center gap-2 mt-2 text-muted-foreground">
-                    <Mail className="h-4 w-4" />
-                    <span className="text-sm">{user.email}</span>
+                  <div className="relative group mb-4">
+                    <Avatar className="h-24 w-24">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-3xl">
+                        {user.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <button
+                      onClick={handleProfilePictureUpload}
+                      className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-smooth"
+                    >
+                      <Camera className="h-6 w-6 text-white" />
+                    </button>
                   </div>
+
+                  {isEditingProfile ? (
+                    <div className="w-full space-y-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="profile-name" className="text-left">Full Name</Label>
+                        <Input
+                          id="profile-name"
+                          value={profileName}
+                          onChange={(e) => setProfileName(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="profile-email" className="text-left">Email Address</Label>
+                        <Input
+                          id="profile-email"
+                          type="email"
+                          value={profileEmail}
+                          onChange={(e) => setProfileEmail(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button onClick={handleSaveProfile} variant="default" className="flex-1">
+                          Save
+                        </Button>
+                        <Button variant="outline" onClick={() => setIsEditingProfile(false)} className="flex-1">
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <h2 className="text-2xl font-bold">{user.name}</h2>
+                      <div className="flex items-center gap-2 mt-2 text-muted-foreground">
+                        <Mail className="h-4 w-4" />
+                        <span className="text-sm">{user.email}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <Separator />
@@ -65,9 +132,18 @@ const Profile = () => {
 
                 <Separator />
 
-                <Button variant="outline" className="w-full">
-                  Edit Profile
-                </Button>
+                {!isEditingProfile && (
+                  <>
+                    <Button variant="outline" className="w-full" onClick={() => setIsEditingProfile(true)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                    <Button variant="outline" className="w-full" onClick={handleLogout}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </Button>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>

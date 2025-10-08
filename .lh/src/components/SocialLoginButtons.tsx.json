@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/SocialLoginButtons.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759939492671,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759939492671,
+            "name": "Commit-0",
+            "content": "import { Button } from \"@/components/ui/button\";\r\nimport { Chrome, Facebook } from \"lucide-react\";\r\n\r\nconst SocialLoginButtons = () => {\r\n  const handleSocialLogin = (provider: string) => {\r\n    // Placeholder for social login - connect to backend later\r\n    console.log(`Social login with ${provider}`);\r\n  };\r\n\r\n  return (\r\n    <div className=\"grid grid-cols-2 gap-3\">\r\n      <Button\r\n        type=\"button\"\r\n        variant=\"outline\"\r\n        onClick={() => handleSocialLogin(\"google\")}\r\n        className=\"w-full gap-2 transition-smooth hover:border-primary\"\r\n      >\r\n        <Chrome className=\"h-4 w-4\" />\r\n        Google\r\n      </Button>\r\n      <Button\r\n        type=\"button\"\r\n        variant=\"outline\"\r\n        onClick={() => handleSocialLogin(\"facebook\")}\r\n        className=\"w-full gap-2 transition-smooth hover:border-primary\"\r\n      >\r\n        <Facebook className=\"h-4 w-4\" />\r\n        Facebook\r\n      </Button>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default SocialLoginButtons;\r\n"
+        }
+    ]
+}
