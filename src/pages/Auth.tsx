@@ -196,7 +196,7 @@ const Auth = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password"></Label>
               {isLogin ? (
                 <div className="relative">
                   <Input

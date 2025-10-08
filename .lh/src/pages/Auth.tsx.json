@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1759428007971,
@@ -28,6 +28,10 @@
                 {
                     "date": 1759939946221,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n import SocialLoginButtons from \"@/components/SocialLoginButtons\";\r\n import { Car, Eye, EyeOff } from \"lucide-react\";\r\n import { toast } from \"@/hooks/use-toast\";\r\n import { passwordSchema } from \"@/lib/validation\";\r\n-import authHero from \"@C:\\Users\\GamingCorner\\Desktop\\code\\senior\\src\\assets\\hero-car.jpg\";\r\n+import authHero from \"@/assets/hero-car.jpg\";\r\n \r\n const Auth = () => {\r\n   const [searchParams] = useSearchParams();\r\n   const mode = searchParams.get(\"mode\") || \"login\";\r\n"
+                },
+                {
+                    "date": 1759941281792,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -195,9 +195,9 @@\n               />\r\n             </div>\r\n \r\n             <div className=\"space-y-2\">\r\n-              <Label htmlFor=\"password\">Password</Label>\r\n+              <Label htmlFor=\"password\"></Label>\r\n               {isLogin ? (\r\n                 <div className=\"relative\">\r\n                   <Input\r\n                     id=\"password\"\r\n"
                 }
             ],
             "date": 1759428007971,
