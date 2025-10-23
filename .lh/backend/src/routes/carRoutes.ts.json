@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/src/routes/carRoutes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1760714592559,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1760714599344,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,8 @@\n \r\n const router = Router();\r\n \r\n router.get(\"/\", (req, res) => {\r\n-  res.send(\"User route works!\");\r\n+  res.send(\"Car route works!\");\r\n });\r\n \r\n export default router;\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1760714592559,
+            "name": "Commit-0",
+            "content": "import { Router } from \"express\";\r\n\r\nconst router = Router();\r\n\r\nrouter.get(\"/\", (req, res) => {\r\n  res.send(\"User route works!\");\r\n});\r\n\r\nexport default router;"
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "backend/src/config/db.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1761149450434,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761230354385,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,16 @@\n-import mongoose from 'mongoose';\r\n+import mongoose from \"mongoose\";\r\n \r\n-export const connectDB = async (uri: string) => {\r\n+export const connectDB = async () => {\r\n   try {\r\n+    const uri = process.env.MONGO_URI as string;\r\n+    if (!uri) {\r\n+      throw new Error(\"MONGO_URI not found in .env file\");\r\n+    }\r\n+\r\n\\ No newline at end of file\n     await mongoose.connect(uri);\r\n-    console.log('MongoDB connected');\r\n+    console.log(\"✅ MongoDB connected successfully\");\r\n   } catch (err) {\r\n-    console.error('MongoDB connection error:', err);\r\n+    console.error(\"❌ MongoDB connection error:\", err);\r\n     process.exit(1);\r\n   }\r\n-};\n+};\r\n"
+                },
+                {
+                    "date": 1761233297889,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,16 @@\n+import mongoose from \"mongoose\";\r\n+\r\n+export const connectDB = async () => {\r\n+  try {\r\n+    const uri = process.env.MONGO_URI as string;\r\n+    if (!uri) {\r\n+      throw new Error(\"MONGO_URI not found in .env file\");\r\n+    }\r\n+\r\n+    await mongoose.connect(uri);\r\n+    console.log(\"✅ MongoDB connected successfully\");\r\n+  } catch (err) {\r\n+    console.error(\"❌ MongoDB connection error:\", err);\r\n+    process.exit(1);\r\n+  }\r\n+};\r\n"
+                }
+            ],
+            "date": 1761149450434,
+            "name": "Commit-0",
+            "content": "import mongoose from 'mongoose';\r\n\r\nexport const connectDB = async (uri: string) => {\r\n  try {\r\n    await mongoose.connect(uri);\r\n    console.log('MongoDB connected');\r\n  } catch (err) {\r\n    console.error('MongoDB connection error:', err);\r\n    process.exit(1);\r\n  }\r\n};"
+        }
+    ]
+}

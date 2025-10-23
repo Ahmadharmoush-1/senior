@@ -1,0 +1,30 @@
+{
+    "sourceFile": "backend/src/models/User.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1761149468845,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761151368545,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,9 @@\n+import mongoose from \"mongoose\";\r\n+\r\n+const userSchema = new mongoose.Schema({\r\n+  name: { type: String, required: true },\r\n+  email: { type: String, required: true, unique: true },\r\n+  password: { type: String, required: true },\r\n+});\r\n+\r\n+export const User = mongoose.model(\"User\", userSchema);\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761151368568,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,25 +5,5 @@\n   email: { type: String, required: true, unique: true },\r\n   password: { type: String, required: true },\r\n });\r\n \r\n-export const User = mongoose.model(\"User\", userSchema);\n-import mongoose, { Document, Schema } from 'mongoose';\r\n-\r\n-export interface IUser extends Document {\r\n-  name: string;\r\n-  email: string;\r\n-  password: string;\r\n-  role?: 'user' | 'admin';\r\n-  createdAt: Date;\r\n-}\r\n-\r\n-const userSchema = new Schema<IUser>({\r\n-  name: { type: String, required: true, trim: true },\r\n-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },\r\n-  password: { type: String, required: true },\r\n-  role: { type: String, enum: ['user', 'admin'], default: 'user' },\r\n-}, {\r\n-  timestamps: true,\r\n-});\r\n-\r\n-export default mongoose.model<IUser>('User', userSchema)\n\\ No newline at end of file\n+export const User = mongoose.model(\"User\", userSchema);\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761151498862,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,15 @@\n-import mongoose from \"mongoose\";\r\n+import mongoose, { Document, Schema } from \"mongoose\";\r\n \r\n-const userSchema = new mongoose.Schema({\r\n+export interface IUser extends Document {\r\n+  name: string;\r\n+  email: string;\r\n+  password: string;\r\n+}\r\n\\ No newline at end of file\n+\r\n+const userSchema = new Schema<IUser>({\r\n   name: { type: String, required: true },\r\n   email: { type: String, required: true, unique: true },\r\n   password: { type: String, required: true },\r\n });\r\n \r\n-export const User = mongoose.model(\"User\", userSchema);\n+export const User = mongoose.model<IUser>(\"User\", userSchema);\r\n"
+                }
+            ],
+            "date": 1761149468845,
+            "name": "Commit-0",
+            "content": "import mongoose, { Document, Schema } from 'mongoose';\r\n\r\nexport interface IUser extends Document {\r\n  name: string;\r\n  email: string;\r\n  password: string;\r\n  role?: 'user' | 'admin';\r\n  createdAt: Date;\r\n}\r\n\r\nconst userSchema = new Schema<IUser>({\r\n  name: { type: String, required: true, trim: true },\r\n  email: { type: String, required: true, unique: true, lowercase: true, trim: true },\r\n  password: { type: String, required: true },\r\n  role: { type: String, enum: ['user', 'admin'], default: 'user' },\r\n}, {\r\n  timestamps: true,\r\n});\r\n\r\nexport default mongoose.model<IUser>('User', userSchema)"
+        }
+    ]
+}

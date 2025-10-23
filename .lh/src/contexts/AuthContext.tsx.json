@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1759427930869,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761151549873,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,25 +32,25 @@\n     setIsLoading(false);\r\n   }, []);\r\n \r\n   const login = async (email: string, password: string) => {\r\n-    // Mock login - replace with actual API call\r\n-    setIsLoading(true);\r\n-    \r\n-    // Simulate API delay\r\n-    await new Promise((resolve) => setTimeout(resolve, 1000));\r\n-    \r\n-    const mockUser: User = {\r\n-      id: \"user-\" + Date.now(),\r\n-      name: \"Test User\",\r\n-      email,\r\n-    };\r\n-    \r\n-    setUser(mockUser);\r\n-    localStorage.setItem(\"carfinder_user\", JSON.stringify(mockUser));\r\n-    setIsLoading(false);\r\n-  };\r\n+  setIsLoading(true);\r\n+  const res = await fetch(\"http://localhost:5000/api/auth/login\", {\r\n+    method: \"POST\",\r\n+    headers: { \"Content-Type\": \"application/json\" },\r\n+    body: JSON.stringify({ email, password }),\r\n+  });\r\n \r\n+  const data = await res.json();\r\n+  if (res.ok) {\r\n+    setUser(data.user);\r\n+    localStorage.setItem(\"carfinder_user\", JSON.stringify(data.user));\r\n+  } else {\r\n+    alert(data.message);\r\n+  }\r\n+  setIsLoading(false);\r\n+};\r\n+\r\n   const register = async (name: string, email: string, password: string) => {\r\n     // Mock registration - replace with actual API call\r\n     setIsLoading(true);\r\n     \r\n"
+                },
+                {
+                    "date": 1761151562604,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,26 +49,26 @@\n   }\r\n   setIsLoading(false);\r\n };\r\n \r\n-  const register = async (name: string, email: string, password: string) => {\r\n-    // Mock registration - replace with actual API call\r\n-    setIsLoading(true);\r\n-    \r\n-    // Simulate API delay\r\n-    await new Promise((resolve) => setTimeout(resolve, 1000));\r\n-    \r\n-    const mockUser: User = {\r\n-      id: \"user-\" + Date.now(),\r\n-      name,\r\n-      email,\r\n-    };\r\n-    \r\n-    setUser(mockUser);\r\n-    localStorage.setItem(\"carfinder_user\", JSON.stringify(mockUser));\r\n-    setIsLoading(false);\r\n-  };\r\n+const register = async (name: string, email: string, password: string) => {\r\n+  setIsLoading(true);\r\n+  const res = await fetch(\"http://localhost:5000/api/auth/register\", {\r\n+    method: \"POST\",\r\n+    headers: { \"Content-Type\": \"application/json\" },\r\n+    body: JSON.stringify({ name, email, password }),\r\n+  });\r\n \r\n+  const data = await res.json();\r\n+  if (res.ok) {\r\n+    setUser(data.user);\r\n+    localStorage.setItem(\"carfinder_user\", JSON.stringify(data.user));\r\n+  } else {\r\n+    alert(data.message);\r\n+  }\r\n+  setIsLoading(false);\r\n+};\r\n+\r\n   const logout = () => {\r\n     setUser(null);\r\n     localStorage.removeItem(\"carfinder_user\");\r\n   };\r\n"
                 }
             ],
             "date": 1759427930869,

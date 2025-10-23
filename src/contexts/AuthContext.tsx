@@ -33,40 +33,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Mock login - replace with actual API call
-    setIsLoading(true);
-    
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    const mockUser: User = {
-      id: "user-" + Date.now(),
-      name: "Test User",
-      email,
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem("carfinder_user", JSON.stringify(mockUser));
-    setIsLoading(false);
-  };
+  setIsLoading(true);
+  const res = await fetch("http://localhost:5000/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
 
-  const register = async (name: string, email: string, password: string) => {
-    // Mock registration - replace with actual API call
-    setIsLoading(true);
-    
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    const mockUser: User = {
-      id: "user-" + Date.now(),
-      name,
-      email,
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem("carfinder_user", JSON.stringify(mockUser));
-    setIsLoading(false);
-  };
+  const data = await res.json();
+  if (res.ok) {
+    setUser(data.user);
+    localStorage.setItem("carfinder_user", JSON.stringify(data.user));
+  } else {
+    alert(data.message);
+  }
+  setIsLoading(false);
+};
+
+const register = async (name: string, email: string, password: string) => {
+  setIsLoading(true);
+  const res = await fetch("http://localhost:5000/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password }),
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    setUser(data.user);
+    localStorage.setItem("carfinder_user", JSON.stringify(data.user));
+  } else {
+    alert(data.message);
+  }
+  setIsLoading(false);
+};
 
   const logout = () => {
     setUser(null);

@@ -1,0 +1,58 @@
+{
+    "sourceFile": "backend/src/server.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 10,
+            "patches": [
+                {
+                    "date": 1761148293751,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761148617397,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,22 @@\n+import express from 'express';\r\n+import dotenv from 'dotenv';\r\n+import cors from 'cors';\r\n+import mongoose from 'mongoose';\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+\r\n+app.use(cors());\r\n+app.use(express.json());\r\n+\r\n+mongoose.connect(process.env.MONGO_URI!)\r\n+  .then(() => console.log('MongoDB Connected'))\r\n+  .catch((err) => console.error(err));\r\n+\r\n+app.get('/', (req, res) => {\r\n+  res.send('CarFinder Hub API is running 🚗');\r\n+});\r\n+\r\n+const PORT = process.env.PORT || 5000;\r\n+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n"
+                },
+                {
+                    "date": 1761151405345,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+import express from \"express\";\r\n+import mongoose from \"mongoose\";\r\n+import dotenv from \"dotenv\";\r\n+import cors from \"cors\";\r\n+import authRoutes from \"./routes/authRoutes\";\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+\r\n+app.use(cors());\r\n+app.use(express.json());\r\n+\r\n+app.use(\"/api/auth\", authRoutes);\r\n+\r\n+mongoose\r\n+  .connect(process.env.MONGO_URI || \"\")\r\n+  .then(() => console.log(\"✅ MongoDB connected\"))\r\n+  .catch((err) => console.log(\"❌ MongoDB error:\", err));\r\n+\r\n+export default app;\r\n"
+                },
+                {
+                    "date": 1761151587741,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import express from \"express\";\r\n import mongoose from \"mongoose\";\r\n import dotenv from \"dotenv\";\r\n import cors from \"cors\";\r\n-import authRoutes from \"./routes/authRoutes\";\r\n+import authRoutes from \"./routes/authRoutes.js\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n@@ -18,48 +18,4 @@\n   .then(() => console.log(\"✅ MongoDB connected\"))\r\n   .catch((err) => console.log(\"❌ MongoDB error:\", err));\r\n \r\n export default app;\r\n-import express from 'express';\r\n-import dotenv from 'dotenv';\r\n-import cors from 'cors';\r\n-import mongoose from 'mongoose';\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-\r\n-app.use(cors());\r\n-app.use(express.json());\r\n-\r\n-mongoose.connect(process.env.MONGO_URI!)\r\n-  .then(() => console.log('MongoDB Connected'))\r\n-  .catch((err) => console.error(err));\r\n-\r\n-app.get('/', (req, res) => {\r\n-  res.send('CarFinder Hub API is running 🚗');\r\n-});\r\n-\r\n-const PORT = process.env.PORT || 5000;\r\n-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n-import express from 'express';\r\n-import dotenv from 'dotenv';\r\n-import cors from 'cors';\r\n-import mongoose from 'mongoose';\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-\r\n-app.use(cors());\r\n-app.use(express.json());\r\n-\r\n-mongoose.connect(process.env.MONGO_URI!)\r\n-  .then(() => console.log('MongoDB Connected'))\r\n-  .catch((err) => console.error(err));\r\n-\r\n-app.get('/', (req, res) => {\r\n-  res.send('CarFinder Hub API is running 🚗');\r\n-});\r\n-\r\n-const PORT = process.env.PORT || 5000;\r\n-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n"
+                },
+                {
+                    "date": 1761151595547,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import express from \"express\";\r\n import mongoose from \"mongoose\";\r\n import dotenv from \"dotenv\";\r\n import cors from \"cors\";\r\n-import authRoutes from \"./routes/authRoutes.js\";\r\n+import authRoutes from \"./routes/authRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1761151630775,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import express from \"express\";\r\n import mongoose from \"mongoose\";\r\n import dotenv from \"dotenv\";\r\n import cors from \"cors\";\r\n-import authRoutes from \"./routes/authRoutes\";\r\n+import authRoutes from \"./routes/authRoutes.js\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1761230395778,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,16 @@\n import express from \"express\";\r\n-import mongoose from \"mongoose\";\r\n import dotenv from \"dotenv\";\r\n-import cors from \"cors\";\r\n-import authRoutes from \"./routes/authRoutes.js\";\r\n+import { connectDB } from \"./db.js\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n \r\n-app.use(cors());\r\n app.use(express.json());\r\n \r\n-app.use(\"/api/auth\", authRoutes);\r\n+// Connect to MongoDB\r\n+connectDB();\r\n \r\n-mongoose\r\n-  .connect(process.env.MONGO_URI || \"\")\r\n-  .then(() => console.log(\"✅ MongoDB connected\"))\r\n-  .catch((err) => console.log(\"❌ MongoDB error:\", err));\r\n-\r\n-export default app;\r\n+app.listen(process.env.PORT || 5000, () => {\r\n+  console.log(`🚗 Server running on port ${process.env.PORT || 5000}`);\r\n+});\r\n"
+                },
+                {
+                    "date": 1761230403169,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import express from \"express\";\r\n import dotenv from \"dotenv\";\r\n-import { connectDB } from \"./db.js\";\r\n+import { connectDB } from \"./db\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1761230409747,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,16 @@\n+import express from \"express\";\r\n+import dotenv from \"dotenv\";\r\n+import { connectDB } from \"./db.js\";\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+\r\n+app.use(express.json());\r\n+\r\n+// Connect to MongoDB\r\n+connectDB();\r\n+\r\n+app.listen(process.env.PORT || 5000, () => {\r\n+  console.log(`🚗 Server running on port ${process.env.PORT || 5000}`);\r\n+});\r\n"
+                },
+                {
+                    "date": 1761230424065,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import express from \"express\";\r\n import dotenv from \"dotenv\";\r\n-import { connectDB } from \"./db.js\";\r\n+import { connectDB } from \"./db\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1761230431332,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,16 +1,21 @@\n import express from \"express\";\r\n+import mongoose from \"mongoose\";\r\n import dotenv from \"dotenv\";\r\n-import { connectDB } from \"./db\";\r\n+import cors from \"cors\";\r\n+import authRoutes from \"./routes/authRoutes.js\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n \r\n+app.use(cors());\r\n app.use(express.json());\r\n \r\n-// Connect to MongoDB\r\n-connectDB();\r\n+app.use(\"/api/auth\", authRoutes);\r\n \r\n-app.listen(process.env.PORT || 5000, () => {\r\n-  console.log(`🚗 Server running on port ${process.env.PORT || 5000}`);\r\n-});\r\n+mongoose\r\n+  .connect(process.env.MONGO_URI || \"\")\r\n+  .then(() => console.log(\"✅ MongoDB connected\"))\r\n+  .catch((err) => console.log(\"❌ MongoDB error:\", err));\r\n+\r\n+export default app;\r\n"
+                }
+            ],
+            "date": 1761148293751,
+            "name": "Commit-0",
+            "content": "import express from 'express';\r\nimport dotenv from 'dotenv';\r\nimport cors from 'cors';\r\nimport mongoose from 'mongoose';\r\n\r\ndotenv.config();\r\n\r\nconst app = express();\r\n\r\napp.use(cors());\r\napp.use(express.json());\r\n\r\nmongoose.connect(process.env.MONGO_URI!)\r\n  .then(() => console.log('MongoDB Connected'))\r\n  .catch((err) => console.error(err));\r\n\r\napp.get('/', (req, res) => {\r\n  res.send('CarFinder Hub API is running 🚗');\r\n});\r\n\r\nconst PORT = process.env.PORT || 5000;\r\napp.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n"
+        }
+    ]
+}

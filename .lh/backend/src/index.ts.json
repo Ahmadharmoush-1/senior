@@ -1,0 +1,94 @@
+{
+    "sourceFile": "backend/src/index.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 19,
+            "patches": [
+                {
+                    "date": 1760714436953,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1760714612783,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,8 @@\n import express from \"express\";\r\n import cors from \"cors\";\r\n import dotenv from \"dotenv\";\r\n+import userRoutes from \"./routes/userRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1760714619672,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import cors from \"cors\";\r\n import dotenv from \"dotenv\";\r\n-import userRoutes from \"./routes/userRoutes\";\r\n+import userRoutes from \"./routes/carRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1760714648347,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,8 +9,9 @@\n const PORT = process.env.PORT || 5000;\r\n \r\n app.use(cors());\r\n app.use(express.json());\r\n+app.use(\"/users\", userRoutes);\r\n \r\n app.get(\"/\", (req, res) => {\r\n   res.send(\"Backend is running!\");\r\n });\r\n"
+                },
+                {
+                    "date": 1760714656825,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+import express from \"express\";\r\n+import cors from \"cors\";\r\n+import dotenv from \"dotenv\";\r\n+import carRoutes from \"./routes/carRoutes\";\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+const PORT = process.env.PORT || 5000;\r\n+\r\n+app.use(cors());\r\n+app.use(express.json());\r\n+app.use(\"/users\", carRoutes);\r\n+\r\n+app.get(\"/\", (req, res) => {\r\n+  res.send(\"Backend is running!\");\r\n+});\r\n+\r\n+app.listen(PORT, () => {\r\n+  console.log(`Server is running on port ${PORT}`);\r\n+});\r\n"
+                },
+                {
+                    "date": 1760714663303,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import cors from \"cors\";\r\n import dotenv from \"dotenv\";\r\n-import carRoutes from \"./routes/carRoutes\";\r\n+import carRoutes from \"@/routes/carRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1760714669630,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import cors from \"cors\";\r\n import dotenv from \"dotenv\";\r\n-import carRoutes from \"@/routes/carRoutes\";\r\n+import carRoutes from \"/routes/carRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n@@ -18,25 +18,4 @@\n \r\n app.listen(PORT, () => {\r\n   console.log(`Server is running on port ${PORT}`);\r\n });\r\n-import express from \"express\";\r\n-import cors from \"cors\";\r\n-import dotenv from \"dotenv\";\r\n-import userRoutes from \"./routes/carRoutes\";\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-const PORT = process.env.PORT || 5000;\r\n-\r\n-app.use(cors());\r\n-app.use(express.json());\r\n-app.use(\"/users\", userRoutes);\r\n-\r\n-app.get(\"/\", (req, res) => {\r\n-  res.send(\"Backend is running!\");\r\n-});\r\n-\r\n-app.listen(PORT, () => {\r\n-  console.log(`Server is running on port ${PORT}`);\r\n-});\r\n"
+                },
+                {
+                    "date": 1760714686414,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import cors from \"cors\";\r\n import dotenv from \"dotenv\";\r\n-import carRoutes from \"/routes/carRoutes\";\r\n+import carRoutes from \"C:\\Users\\GamingCorner\\Desktop\\code\\senior\\backend\\src\\routes\\carRoutes.ts\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1760714692558,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+import express from \"express\";\r\n+import cors from \"cors\";\r\n+import dotenv from \"dotenv\";\r\n+import carRoutes from \"/src\\routes\\carRoutes.ts\";\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+const PORT = process.env.PORT || 5000;\r\n+\r\n+app.use(cors());\r\n+app.use(express.json());\r\n+app.use(\"/users\", carRoutes);\r\n+\r\n+app.get(\"/\", (req, res) => {\r\n+  res.send(\"Backend is running!\");\r\n+});\r\n+\r\n+app.listen(PORT, () => {\r\n+  console.log(`Server is running on port ${PORT}`);\r\n+});\r\n"
+                },
+                {
+                    "date": 1760714699284,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+import express from \"express\";\r\n+import cors from \"cors\";\r\n+import dotenv from \"dotenv\";\r\n+import carRoutes from \"/routes/carRoutes.ts\";\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+const PORT = process.env.PORT || 5000;\r\n+\r\n+app.use(cors());\r\n+app.use(express.json());\r\n+app.use(\"/users\", carRoutes);\r\n+\r\n+app.get(\"/\", (req, res) => {\r\n+  res.send(\"Backend is running!\");\r\n+});\r\n+\r\n+app.listen(PORT, () => {\r\n+  console.log(`Server is running on port ${PORT}`);\r\n+});\r\n"
+                },
+                {
+                    "date": 1760714717187,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+import express from \"express\";\r\n+import cors from \"cors\";\r\n+import dotenv from \"dotenv\";\r\n+import carRoutes from \"fa-border/routes/carRoutes.ts\";\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+const PORT = process.env.PORT || 5000;\r\n+\r\n+app.use(cors());\r\n+app.use(express.json());\r\n+app.use(\"/users\", carRoutes);\r\n+\r\n+app.get(\"/\", (req, res) => {\r\n+  res.send(\"Backend is running!\");\r\n+});\r\n+\r\n+app.listen(PORT, () => {\r\n+  console.log(`Server is running on port ${PORT}`);\r\n+});\r\n"
+                },
+                {
+                    "date": 1760714723429,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import cors from \"cors\";\r\n import dotenv from \"dotenv\";\r\n-import carRoutes from \"fa-border/routes/carRoutes.ts\";\r\n+import carRoutes from \"@/routes/carRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1760714734938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,76 +9,13 @@\n const PORT = process.env.PORT || 5000;\r\n \r\n app.use(cors());\r\n app.use(express.json());\r\n-app.use(\"/users\", carRoutes);\r\n+app.use(\"/car\", carRoutes);\r\n \r\n app.get(\"/\", (req, res) => {\r\n   res.send(\"Backend is running!\");\r\n });\r\n \r\n app.listen(PORT, () => {\r\n   console.log(`Server is running on port ${PORT}`);\r\n });\r\n-import express from \"express\";\r\n-import cors from \"cors\";\r\n-import dotenv from \"dotenv\";\r\n-import carRoutes from \"/routes/carRoutes.ts\";\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-const PORT = process.env.PORT || 5000;\r\n-\r\n-app.use(cors());\r\n-app.use(express.json());\r\n-app.use(\"/users\", carRoutes);\r\n-\r\n-app.get(\"/\", (req, res) => {\r\n-  res.send(\"Backend is running!\");\r\n-});\r\n-\r\n-app.listen(PORT, () => {\r\n-  console.log(`Server is running on port ${PORT}`);\r\n-});\r\n-import express from \"express\";\r\n-import cors from \"cors\";\r\n-import dotenv from \"dotenv\";\r\n-import carRoutes from \"/src\\routes\\carRoutes.ts\";\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-const PORT = process.env.PORT || 5000;\r\n-\r\n-app.use(cors());\r\n-app.use(express.json());\r\n-app.use(\"/users\", carRoutes);\r\n-\r\n-app.get(\"/\", (req, res) => {\r\n-  res.send(\"Backend is running!\");\r\n-});\r\n-\r\n-app.listen(PORT, () => {\r\n-  console.log(`Server is running on port ${PORT}`);\r\n-});\r\n-import express from \"express\";\r\n-import cors from \"cors\";\r\n-import dotenv from \"dotenv\";\r\n-import carRoutes from \"C:\\Users\\GamingCorner\\Desktop\\code\\senior\\backend\\src\\routes\\carRoutes.ts\";\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-const PORT = process.env.PORT || 5000;\r\n-\r\n-app.use(cors());\r\n-app.use(express.json());\r\n-app.use(\"/users\", carRoutes);\r\n-\r\n-app.get(\"/\", (req, res) => {\r\n-  res.send(\"Backend is running!\");\r\n-});\r\n-\r\n-app.listen(PORT, () => {\r\n-  console.log(`Server is running on port ${PORT}`);\r\n-});\r\n"
+                },
+                {
+                    "date": 1760714753345,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import cors from \"cors\";\r\n import dotenv from \"dotenv\";\r\n-import carRoutes from \"@/routes/carRoutes\";\r\n+// import carRoutes from \"@/routes/carRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1761148458773,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n const PORT = process.env.PORT || 5000;\r\n \r\n app.use(cors());\r\n app.use(express.json());\r\n-app.use(\"/car\", carRoutes);\r\n+// app.use(\"/car\", carRoutes);\r\n \r\n app.get(\"/\", (req, res) => {\r\n   res.send(\"Backend is running!\");\r\n });\r\n"
+                },
+                {
+                    "date": 1761148584114,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,22 @@\n-import express from \"express\";\r\n-import cors from \"cors\";\r\n-import dotenv from \"dotenv\";\r\n-// import carRoutes from \"@/routes/carRoutes\";\r\n+import express from 'express';\r\n+import dotenv from 'dotenv';\r\n+import cors from 'cors';\r\n+import mongoose from 'mongoose';\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n-const PORT = process.env.PORT || 5000;\r\n \r\n app.use(cors());\r\n app.use(express.json());\r\n-// app.use(\"/car\", carRoutes);\r\n \r\n-app.get(\"/\", (req, res) => {\r\n-  res.send(\"Backend is running!\");\r\n+mongoose.connect(process.env.MONGO_URI!)\r\n+  .then(() => console.log('MongoDB Connected'))\r\n+  .catch((err) => console.error(err));\r\n+\r\n+app.get('/', (req, res) => {\r\n+  res.send('CarFinder Hub API is running 🚗');\r\n });\r\n \r\n-app.listen(PORT, () => {\r\n-  console.log(`Server is running on port ${PORT}`);\r\n-});\r\n+const PORT = process.env.PORT || 5000;\r\n+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n"
+                },
+                {
+                    "date": 1761148612667,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,22 +1,21 @@\n-import express from 'express';\r\n-import dotenv from 'dotenv';\r\n-import cors from 'cors';\r\n-import mongoose from 'mongoose';\r\n+import express from \"express\";\r\n+import cors from \"cors\";\r\n+import dotenv from \"dotenv\";\r\n+// import carRoutes from \"@/routes/carRoutes\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n+const PORT = process.env.PORT || 5000;\r\n \r\n app.use(cors());\r\n app.use(express.json());\r\n+// app.use(\"/car\", carRoutes);\r\n \r\n-mongoose.connect(process.env.MONGO_URI!)\r\n-  .then(() => console.log('MongoDB Connected'))\r\n-  .catch((err) => console.error(err));\r\n+app.get(\"/\", (req, res) => {\r\n+  res.send(\"Backend is running!\");\r\n+});\r\n \r\n-app.get('/', (req, res) => {\r\n-  res.send('CarFinder Hub API is running 🚗');\r\n+app.listen(PORT, () => {\r\n+  console.log(`Server is running on port ${PORT}`);\r\n });\r\n-\r\n-const PORT = process.env.PORT || 5000;\r\n-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n"
+                },
+                {
+                    "date": 1761148622644,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n const PORT = process.env.PORT || 5000;\r\n \r\n app.use(cors());\r\n app.use(express.json());\r\n-// app.use(\"/car\", carRoutes);\r\n+app.use(\"/car\", carRoutes);\r\n \r\n app.get(\"/\", (req, res) => {\r\n   res.send(\"Backend is running!\");\r\n });\r\n"
+                },
+                {
+                    "date": 1761151007173,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,23 @@\n-import express from \"express\";\r\n-import cors from \"cors\";\r\n-import dotenv from \"dotenv\";\r\n-// import carRoutes from \"@/routes/carRoutes\";\r\n+import express from 'express';\r\n+import cors from 'cors';\r\n+import dotenv from 'dotenv';\r\n+import authRoutes from './routes/authRoutes';\r\n+import { connectDB } from './config/db';\r\n \r\n dotenv.config();\r\n-\r\n const app = express();\r\n-const PORT = process.env.PORT || 5000;\r\n-\r\n app.use(cors());\r\n app.use(express.json());\r\n-//app.use(\"/car\", carRoutes);\r\n \r\n-app.get(\"/\", (req, res) => {\r\n-  res.send(\"Backend is running!\");\r\n-});\r\n+// mount routes\r\n+app.use('/api/auth', authRoutes);\r\n \r\n-app.listen(PORT, () => {\r\n-  console.log(`Server is running on port ${PORT}`);\r\n-});\r\n+// health\r\n+app.get('/', (req, res) => res.send('CarFinder Hub API running'));\r\n+\r\n+// connect db + start\r\n+const PORT = process.env.PORT || 5000;\r\n+(async () => {\r\n+  await connectDB(process.env.MONGO_URI!);\r\n+  app.listen(PORT, () => console.log(`Server running : http://localhost:${PORT}`));\r\n+})();\r\n"
+                },
+                {
+                    "date": 1761153159696,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,7 @@\n+import app from \"./server.js\";\r\n+\r\n+const PORT = process.env.PORT || 5000;\r\n+\r\n+app.listen(PORT, () => {\r\n+  console.log(`🚀 Server running on http://localhost:${PORT}`);\r\n+});\r\n"
+                }
+            ],
+            "date": 1760714436953,
+            "name": "Commit-0",
+            "content": "import express from \"express\";\r\nimport cors from \"cors\";\r\nimport dotenv from \"dotenv\";\r\n\r\ndotenv.config();\r\n\r\nconst app = express();\r\nconst PORT = process.env.PORT || 5000;\r\n\r\napp.use(cors());\r\napp.use(express.json());\r\n\r\napp.get(\"/\", (req, res) => {\r\n  res.send(\"Backend is running!\");\r\n});\r\n\r\napp.listen(PORT, () => {\r\n  console.log(`Server is running on port ${PORT}`);\r\n});\r\n"
+        }
+    ]
+}

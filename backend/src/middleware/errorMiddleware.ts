@@ -1,0 +1,1 @@
+//handles all thrown errors in the application

@@ -1,0 +1,34 @@
+{
+    "sourceFile": "backend/src/routes/authRoutes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1761149750820,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761149772577,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,31 @@\n+import { Router } from 'express';\r\n+import { body } from 'express-validator';\r\n+import { register, login } from '../controllers/authController.js';\r\n+import { validateRequest } from '../middleware/validateMiddleware.js';\r\n+\r\n+const router = Router();\r\n+\r\n+// Register\r\n+router.post(\r\n+  '/register',\r\n+  [\r\n+    body('name').notEmpty().withMessage('Name is required'),\r\n+    body('email').isEmail().withMessage('Valid email required'),\r\n+    body('password').isLength({ min: 6 }).withMessage('Password min 6 chars')\r\n+  ],\r\n+  validateRequest,\r\n+  register\r\n+);\r\n+\r\n+// Login\r\n+router.post(\r\n+  '/login',\r\n+  [\r\n+    body('email').isEmail().withMessage('Valid email required'),\r\n+    body('password').notEmpty().withMessage('Password required')\r\n+  ],\r\n+  validateRequest,\r\n+  login\r\n+);\r\n+\r\n+export default router;\r\n"
+                },
+                {
+                    "date": 1761149782992,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { Router } from 'express';\r\n import { body } from 'express-validator';\r\n-import { register, login } from '../controllers/authController.js';\r\n-import { validateRequest } from '../middleware/validateMiddleware.js';\r\n+import { register, login } from '../controllers/authController';\r\n+import { validateRequest } from '../middleware/validateMiddleware';\r\n \r\n const router = Router();\r\n \r\n // Register\r\n"
+                },
+                {
+                    "date": 1761149789984,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { Router } from 'express';\r\n import { body } from 'express-validator';\r\n-import { register, login } from '../controllers/authController.js';\r\n-import { validateRequest } from '../middleware/validateMiddleware.js';\r\n+import { register, login } from '../controllers/authController';\r\n+import { validateRequest } from '../middleware/validateMiddleware';\r\n \r\n const router = Router();\r\n \r\n // Register\r\n"
+                },
+                {
+                    "date": 1761149816418,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { Router } from 'express';\r\n import { body } from 'express-validator';\r\n import { register, login } from '../controllers/authController.js';\r\n-import { validateRequest } from '../middleware/validateMiddleware.js';\r\n+import validateRequest from '../middleware/validateMiddleware.js';\r\n \r\n const router = Router();\r\n \r\n // Register\r\n"
+                }
+            ],
+            "date": 1761149750820,
+            "name": "Commit-0",
+            "content": "import { Router } from 'express';\r\nimport { body } from 'express-validator';\r\nimport { register, login } from '../controllers/authController';\r\nimport { validateRequest } from '../middleware/validateMiddleware';\r\n\r\nconst router = Router();\r\n\r\n// Register\r\nrouter.post(\r\n  '/register',\r\n  [\r\n    body('name').notEmpty().withMessage('Name is required'),\r\n    body('email').isEmail().withMessage('Valid email required'),\r\n    body('password').isLength({ min: 6 }).withMessage('Password min 6 chars')\r\n  ],\r\n  validateRequest,\r\n  register\r\n);\r\n\r\n// Login\r\nrouter.post(\r\n  '/login',\r\n  [\r\n    body('email').isEmail().withMessage('Valid email required'),\r\n    body('password').notEmpty().withMessage('Password required')\r\n  ],\r\n  validateRequest,\r\n  login\r\n);\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}
