@@ -1,0 +1,18 @@
+{
+    "sourceFile": "tailwind.config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1761233665798,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1761233665798,
+            "name": "Commit-0",
+            "content": "/** @type {import('tailwindcss').Config} */\nmodule.exports = {\n  darkMode: [\"class\"],\n  content: [\n    \"./index.html\",\n    \"./src/**/*.{js,ts,jsx,tsx}\",\n  ],\n  theme: {\n    extend: {\n      colors: {\n        border: \"hsl(var(--border) / <alpha-value>)\",\n        background: \"hsl(var(--background) / <alpha-value>)\",\n        foreground: \"hsl(var(--foreground) / <alpha-value>)\",\n        card: \"hsl(var(--card) / <alpha-value>)\",\n        \"card-foreground\": \"hsl(var(--card-foreground) / <alpha-value>)\",\n        primary: \"hsl(var(--primary) / <alpha-value>)\",\n        \"primary-foreground\": \"hsl(var(--primary-foreground) / <alpha-value>)\",\n        secondary: \"hsl(var(--secondary) / <alpha-value>)\",\n        \"secondary-foreground\": \"hsl(var(--secondary-foreground) / <alpha-value>)\",\n        accent: \"hsl(var(--accent) / <alpha-value>)\",\n        \"accent-foreground\": \"hsl(var(--accent-foreground) / <alpha-value>)\",\n        muted: \"hsl(var(--muted) / <alpha-value>)\",\n        \"muted-foreground\": \"hsl(var(--muted-foreground) / <alpha-value>)\",\n        destructive: \"hsl(var(--destructive) / <alpha-value>)\",\n        \"destructive-foreground\": \"hsl(var(--destructive-foreground) / <alpha-value>)\",\n        ring: \"hsl(var(--ring) / <alpha-value>)\",\n        input: \"hsl(var(--input) / <alpha-value>)\",\n      },\n      borderRadius: {\n        lg: \"var(--radius)\",\n      },\n    },\n  },\n  plugins: [],\n}\n"
+        }
+    ]
+}
