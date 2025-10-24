@@ -2,6 +2,9 @@ import express from "express";
 import { User } from "../models/User";
 
 const router = express.Router();
+router.get("/test", (_req, res) => {
+  res.json({ ok: true, route: "/api/auth/test" });
+});
 
 // Register route
 // Register route
