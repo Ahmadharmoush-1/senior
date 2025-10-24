@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { User } from "@/types/car";
+
+interface User {
+  name: string;
+  email: string;
+  password?: string;
+}
 
 interface AuthContextType {
   user: User | null;
@@ -24,7 +29,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session in localStorage
     const storedUser = localStorage.getItem("carfinder_user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -33,40 +37,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-  setIsLoading(true);
-  const res = await fetch("http://localhost:5000/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+    setIsLoading(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-  const data = await res.json();
-  if (res.ok) {
-    setUser(data.user);
-    localStorage.setItem("carfinder_user", JSON.stringify(data.user));
-  } else {
-    alert(data.message);
-  }
-  setIsLoading(false);
-};
+      const data = await res.json();
+      if (res.ok) {
+        setUser(data.user);
+        localStorage.setItem("carfinder_user", JSON.stringify(data.user));
+        alert("Login successful!");
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (err) {
+      alert("Error connecting to server");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-const register = async (name: string, email: string, password: string) => {
-  setIsLoading(true);
-  const res = await fetch("http://localhost:5000/api/auth/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password }),
-  });
+  const register = async (name: string, email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-  const data = await res.json();
-  if (res.ok) {
-    setUser(data.user);
-    localStorage.setItem("carfinder_user", JSON.stringify(data.user));
-  } else {
-    alert(data.message);
-  }
-  setIsLoading(false);
-};
+      const data = await res.json();
+      if (res.ok) {
+        setUser(data.user);
+        localStorage.setItem("carfinder_user", JSON.stringify(data.user));
+        alert("Registration successful!");
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      alert("Error connecting to server");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const logout = () => {
     setUser(null);

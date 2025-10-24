@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 10,
+            "activePatchIndex": 12,
             "patches": [
                 {
                     "date": 1761148293751,
@@ -48,6 +48,14 @@
                 {
                     "date": 1761230431332,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,16 +1,21 @@\n import express from \"express\";\r\n+import mongoose from \"mongoose\";\r\n import dotenv from \"dotenv\";\r\n-import { connectDB } from \"./db\";\r\n+import cors from \"cors\";\r\n+import authRoutes from \"./routes/authRoutes.js\";\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n \r\n+app.use(cors());\r\n app.use(express.json());\r\n \r\n-// Connect to MongoDB\r\n-connectDB();\r\n+app.use(\"/api/auth\", authRoutes);\r\n \r\n-app.listen(process.env.PORT || 5000, () => {\r\n-  console.log(`🚗 Server running on port ${process.env.PORT || 5000}`);\r\n-});\r\n+mongoose\r\n+  .connect(process.env.MONGO_URI || \"\")\r\n+  .then(() => console.log(\"✅ MongoDB connected\"))\r\n+  .catch((err) => console.log(\"❌ MongoDB error:\", err));\r\n+\r\n+export default app;\r\n"
+                },
+                {
+                    "date": 1761314245767,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,20 @@\n+import express from \"express\";\r\n+import dotenv from \"dotenv\";\r\n+import cors from \"cors\";\r\n+import authRoutes from \"./routes/authRoutes.js\";\r\n+import connectDB from \"./config/db\";\r\n+\r\n+dotenv.config();\r\n+\r\n+const app = express();\r\n+app.use(cors());\r\n+app.use(express.json());\r\n+\r\n+app.use(\"/api/auth\", authRoutes);\r\n+\r\n+const PORT = process.env.PORT || 5000;\r\n+\r\n+// ✅ Connect to MongoDB first, then start server\r\n+connectDB().then(() => {\r\n+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n+});\r\n"
+                },
+                {
+                    "date": 1761317344241,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,41 +17,4 @@\n // ✅ Connect to MongoDB first, then start server\r\n connectDB().then(() => {\r\n   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\r\n });\r\n-import express from \"express\";\r\n-import mongoose from \"mongoose\";\r\n-import dotenv from \"dotenv\";\r\n-import cors from \"cors\";\r\n-import authRoutes from \"./routes/authRoutes.js\";\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-\r\n-app.use(cors());\r\n-app.use(express.json());\r\n-\r\n-app.use(\"/api/auth\", authRoutes);\r\n-\r\n-mongoose\r\n-  .connect(process.env.MONGO_URI || \"\")\r\n-  .then(() => console.log(\"✅ MongoDB connected\"))\r\n-  .catch((err) => console.log(\"❌ MongoDB error:\", err));\r\n-\r\n-export default app;\r\n-import express from \"express\";\r\n-import dotenv from \"dotenv\";\r\n-import { connectDB } from \"./db\";\r\n-\r\n-dotenv.config();\r\n-\r\n-const app = express();\r\n-\r\n-app.use(express.json());\r\n-\r\n-// Connect to MongoDB\r\n-connectDB();\r\n-\r\n-app.listen(process.env.PORT || 5000, () => {\r\n-  console.log(`🚗 Server running on port ${process.env.PORT || 5000}`);\r\n-});\r\n"
                 }
             ],
             "date": 1761148293751,

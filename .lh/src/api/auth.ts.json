@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/api/auth.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1761313923890,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1761313923890,
+            "name": "Commit-0",
+            "content": "import axios from \"axios\";\r\n\r\nconst API_URL = \"http://localhost:5000/api/auth\";\r\n\r\nexport const register = async (name: string, email: string, password: string) => {\r\n  const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n  return res.data;\r\n};\r\n\r\nexport const login = async (email: string, password: string) => {\r\n  const res = await axios.post(`${API_URL}/login`, { email, password });\r\n  return res.data;\r\n};\r\n"
+        }
+    ]
+}
