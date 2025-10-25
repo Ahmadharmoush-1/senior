@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://senior-tnop.onrender.com/api/auth/test";
+const API_URL = "https://senior-tnop.onrender.com/api/auth";
 
 export const register = async (name: string, email: string, password: string) => {
   const res = await axios.post(`${API_URL}/register`, { name, email, password });

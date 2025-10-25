@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1761313923890,
@@ -15,6 +15,14 @@
                 },
                 {
                     "date": 1761331704846,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import axios from \"axios\";\r\n \r\n-const API_URL = \"https://senior-tnop.onrender.com/api/auth\";\r\n+const API_URL = \"https://senior-tnop.onrender.com/api/auth/test\";\r\n \r\n export const register = async (name: string, email: string, password: string) => {\r\n   const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n"
+                },
+                {
+                    "date": 1761390579491,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import axios from \"axios\";\r\n \r\n-const API_URL = \"https://senior-tnop.onrender.com/api/auth/test\";\r\n+const API_URL = \"https://senior-tnop.onrender.com/api/auth\";\r\n \r\n export const register = async (name: string, email: string, password: string) => {\r\n   const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n"
+                },
+                {
+                    "date": 1761390627323,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import axios from \"axios\";\r\n \r\n-const API_URL = \"https://senior-tnop.onrender.com/api/auth\";\r\n+const API_URL = \"https://senior-tnop.onrender.com/api/auth/test\";\r\n \r\n export const register = async (name: string, email: string, password: string) => {\r\n   const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n"
                 }
             ],
