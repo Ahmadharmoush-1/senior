@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1761149450434,
@@ -28,6 +28,14 @@
                 {
                     "date": 1761317783516,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,5 +11,5 @@\n     process.exit(1);\r\n   }\r\n };\r\n \r\n-export default connectDB;\n\\ No newline at end of file\n+export default connectDB;\r\n"
+                },
+                {
+                    "date": 1762376159469,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,17 @@\n-import mongoose from \"mongoose\";\r\n+import mongoose from 'mongoose';\r\n+import dotenv from 'dotenv';\r\n+dotenv.config();\r\n \r\n-const connectDB = async () => {\r\n-  console.log(\"⏳ Connecting to MongoDB...\");\r\n \r\n-  try {\r\n-    await mongoose.connect(process.env.MONGO_URI!);\r\n-    console.log(\"✅ MongoDB connected successfully\");\r\n-  } catch (error) {\r\n-    console.error(\"❌ MongoDB connection error:\", error);\r\n-    process.exit(1);\r\n-  }\r\n-};\r\n+const MONGO_URI = process.env.MONGO_URI || '';\r\n \r\n-export default connectDB;\r\n+\r\n+export const connectDB = async () => {\r\n+try {\r\n+await mongoose.connect(MONGO_URI);\r\n+console.log('MongoDB connected');\r\n+} catch (err) {\r\n+console.error('MongoDB connection error:', err);\r\n+process.exit(1);\r\n+}\r\n+};\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762376165178,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,15 @@\n-import mongoose from 'mongoose';\r\n-import dotenv from 'dotenv';\r\n-dotenv.config();\r\n+import mongoose from \"mongoose\";\r\n \r\n+const connectDB = async () => {\r\n+  console.log(\"⏳ Connecting to MongoDB...\");\r\n \r\n-const MONGO_URI = process.env.MONGO_URI || '';\r\n+  try {\r\n+    await mongoose.connect(process.env.MONGO_URI!);\r\n+    console.log(\"✅ MongoDB connected successfully\");\r\n+  } catch (error) {\r\n+    console.error(\"❌ MongoDB connection error:\", error);\r\n+    process.exit(1);\r\n+  }\r\n+};\r\n\\ No newline at end of file\n \r\n-\r\n-export const connectDB = async () => {\r\n-try {\r\n-await mongoose.connect(MONGO_URI);\r\n-console.log('MongoDB connected');\r\n-} catch (err) {\r\n-console.error('MongoDB connection error:', err);\r\n-process.exit(1);\r\n-}\r\n-};\n+export default connectDB;\r\n"
                 }
             ],
             "date": 1761149450434,
