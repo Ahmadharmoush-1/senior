@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1759428216487,
@@ -20,6 +20,18 @@
                 {
                     "date": 1761152569041,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { defineConfig } from \"vite\";\n import react from \"@vitejs/plugin-react-swc\";\n import path from \"path\";\n-// import { componentTagger } from \"lovable-tagger\";\n+import { componentTagger } from \"lovable-tagger\";\n \n // https://vitejs.dev/config/\n export default defineConfig(({ mode }) => ({\n   server: {\n"
+                },
+                {
+                    "date": 1762363799569,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \n // https://vitejs.dev/config/\n export default defineConfig(({ mode }) => ({\n   server: {\n-    host: \"::\",\n+    host: \"true\",\n     port: 8080,\n   },\n   plugins: [react(), mode === \"development\" && componentTagger()].filter(Boolean),\n   resolve: {\n"
+                },
+                {
+                    "date": 1762363839228,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \n // https://vitejs.dev/config/\n export default defineConfig(({ mode }) => ({\n   server: {\n-    host: \"true\",\n+    host: \"\",\n     port: 8080,\n   },\n   plugins: [react(), mode === \"development\" && componentTagger()].filter(Boolean),\n   resolve: {\n"
+                },
+                {
+                    "date": 1762363929842,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,14 +5,14 @@\n \n // https://vitejs.dev/config/\n export default defineConfig(({ mode }) => ({\n   server: {\n-    host: \"\",\n+    host: \"::\",\n     port: 8080,\n   },\n   plugins: [react(), mode === \"development\" && componentTagger()].filter(Boolean),\n   resolve: {\n     alias: {\n       \"@\": path.resolve(__dirname, \"./src\"),\n     },\n   },\n-}));\n+}));\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1759428216487,
