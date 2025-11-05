@@ -3,7 +3,11 @@
     "activeCommit": 0,
     "commits": [
         {
+<<<<<<< Updated upstream
             "activePatchIndex": 4,
+=======
+            "activePatchIndex": 10,
+>>>>>>> Stashed changes
             "patches": [
                 {
                     "date": 1761313923890,
@@ -24,6 +28,33 @@
                 {
                     "date": 1761390627323,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import axios from \"axios\";\r\n \r\n-const API_URL = \"https://senior-tnop.onrender.com/api/auth\";\r\n+const API_URL = \"https://senior-tnop.onrender.com/api/auth/test\";\r\n \r\n export const register = async (name: string, email: string, password: string) => {\r\n   const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n"
+<<<<<<< Updated upstream
+=======
+                },
+                {
+                    "date": 1761392880196,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,10 @@\n import axios from \"axios\";\r\n \r\n-const API_URL = \"https://senior-tnop.onrender.com/api/auth/test\";\r\n+// src/api/auth.ts\r\n+const API_URL = process.env.REACT_APP_API_URL || \"http://localhost:5000/api/auth\";\r\n \r\n+\r\n export const register = async (name: string, email: string, password: string) => {\r\n   const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n };\r\n"
+                },
+                {
+                    "date": 1762356811317,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,11 @@\n import axios from \"axios\";\r\n \r\n // src/api/auth.ts\r\n-const API_URL = process.env.REACT_APP_API_URL || \"http://localhost:5000/api/auth\";\r\n+axios.post(\"https://your-backend-name.onrender.com/api/auth/login\", data);\r\n \r\n \r\n+\r\n export const register = async (name: string, email: string, password: string) => {\r\n   const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n };\r\n"
+                },
+                {
+                    "date": 1762357702426,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import axios from \"axios\";\r\n \r\n // src/api/auth.ts\r\n-axios.post(\"https://your-backend-name.onrender.com/api/auth/login\", data);\r\n+const API_URL = process.env.REACT_APP_API_URL || \"https://senior-tnop.onrender.com/api/auth\";\r\n \r\n \r\n \r\n export const register = async (name: string, email: string, password: string) => {\r\n"
+                },
+                {
+                    "date": 1762358228340,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,12 @@\n import axios from \"axios\";\r\n \r\n // src/api/auth.ts\r\n-const API_URL = process.env.REACT_APP_API_URL || \"https://senior-tnop.onrender.com/api/auth\";\r\n+const API_URL = \"https://senior-tnop.onrender.com/api/auth\";\r\n \r\n \r\n \r\n+\r\n export const register = async (name: string, email: string, password: string) => {\r\n   const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n };\r\n"
+                },
+                {
+                    "date": 1762376663103,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,11 @@\n import axios from \"axios\";\r\n \r\n-// src/api/auth.ts\r\n-const API_URL = \"https://senior-tnop.onrender.com/api/auth\";\r\n+// ✅ Use your local backend address\r\n+const API_URL = \"http://localhost:5000/api/auth\";\r\n \r\n-\r\n-\r\n-\r\n export const register = async (name: string, email: string, password: string) => {\r\n-  const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n+  const res = await axios.post(`${API_URL}/signup`, { name, email, password });\r\n   return res.data;\r\n };\r\n \r\n export const login = async (email: string, password: string) => {\r\n"
+                },
+                {
+                    "date": 1762377323661,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,14 @@\n import axios from \"axios\";\r\n \r\n-// ✅ Use your local backend address\r\n-const API_URL = \"http://localhost:5000/api/auth\";\r\n+// src/api/auth.ts\r\n+const API_URL = \"https://senior-tnop.onrender.com/api/auth\";\r\n \r\n+\r\n+\r\n+\r\n export const register = async (name: string, email: string, password: string) => {\r\n-  const res = await axios.post(`${API_URL}/signup`, { name, email, password });\r\n+  const res = await axios.post(`${API_URL}/register`, { name, email, password });\r\n   return res.data;\r\n };\r\n \r\n export const login = async (email: string, password: string) => {\r\n"
+>>>>>>> Stashed changes
                 }
             ],
             "date": 1761313923890,
