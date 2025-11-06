@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: ["https://carfinderhub.netlify.app/"],
+  origin: ["http://localhost:5173", "http://localhost:8081"], // add your frontend URL(s)
   credentials: true
 }));
 app.use(express.json());
@@ -23,7 +23,7 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", authRoutes);
 
 // start server after DB connected
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 connectDB().then(() => {
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+ app.listen(5000, "0.0.0.0", () => console.log("Server running on port 5000"));
 });

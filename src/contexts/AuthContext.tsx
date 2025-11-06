@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
+import { register as apiRegister, login as apiLogin } from "../api/auth"; // ✅ Import axios helpers
 
 interface User {
   name: string;
@@ -14,6 +15,17 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
+function getErrorMessage(error: unknown, fallback = "An error occurred") {
+  if (error instanceof Error) {
+    return error.message || fallback;
+  }
+  if (typeof error === "object" && error !== null) {
+    const maybeAxiosError = error as { response?: { data?: { message?: string } } };
+    return maybeAxiosError.response?.data?.message ?? fallback;
+  }
+  return fallback;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
@@ -24,37 +36,31 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+// ✅ Safe parser for localStorage
+function getStoredUser(): User | null {
+  try {
+    const item = localStorage.getItem("carfinder_user");
+    if (!item || item === "undefined") return null;
+    return JSON.parse(item);
+  } catch {
+    return null;
+  }
+}
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("carfinder_user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
-  }, []);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(() => getStoredUser());
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setUser(data.user);
-        localStorage.setItem("carfinder_user", JSON.stringify(data.user));
-        alert("Login successful!");
-      } else {
-        alert(data.message || "Login failed");
-      }
-    } catch (err) {
-      alert("Error connecting to server");
+      const data = await apiLogin(email, password);
+      setUser(data.user);
+      localStorage.setItem("carfinder_user", JSON.stringify(data.user));
+      alert("Login successful!");
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, "Login failed");
+      alert(message);
     } finally {
       setIsLoading(false);
     }
@@ -63,22 +69,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setUser(data.user);
-        localStorage.setItem("carfinder_user", JSON.stringify(data.user));
-        alert("Registration successful!");
-      } else {
-        alert(data.message || "Registration failed");
-      }
-    } catch (err) {
-      alert("Error connecting to server");
+      const data = await apiRegister(name, email, password);
+      setUser(data.user);
+      localStorage.setItem("carfinder_user", JSON.stringify(data.user));
+      alert("Registration successful!");
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, "Registration failed");
+      alert(message);
     } finally {
       setIsLoading(false);
     }

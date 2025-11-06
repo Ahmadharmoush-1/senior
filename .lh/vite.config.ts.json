@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1759428216487,
@@ -20,6 +20,18 @@
                 {
                     "date": 1761152569041,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { defineConfig } from \"vite\";\n import react from \"@vitejs/plugin-react-swc\";\n import path from \"path\";\n-// import { componentTagger } from \"lovable-tagger\";\n+import { componentTagger } from \"lovable-tagger\";\n \n // https://vitejs.dev/config/\n export default defineConfig(({ mode }) => ({\n   server: {\n"
+                },
+                {
+                    "date": 1762455078834,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,18 +1,18 @@\n-import { defineConfig } from \"vite\";\n-import react from \"@vitejs/plugin-react-swc\";\n-import path from \"path\";\n-import { componentTagger } from \"lovable-tagger\";\n-\n-// https://vitejs.dev/config/\n-export default defineConfig(({ mode }) => ({\n-  server: {\n-    host: \"::\",\n-    port: 8080,\n-  },\n-  plugins: [react(), mode === \"development\" && componentTagger()].filter(Boolean),\n-  resolve: {\n-    alias: {\n-      \"@\": path.resolve(__dirname, \"./src\"),\n-    },\n-  },\n-}));\n+import { defineConfig } from \"vite\";\r\n+import react from \"@vitejs/plugin-react-swc\";\r\n+import path from \"path\";\r\n+import { componentTagger } from \"lovable-tagger\";\r\n+\r\n+// https://vitejs.dev/config/\r\n+export default defineConfig(({ mode }) => ({\r\n+  server: {\r\n+    host: \"::\",\r\n+    port: 8081,\r\n+  },\r\n+  plugins: [react(), mode === \"development\" && componentTagger()].filter(Boolean),\r\n+  resolve: {\r\n+    alias: {\r\n+      \"@\": path.resolve(__dirname, \"./src\"),\r\n+    },\r\n+  },\r\n+}));\r\n"
+                },
+                {
+                    "date": 1762455858901,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,10 @@\n // https://vitejs.dev/config/\r\n export default defineConfig(({ mode }) => ({\r\n   server: {\r\n     host: \"::\",\r\n-    port: 8081,\r\n+    port: 8081, // ✅ always use port 8081\r\n+    strictPort: true, // ✅ don't auto-switch ports\r\n   },\r\n   plugins: [react(), mode === \"development\" && componentTagger()].filter(Boolean),\r\n   resolve: {\r\n     alias: {\r\n"
+                },
+                {
+                    "date": 1762455904232,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,14 +2,13 @@\n import react from \"@vitejs/plugin-react-swc\";\r\n import path from \"path\";\r\n import { componentTagger } from \"lovable-tagger\";\r\n \r\n-// https://vitejs.dev/config/\r\n export default defineConfig(({ mode }) => ({\r\n   server: {\r\n-    host: \"::\",\r\n-    port: 8081, // ✅ always use port 8081\r\n-    strictPort: true, // ✅ don't auto-switch ports\r\n+    host: \"localhost\", // ← keep it simple for now\r\n+    port: 8081,        // ← the port you want\r\n+    strictPort: true,  // ← fail if something else uses it\r\n   },\r\n   plugins: [react(), mode === \"development\" && componentTagger()].filter(Boolean),\r\n   resolve: {\r\n     alias: {\r\n"
                 }
             ],
             "date": 1759428216487,
