@@ -1,0 +1,54 @@
+{
+    "sourceFile": "src/services/carService.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 9,
+            "patches": [
+                {
+                    "date": 1763154866605,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763154918583,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,12 @@\n+import axios from \"@/lib/axios.ts\"; // or your axios instance\r\n+\r\n+export async function createCar(formData: FormData, token: string) {\r\n+  const res = await axios.post(\"/cars\", formData, {\r\n+    headers: {\r\n+      Authorization: `Bearer ${token}`,\r\n+      \"Content-Type\": \"multipart/form-data\",\r\n+    },\r\n+  });\r\n+\r\n+  return res.data;\r\n+}\r\n"
+                },
+                {
+                    "date": 1763154925250,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,12 @@\n+import axios from \"@/lib/axios\"; // or your axios instance\r\n+\r\n+export async function createCar(formData: FormData, token: string) {\r\n+  const res = await axios.post(\"/cars\", formData, {\r\n+    headers: {\r\n+      Authorization: `Bearer ${token}`,\r\n+      \"Content-Type\": \"multipart/form-data\",\r\n+    },\r\n+  });\r\n+\r\n+  return res.data;\r\n+}\r\n"
+                },
+                {
+                    "date": 1763155156483,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import axios from \"@/lib/axios\"; // or your axios instance\r\n+import { axios } from \"@/lib/axios\"; // or your axios instance\r\n \r\n export async function createCar(formData: FormData, token: string) {\r\n   const res = await axios.post(\"/cars\", formData, {\r\n     headers: {\r\n"
+                },
+                {
+                    "date": 1763202287792,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,36 +1,27 @@\n-import { axios } from \"@/lib/axios\"; // or your axios instance\r\n+// src/services/carService.ts\r\n+import axios from \"@/lib/axios\";\r\n \r\n export async function createCar(formData: FormData, token: string) {\r\n+  if (!token) throw new Error(\"Missing auth token\");\r\n+\r\n   const res = await axios.post(\"/cars\", formData, {\r\n     headers: {\r\n       Authorization: `Bearer ${token}`,\r\n-      \"Content-Type\": \"multipart/form-data\",\r\n+      // axios will set the correct multipart boundary if you omit Content-Type,\r\n+      // but it's OK to include it as well. I'll omit it to be safe.\r\n     },\r\n   });\r\n \r\n   return res.data;\r\n }\r\n-import axios from \"@/lib/axios.ts\"; // or your axios instance\r\n \r\n-export async function createCar(formData: FormData, token: string) {\r\n-  const res = await axios.post(\"/cars\", formData, {\r\n-    headers: {\r\n-      Authorization: `Bearer ${token}`,\r\n-      \"Content-Type\": \"multipart/form-data\",\r\n-    },\r\n-  });\r\n-\r\n-  return res.data;\r\n+export async function getCars() {\r\n+  const res = await axios.get(\"/cars\");\r\n+  // backend returns { cars: [...] }\r\n+  return res.data.cars ?? res.data;\r\n }\r\n-import axios from \"@/lib/axios\"; // or your axios instance\r\n \r\n-export async function createCar(formData: FormData, token: string) {\r\n-  const res = await axios.post(\"/cars\", formData, {\r\n-    headers: {\r\n-      Authorization: `Bearer ${token}`,\r\n-      \"Content-Type\": \"multipart/form-data\",\r\n-    },\r\n-  });\r\n-\r\n-  return res.data;\r\n+export async function getCarById(id: string) {\r\n+  const res = await axios.get(`/cars/${id}`);\r\n+  return res.data.car ?? res.data;\r\n }\r\n"
+                },
+                {
+                    "date": 1763202477840,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,12 +16,12 @@\n }\r\n \r\n export async function getCars() {\r\n   const res = await axios.get(\"/cars\");\r\n-  // backend returns { cars: [...] }\r\n-  return res.data.cars ?? res.data;\r\n+  return res.data.cars; // ⬅ FIX\r\n }\r\n \r\n+\r\n export async function getCarById(id: string) {\r\n   const res = await axios.get(`/cars/${id}`);\r\n   return res.data.car ?? res.data;\r\n }\r\n"
+                },
+                {
+                    "date": 1763203033464,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,30 @@\n+import axios from \"@/lib/axios\";\r\n+\r\n+export const getCars = async () => {\r\n+  const res = await axios.get(\"/cars\");\r\n+  return res.data.cars; // backend returns {cars: []}\r\n+};\r\n+\r\n+export const createCar = async (car: any, token: string) => {\r\n+  const formData = new FormData();\r\n+\r\n+  formData.append(\"brand\", car.brand);\r\n+  formData.append(\"model\", car.model);\r\n+  formData.append(\"year\", String(car.year));\r\n+  formData.append(\"condition\", car.condition); // must match backend enum exactly\r\n+  formData.append(\"price\", String(car.price));\r\n+  formData.append(\"mileage\", String(car.mileage));\r\n+  formData.append(\"description\", car.description);\r\n+\r\n+  car.platforms.forEach((p: string) => formData.append(\"platforms\", p));\r\n+  car.images.forEach((file: File) => formData.append(\"images\", file));\r\n+\r\n+  const res = await axios.post(\"/cars\", formData, {\r\n+    headers: {\r\n+      Authorization: `Bearer ${token}`,\r\n+      \"Content-Type\": \"multipart/form-data\",\r\n+    },\r\n+  });\r\n+\r\n+  return res.data.car;\r\n+};\r\n"
+                },
+                {
+                    "date": 1763203679716,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n   const res = await axios.get(\"/cars\");\r\n   return res.data.cars; // backend returns {cars: []}\r\n };\r\n \r\n-export const createCar = async (car: any, token: string) => {\r\n+export const createCar = async (car: Car, token: string) => {\r\n   const formData = new FormData();\r\n \r\n   formData.append(\"brand\", car.brand);\r\n   formData.append(\"model\", car.model);\r\n"
+                },
+                {
+                    "date": 1763203710681,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,24 +1,25 @@\n import axios from \"@/lib/axios\";\r\n+import { CarCreateInput, Car } from \"@/types/car\";\r\n \r\n-export const getCars = async () => {\r\n+export const getCars = async (): Promise<Car[]> => {\r\n   const res = await axios.get(\"/cars\");\r\n-  return res.data.cars; // backend returns {cars: []}\r\n+  return res.data.cars;\r\n };\r\n \r\n-export const createCar = async (car: any, token: string) => {\r\n+export const createCar = async (car: CarCreateInput, token: string): Promise<Car> => {\r\n   const formData = new FormData();\r\n \r\n   formData.append(\"brand\", car.brand);\r\n   formData.append(\"model\", car.model);\r\n   formData.append(\"year\", String(car.year));\r\n-  formData.append(\"condition\", car.condition); // must match backend enum exactly\r\n+  formData.append(\"condition\", car.condition);\r\n   formData.append(\"price\", String(car.price));\r\n   formData.append(\"mileage\", String(car.mileage));\r\n   formData.append(\"description\", car.description);\r\n \r\n-  car.platforms.forEach((p: string) => formData.append(\"platforms\", p));\r\n-  car.images.forEach((file: File) => formData.append(\"images\", file));\r\n+  car.platforms.forEach((p) => formData.append(\"platforms\", p));\r\n+  car.images.forEach((file) => formData.append(\"images\", file));\r\n \r\n   const res = await axios.post(\"/cars\", formData, {\r\n     headers: {\r\n       Authorization: `Bearer ${token}`,\r\n"
+                },
+                {
+                    "date": 1763203749698,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,31 @@\n+import axios from \"@/lib/axios\";\r\n+import {  Car } from \"@/types/car\";\r\n+\r\n+export const getCars = async (): Promise<Car[]> => {\r\n+  const res = await axios.get(\"/cars\");\r\n+  return res.data.cars;\r\n+};\r\n+\r\n+export const createCar = async (car: CarCreateInput, token: string): Promise<Car> => {\r\n+  const formData = new FormData();\r\n+\r\n+  formData.append(\"brand\", car.brand);\r\n+  formData.append(\"model\", car.model);\r\n+  formData.append(\"year\", String(car.year));\r\n+  formData.append(\"condition\", car.condition);\r\n+  formData.append(\"price\", String(car.price));\r\n+  formData.append(\"mileage\", String(car.mileage));\r\n+  formData.append(\"description\", car.description);\r\n+\r\n+  car.platforms.forEach((p) => formData.append(\"platforms\", p));\r\n+  car.images.forEach((file) => formData.append(\"images\", file));\r\n+\r\n+  const res = await axios.post(\"/cars\", formData, {\r\n+    headers: {\r\n+      Authorization: `Bearer ${token}`,\r\n+      \"Content-Type\": \"multipart/form-data\",\r\n+    },\r\n+  });\r\n+\r\n+  return res.data.car;\r\n+};\r\n"
+                }
+            ],
+            "date": 1763154866605,
+            "name": "Commit-0",
+            "content": "import axios from \"@/lib/axios\"; // or your axios instance\r\n\r\nexport async function createCar(formData: FormData, token: string) {\r\n  const res = await axios.post(\"/cars\", formData, {\r\n    headers: {\r\n      Authorization: `Bearer ${token}`,\r\n      \"Content-Type\": \"multipart/form-data\",\r\n    },\r\n  });\r\n\r\n  return res.data;\r\n}\r\n"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/routes/facebookRoutes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763934030144,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763934030144,
+            "name": "Commit-0",
+            "content": "import { Router } from \"express\";\r\nimport { scrapeFacebook } from \"../controllers/facebookController\";\r\n\r\nconst router = Router();\r\n\r\nrouter.post(\"/scrape-facebook\", scrapeFacebook);\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

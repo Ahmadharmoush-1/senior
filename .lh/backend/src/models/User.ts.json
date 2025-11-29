@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 10,
             "patches": [
                 {
                     "date": 1761149468845,
@@ -28,6 +28,26 @@
                 {
                     "date": 1762376199844,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,18 +1,15 @@\n-import { Schema, model } from 'mongoose';\r\n+import mongoose, { Document, Schema } from \"mongoose\";\r\n \r\n-\r\n-export interface IUser {\r\n-name: string;\r\n-email: string;\r\n-password: string;\r\n+export interface IUser extends Document {\r\n+  name: string;\r\n+  email: string;\r\n+  password: string;\r\n }\r\n \r\n-\r\n const userSchema = new Schema<IUser>({\r\n-name: { type: String, required: true },\r\n-email: { type: String, required: true, unique: true },\r\n\\ No newline at end of file\n-password: { type: String, required: true }\r\n-}, { timestamps: true });\r\n+  name: { type: String, required: true },\r\n+  email: { type: String, required: true, unique: true },\r\n+  password: { type: String, required: true },\r\n+});\r\n \r\n-\r\n-export default model<IUser>('User', userSchema);\n+export const User = mongoose.model<IUser>(\"User\", userSchema);\r\n"
+                },
+                {
+                    "date": 1763652622148,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,12 @@\n-import mongoose, { Document, Schema } from \"mongoose\";\r\n+import { Schema, model } from \"mongoose\";\r\n \r\n-export interface IUser extends Document {\r\n-  name: string;\r\n-  email: string;\r\n-  password: string;\r\n-}\r\n+const userSchema = new Schema(\r\n+  {\r\n+    name: { type: String, required: true },\r\n+    email: { type: String, required: true, unique: true },\r\n+    password: { type: String, required: true },\r\n+  },\r\n+  { timestamps: true }\r\n+);\r\n \r\n-const userSchema = new Schema<IUser>({\r\n-  name: { type: String, required: true },\r\n-  email: { type: String, required: true, unique: true },\r\n-  password: { type: String, required: true },\r\n-});\r\n-\r\n-export const User = mongoose.model<IUser>(\"User\", userSchema);\r\n+export const User = model(\"User\", userSchema);\r\n"
+                },
+                {
+                    "date": 1763991083720,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,10 +2,16 @@\n \r\n const userSchema = new Schema(\r\n   {\r\n     name: { type: String, required: true },\r\n-    email: { type: String, required: true, unique: true },\r\n+\r\n+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },\r\n+\r\n     password: { type: String, required: true },\r\n+\r\n+    // ✅ OTP fields for login\r\n+    otpHash: { type: String, default: null },\r\n+    otpExpiresAt: { type: Date, default: null },\r\n   },\r\n   { timestamps: true }\r\n );\r\n \r\n"
+                },
+                {
+                    "date": 1763991488050,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,14 @@\n+// src/models/User.ts\r\n import { Schema, model } from \"mongoose\";\r\n \r\n const userSchema = new Schema(\r\n   {\r\n     name: { type: String, required: true },\r\n-\r\n-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },\r\n-\r\n+    email: { type: String, required: true, unique: true },\r\n     password: { type: String, required: true },\r\n \r\n-    // ✅ OTP fields for login\r\n+    // ✅ Add these fields\r\n     otpHash: { type: String, default: null },\r\n     otpExpiresAt: { type: Date, default: null },\r\n   },\r\n   { timestamps: true }\r\n"
+                },
+                {
+                    "date": 1763991494542,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +0,0 @@\n-// src/models/User.ts\r\n-import { Schema, model } from \"mongoose\";\r\n-\r\n-const userSchema = new Schema(\r\n-  {\r\n-    name: { type: String, required: true },\r\n-    email: { type: String, required: true, unique: true },\r\n-    password: { type: String, required: true },\r\n-\r\n-    // ✅ Add these fields\r\n-    otpHash: { type: String, default: null },\r\n-    otpExpiresAt: { type: Date, default: null },\r\n-  },\r\n-  { timestamps: true }\r\n-);\r\n-\r\n-export const User = model(\"User\", userSchema);\r\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1763991912135,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,23 @@\n-// src/models/User.ts\r\n-import { Schema, model } from \"mongoose\";\r\n+import { Schema, model, Document } from \"mongoose\";\r\n \r\n-const userSchema = new Schema(\r\n+export interface IUser extends Document {\r\n+  name: string;\r\n+  email: string;\r\n+  password: string;\r\n+  otpHash: string | null;\r\n+  otpExpiresAt: Date | null;\r\n+}\r\n+\r\n+const userSchema = new Schema<IUser>(\r\n   {\r\n     name: { type: String, required: true },\r\n     email: { type: String, required: true, unique: true },\r\n     password: { type: String, required: true },\r\n \r\n-    // ✅ Add these fields\r\n     otpHash: { type: String, default: null },\r\n     otpExpiresAt: { type: Date, default: null },\r\n   },\r\n   { timestamps: true }\r\n );\r\n \r\n-export const User = model(\"User\", userSchema);\r\n+export const User = model<IUser>(\"User\", userSchema);\r\n"
                 }
             ],
             "date": 1761149468845,

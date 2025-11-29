@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/controllers/scrapeController.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763932829221,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763932829221,
+            "name": "Commit-0",
+            "content": "import { Request, Response } from \"express\";\r\nimport { scrapeFacebookMarketplace } from \"../services/facebookScraper\";\r\nimport { AuthRequest } from \"../middleware/authMiddleware\";\r\nimport { Car } from \"../models/Car\";\r\n\r\nexport const previewFacebookListing = async (req: Request, res: Response) => {\r\n  const { url } = req.body;\r\n\r\n  if (!url || !url.includes(\"facebook.com/marketplace\")) {\r\n    return res.status(400).json({ message: \"Invalid Facebook Marketplace URL\" });\r\n  }\r\n\r\n  try {\r\n    const data = await scrapeFacebookMarketplace(url);\r\n    return res.json(data);\r\n  } catch (err) {\r\n    console.error(\"Preview scrape error:\", err);\r\n    return res.status(500).json({\r\n      message: \"Facebook blocked scraping or listing is private.\",\r\n    });\r\n  }\r\n};\r\n\r\n/**\r\n * ✅ Pro flow:\r\n * user sends FB URL -> scrape -> create \"draft\" car in DB\r\n * owner can later edit / delete normally\r\n */\r\nexport const importFacebookListing = async (req: AuthRequest, res: Response) => {\r\n  const { url } = req.body;\r\n  if (!req.user?.id) return res.status(401).json({ message: \"Unauthorized\" });\r\n\r\n  if (!url || !url.includes(\"facebook.com/marketplace\")) {\r\n    return res.status(400).json({ message: \"Invalid Facebook Marketplace URL\" });\r\n  }\r\n\r\n  try {\r\n    const data = await scrapeFacebookMarketplace(url);\r\n\r\n    // naive brand/model split from title\r\n    const parts = data.title.split(\" \");\r\n    const brand = parts[0] || \"Unknown\";\r\n    const model = parts.slice(1).join(\" \") || \"Unknown\";\r\n\r\n    const car = await Car.create({\r\n      brand,\r\n      model,\r\n      price: data.price ?? 0,\r\n      mileage: 0,\r\n      year: new Date().getFullYear(), // user can edit later\r\n      platforms: [\"facebook\"],\r\n      description: data.description,\r\n      condition: \"used\",\r\n      images: data.images,\r\n      seller: req.user.id,\r\n      facebookSource: {\r\n        url,\r\n        externalId: data.externalId,\r\n        importedAt: new Date(),\r\n        lastSyncedAt: new Date(),\r\n      },\r\n    });\r\n\r\n    const populated = await car.populate(\"seller\", \"name email\");\r\n    return res.status(201).json(populated);\r\n  } catch (err) {\r\n    console.error(\"Import scrape error:\", err);\r\n    return res.status(500).json({\r\n      message: \"Facebook blocked scraping or listing is private.\",\r\n    });\r\n  }\r\n};\r\n"
+        }
+    ]
+}

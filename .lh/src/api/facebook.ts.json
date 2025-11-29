@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/api/facebook.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763934056614,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763934056614,
+            "name": "Commit-0",
+            "content": "import axios from \"axios\";\r\nimport { API_BASE_URL } from \"./cars\";\r\n\r\nexport const scrapeFacebook = async (url: string) => {\r\n  const res = await axios.post(`${API_BASE_URL}/api/cars/scrape-facebook`, { url });\r\n  return res.data.data;\r\n};\r\n"
+        }
+    ]
+}

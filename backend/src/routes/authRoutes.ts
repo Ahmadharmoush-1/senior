@@ -1,17 +1,14 @@
-// src/routes/authRoutes.ts
 import express from "express";
-import { registerUser, loginUser } from "../controllers/authController";
+import { login, register, verifyOtpLogin } from "../controllers/authController";
 
 const router = express.Router();
 
-// Test route (optional)
-router.get("/test", (_req, res) => {
-  res.json({ ok: true, route: "/api/auth/test" });
-});
+router.post("/register", register);
 
-// Register & Login routes (using controllers)
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+// step 1: password login → sends otp
+router.post("/login", login);
+
+// step 2: verify otp → returns token
+router.post("/verify-otp", verifyOtpLogin);
 
 export default router;
-//

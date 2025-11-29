@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1761147661693,
@@ -19,6 +19,10 @@
                 },
                 {
                     "date": 1761149880289,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,12 @@\n+//it ensures incoming requests have valid data before reaching route handlers\r\n+//it ensures incoming requests have valid data before reaching route handlers\r\n+import type { Request, Response, NextFunction } from 'express';\r\n+import { validationResult } from 'express-validator';\r\n+\r\n+export const validateRequest = (req: Request, res: Response, next: NextFunction) => {\r\n+  const errors = validationResult(req);\r\n+  if (!errors.isEmpty()) {\r\n+    return res.status(400).json({ errors: errors.array() });\r\n+  }\r\n+  next();\r\n+};\r\n"
+                },
+                {
+                    "date": 1763630331379,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,12 @@\n+//it ensures incoming requests have valid data before reaching route handlers\r\n+//it ensures incoming requests have valid data before reaching route handlers\r\n+import type { Request, Response, NextFunction } from 'express';\r\n+import { validationResult } from 'express-validator';\r\n+\r\n+export const validateRequest = (req: Request, res: Response, next: NextFunction) => {\r\n+  const errors = validationResult(req);\r\n+  if (!errors.isEmpty()) {\r\n+    return res.status(400).json({ errors: errors.array() });\r\n+  }\r\n+  next();\r\n+};\r\n"
                 }
             ],

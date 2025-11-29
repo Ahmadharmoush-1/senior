@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/models/Comparison.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764353533008,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764353533008,
+            "name": "Commit-0",
+            "content": "// src/models/Comparison.ts\r\nimport mongoose, { Schema, model, Document } from \"mongoose\";\r\n\r\nexport interface IComparison extends Document {\r\n  user: mongoose.Types.ObjectId;\r\n  carA: mongoose.Types.ObjectId;\r\n  carB: mongoose.Types.ObjectId;\r\n  createdAt: Date;\r\n  updatedAt: Date;\r\n}\r\n\r\nconst comparisonSchema = new Schema<IComparison>(\r\n  {\r\n    user: {\r\n      type: mongoose.Schema.Types.ObjectId,\r\n      ref: \"User\",\r\n      required: true,\r\n    },\r\n    carA: {\r\n      type: mongoose.Schema.Types.ObjectId,\r\n      ref: \"Car\",\r\n      required: true,\r\n    },\r\n    carB: {\r\n      type: mongoose.Schema.Types.ObjectId,\r\n      ref: \"Car\",\r\n      required: true,\r\n    },\r\n  },\r\n  { timestamps: true }\r\n);\r\n\r\nexport const Comparison = model<IComparison>(\"Comparison\", comparisonSchema);\r\n"
+        }
+    ]
+}

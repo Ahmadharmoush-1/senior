@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/controllers/comparisonController.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764353553147,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764353553147,
+            "name": "Commit-0",
+            "content": "// src/controllers/comparisonController.ts\r\nimport type { Response } from \"express\";\r\nimport { Comparison } from \"../models/Comparison\";\r\nimport type { AuthRequest } from \"../middleware/authMiddleware\";\r\n\r\nexport const saveComparison = async (req: AuthRequest, res: Response) => {\r\n  try {\r\n    const userId = req.user?.id;\r\n    const { carAId, carBId } = req.body as {\r\n      carAId?: string;\r\n      carBId?: string;\r\n    };\r\n\r\n    if (!userId) {\r\n      return res.status(401).json({ message: \"Unauthorized\" });\r\n    }\r\n\r\n    if (!carAId || !carBId) {\r\n      return res\r\n        .status(400)\r\n        .json({ message: \"carAId and carBId are required\" });\r\n    }\r\n\r\n    const comparison = await Comparison.create({\r\n      user: userId,\r\n      carA: carAId,\r\n      carB: carBId,\r\n    });\r\n\r\n    return res.status(201).json({ success: true, comparison });\r\n  } catch (err) {\r\n    console.error(\"saveComparison error:\", err);\r\n    return res.status(500).json({ message: \"Server error\" });\r\n  }\r\n};\r\n\r\nexport const getComparisons = async (req: AuthRequest, res: Response) => {\r\n  try {\r\n    const userId = req.user?.id;\r\n\r\n    if (!userId) {\r\n      return res.status(401).json({ message: \"Unauthorized\" });\r\n    }\r\n\r\n    const comparisons = await Comparison.find({ user: userId })\r\n      .populate(\"carA\")\r\n      .populate(\"carB\")\r\n      .sort({ createdAt: -1 });\r\n\r\n    return res.json({ comparisons });\r\n  } catch (err) {\r\n    console.error(\"getComparisons error:\", err);\r\n    return res.status(500).json({ message: \"Server error\" });\r\n  }\r\n};\r\n"
+        }
+    ]
+}

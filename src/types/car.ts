@@ -6,15 +6,15 @@ export interface Car {
   year: number;
   price: number;
   mileage: number;
-  location: string;
+  condition: string;
   description: string;
-  condition: "new" | "used" | "certified";
-  fuelType?: "gasoline" | "diesel" | "electric" | "hybrid";
-  transmission?: "automatic" | "manual";
   images: string[];
-  platform: Platform[];
-  seller: Seller;
+  platform: { name: string }[];
+  seller: { id: string; name: string; email: string; phone: string };
   createdAt: string;
+  location: string;
+  fuelType?: string;
+  transmission?: string;
 }
 
 export interface Seller {

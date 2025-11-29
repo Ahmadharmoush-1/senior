@@ -1,0 +1,30 @@
+{
+    "sourceFile": "backend/src/utils/sendEmail.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1763991158505,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763992195701,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,28 +1,25 @@\n import nodemailer from \"nodemailer\";\r\n \r\n-export const sendEmail = async ({\r\n-  to,\r\n-  subject,\r\n-  html,\r\n-}: {\r\n-  to: string;\r\n-  subject: string;\r\n-  html: string;\r\n-}) => {\r\n-  const transporter = nodemailer.createTransport({\r\n-    host: process.env.SMTP_HOST,\r\n-    port: Number(process.env.SMTP_PORT || 587),\r\n-    secure: false,\r\n-    auth: {\r\n-      user: process.env.SMTP_USER,\r\n-      pass: process.env.SMTP_PASS,\r\n-    },\r\n-  });\r\n+export const sendEmail = async (to: string, subject: string, text: string) => {\r\n+  try {\r\n+    const transporter = nodemailer.createTransport({\r\n+      service: \"gmail\",\r\n+      auth: {\r\n+        user: process.env.GMAIL_USER,\r\n+        pass: process.env.GMAIL_PASS,\r\n+      },\r\n+    });\r\n \r\n-  await transporter.sendMail({\r\n-    from: process.env.SMTP_FROM || process.env.SMTP_USER,\r\n-    to,\r\n-    subject,\r\n-    html,\r\n-  });\r\n+    await transporter.sendMail({\r\n+      from: `\"CarFinder OTP\" <${process.env.GMAIL_USER}>`,\r\n+      to,\r\n+      subject,\r\n+      text,\r\n+    });\r\n+\r\n+    console.log(`📧 Email sent to ${to}`);\r\n+  } catch (err) {\r\n+    console.error(\"Email error:\", err);\r\n+    throw new Error(\"Failed to send email\");\r\n+  }\r\n };\r\n"
+                },
+                {
+                    "date": 1763993977550,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,25 +1,18 @@\n import nodemailer from \"nodemailer\";\r\n \r\n-export const sendEmail = async (to: string, subject: string, text: string) => {\r\n-  try {\r\n-    const transporter = nodemailer.createTransport({\r\n-      service: \"gmail\",\r\n-      auth: {\r\n-        user: process.env.GMAIL_USER,\r\n-        pass: process.env.GMAIL_PASS,\r\n-      },\r\n-    });\r\n+export const sendEmail = async (to: string, subject: string, html: string) => {\r\n+  const transporter = nodemailer.createTransport({\r\n+    service: \"gmail\",\r\n+    auth: {\r\n+      user: process.env.EMAIL_USER,\r\n+      pass: process.env.EMAIL_PASS, // Gmail App Password\r\n+    },\r\n+  });\r\n \r\n-    await transporter.sendMail({\r\n-      from: `\"CarFinder OTP\" <${process.env.GMAIL_USER}>`,\r\n-      to,\r\n-      subject,\r\n-      text,\r\n-    });\r\n-\r\n-    console.log(`📧 Email sent to ${to}`);\r\n-  } catch (err) {\r\n-    console.error(\"Email error:\", err);\r\n-    throw new Error(\"Failed to send email\");\r\n-  }\r\n+  await transporter.sendMail({\r\n+    from: `\"CarFinderHub OTP\" <${process.env.EMAIL_USER}>`,\r\n+    to,\r\n+    subject,\r\n+    html,\r\n+  });\r\n };\r\n"
+                },
+                {
+                    "date": 1763995909731,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,18 +1,25 @@\n import nodemailer from \"nodemailer\";\r\n \r\n export const sendEmail = async (to: string, subject: string, html: string) => {\r\n-  const transporter = nodemailer.createTransport({\r\n-    service: \"gmail\",\r\n-    auth: {\r\n-      user: process.env.EMAIL_USER,\r\n-      pass: process.env.EMAIL_PASS, // Gmail App Password\r\n-    },\r\n-  });\r\n+  try {\r\n+    const transporter = nodemailer.createTransport({\r\n+      service: \"gmail\",\r\n+      auth: {\r\n+        user: process.env.GMAIL_USER,\r\n+        pass: process.env.GMAIL_PASS,\r\n+      },\r\n+    });\r\n \r\n-  await transporter.sendMail({\r\n-    from: `\"CarFinderHub OTP\" <${process.env.EMAIL_USER}>`,\r\n-    to,\r\n-    subject,\r\n-    html,\r\n-  });\r\n+    await transporter.sendMail({\r\n+      from: `\"CarFinder Hub\" <${process.env.GMAIL_USER}>`,\r\n+      to,\r\n+      subject,\r\n+      html,\r\n+    });\r\n+\r\n+    console.log(\"📧 Email sent to:\", to);\r\n+  } catch (err) {\r\n+    console.error(\"❌ Email sending failed:\", err);\r\n+    throw err;\r\n+  }\r\n };\r\n"
+                }
+            ],
+            "date": 1763991158505,
+            "name": "Commit-0",
+            "content": "import nodemailer from \"nodemailer\";\r\n\r\nexport const sendEmail = async ({\r\n  to,\r\n  subject,\r\n  html,\r\n}: {\r\n  to: string;\r\n  subject: string;\r\n  html: string;\r\n}) => {\r\n  const transporter = nodemailer.createTransport({\r\n    host: process.env.SMTP_HOST,\r\n    port: Number(process.env.SMTP_PORT || 587),\r\n    secure: false,\r\n    auth: {\r\n      user: process.env.SMTP_USER,\r\n      pass: process.env.SMTP_PASS,\r\n    },\r\n  });\r\n\r\n  await transporter.sendMail({\r\n    from: process.env.SMTP_FROM || process.env.SMTP_USER,\r\n    to,\r\n    subject,\r\n    html,\r\n  });\r\n};\r\n"
+        }
+    ]
+}

@@ -3,11 +3,27 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1761147741542,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763630314794,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,16 @@\n+//handles image uploads for car listings\r\n+import multer, { FileFilterCallback } from \"multer\";\r\n+import path from \"path\";\r\n+import { Request } from \"express\";\r\n+\r\n+const storage = multer.diskStorage({\r\n+  destination: (req: Request, file: Express.Multer.File, cb) => {\r\n+    cb(null, path.join(__dirname, \"../../uploads\"));\r\n+  },\r\n+\r\n+  filename: (req: Request, file: Express.Multer.File, cb) => {\r\n+    cb(null, `${Date.now()}-${file.originalname}`);\r\n+  },\r\n+});\r\n+\r\n+export const upload = multer({ storage });\r\n"
+                },
+                {
+                    "date": 1763651929758,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,11 @@\n-//handles image uploads for car listings\r\n-import multer, { FileFilterCallback } from \"multer\";\r\n+import multer from \"multer\";\r\n import path from \"path\";\r\n-import { Request } from \"express\";\r\n \r\n const storage = multer.diskStorage({\r\n-  destination: (req: Request, file: Express.Multer.File, cb) => {\r\n-    cb(null, path.join(__dirname, \"../../uploads\"));\r\n-  },\r\n-\r\n-  filename: (req: Request, file: Express.Multer.File, cb) => {\r\n-    cb(null, `${Date.now()}-${file.originalname}`);\r\n-  },\r\n+  destination: \"uploads/\",\r\n+  filename: (_req, file, cb) => {\r\n+    cb(null, Date.now() + path.extname(file.originalname));\r\n\\ No newline at end of file\n+  }\r\n });\r\n \r\n export const upload = multer({ storage });\r\n-//handles image \n"
+                },
+                {
+                    "date": 1763652657113,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,13 @@\n import multer from \"multer\";\r\n import path from \"path\";\r\n \r\n const storage = multer.diskStorage({\r\n-  destination: \"uploads/\",\r\n-  filename: (_req, file, cb) => {\r\n-    cb(null, Date.now() + path.extname(file.originalname));\r\n-  }\r\n+  destination(_req, _file, cb) {\r\n+    cb(null, path.join(__dirname, \"../../uploads\"));\r\n+  },\r\n\\ No newline at end of file\n+  filename(_req, file, cb) {\r\n+    cb(null, Date.now() + \"-\" + file.originalname);\r\n+  },\r\n });\r\n \r\n-export const upload = multer({ storage });\n+export const upload = multer({ storage });\r\n"
+                },
+                {
+                    "date": 1763653332753,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,14 @@\n import multer from \"multer\";\r\n import path from \"path\";\r\n \r\n const storage = multer.diskStorage({\r\n-  destination(_req, _file, cb) {\r\n+  destination: (req, file, cb) => {\r\n     cb(null, path.join(__dirname, \"../../uploads\"));\r\n   },\r\n-  filename(_req, file, cb) {\r\n-    cb(null, Date.now() + \"-\" + file.originalname);\r\n+  filename: (req, file, cb) => {\r\n+    const unique = Date.now() + \"-\" + Math.round(Math.random() * 1e9);\r\n+    cb(null, unique + path.extname(file.originalname));\r\n\\ No newline at end of file\n   },\r\n });\r\n \r\n-export const upload = multer({ storage });\n+export const upload = multer({ storage });\r\n"
                 }
             ],
             "date": 1761147741542,

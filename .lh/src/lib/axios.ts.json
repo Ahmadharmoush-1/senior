@@ -1,0 +1,38 @@
+{
+    "sourceFile": "src/lib/axios.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1763154888470,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763155162352,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,14 @@\n+import axios from \"@/lib/axios\"; // or your axios instance\r\n+\r\n+export async function createCar(formData: FormData, token: string) {\r\n+  const res = await axios.post(\"/cars\", formData, {\r\n+    headers: {\r\n+      Authorization: `Bearer ${token}`,\r\n+      \"Content-Type\": \"multipart/form-data\",\r\n+    },\r\n+  });\r\n+\r\n+  return res.data;\r\n+}\r\n+export { axios };\r\n+\r\n"
+                },
+                {
+                    "date": 1763155168723,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,14 @@\n+import { axios } from \"@/lib/axios\"; // or your axios instance\r\n+\r\n+export async function createCar(formData: FormData, token: string) {\r\n+  const res = await axios.post(\"/cars\", formData, {\r\n+    headers: {\r\n+      Authorization: `Bearer ${token}`,\r\n+      \"Content-Type\": \"multipart/form-data\",\r\n+    },\r\n+  });\r\n+\r\n+  return res.data;\r\n+}\r\n+export { axios };\r\n+\r\n"
+                },
+                {
+                    "date": 1763155183136,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,14 @@\n+import { axios } from \"@/lib/axios\"; // or your axios instance\r\n+\r\n+export async function createCar(formData: FormData, token: string) {\r\n+  const res = await axios.post(\"/cars\", formData, {\r\n+    headers: {\r\n+      Authorization: `Bearer ${token}`,\r\n+      \"Content-Type\": \"multipart/form-data\",\r\n+    },\r\n+  });\r\n+\r\n+  return res.data;\r\n+}\r\n+export { axios };\r\n+\r\n"
+                },
+                {
+                    "date": 1763157298743,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,44 +11,4 @@\n   return res.data;\r\n }\r\n export { axios };\r\n \r\n-import { axios } from \"@/lib/axios\"; // or your axios instance\r\n-\r\n-export async function createCar(formData: FormData, token: string) {\r\n-  const res = await axios.post(\"/cars\", formData, {\r\n-    headers: {\r\n-      Authorization: `Bearer ${token}`,\r\n-      \"Content-Type\": \"multipart/form-data\",\r\n-    },\r\n-  });\r\n-\r\n-  return res.data;\r\n-}\r\n-export { axios };\r\n-\r\n-import axios from \"@/lib/axios\"; // or your axios instance\r\n-\r\n-export async function createCar(formData: FormData, token: string) {\r\n-  const res = await axios.post(\"/cars\", formData, {\r\n-    headers: {\r\n-      Authorization: `Bearer ${token}`,\r\n-      \"Content-Type\": \"multipart/form-data\",\r\n-    },\r\n-  });\r\n-\r\n-  return res.data;\r\n-}\r\n-export { axios };\r\n-\r\n-import axios from \"@/lib/axios\"; // or your axios instance\r\n-\r\n-export async function createCar(formData: FormData, token: string) {\r\n-  const res = await axios.post(\"/cars\", formData, {\r\n-    headers: {\r\n-      Authorization: `Bearer ${token}`,\r\n-      \"Content-Type\": \"multipart/form-data\",\r\n-    },\r\n-  });\r\n-\r\n-  return res.data;\r\n-}\r\n"
+                },
+                {
+                    "date": 1763202300427,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,17 @@\n-import { axios } from \"@/lib/axios\"; // or your axios instance\r\n+// src/lib/axios.ts\r\n+import axios from \"axios\";\r\n \r\n-export async function createCar(formData: FormData, token: string) {\r\n-  const res = await axios.post(\"/cars\", formData, {\r\n-    headers: {\r\n-      Authorization: `Bearer ${token}`,\r\n-      \"Content-Type\": \"multipart/form-data\",\r\n-    },\r\n-  });\r\n+const instance = axios.create({\r\n+  baseURL: \"http://localhost:5000/api\", // backend base URL\r\n+  withCredentials: false, // change to true if you use cookie auth\r\n+  timeout: 30_000,\r\n+});\r\n \r\n-  return res.data;\r\n-}\r\n-export { axios };\r\n+// Optional: request interceptor to log or attach token if you prefer centralizing auth\r\n+// instance.interceptors.request.use(config => {\r\n+//   // e.g. const token = getTokenFromStore();\r\n+//   // if (token) config.headers = { ...config.headers, Authorization: `Bearer ${token}` };\r\n+//   return config;\r\n+// });\r\n \r\n+export default instance;\r\n"
+                }
+            ],
+            "date": 1763154888470,
+            "name": "Commit-0",
+            "content": "import axios from \"@/lib/axios\"; // or your axios instance\r\n\r\nexport async function createCar(formData: FormData, token: string) {\r\n  const res = await axios.post(\"/cars\", formData, {\r\n    headers: {\r\n      Authorization: `Bearer ${token}`,\r\n      \"Content-Type\": \"multipart/form-data\",\r\n    },\r\n  });\r\n\r\n  return res.data;\r\n}\r\n"
+        }
+    ]
+}

@@ -1,23 +1,42 @@
+// src/pages/Favorites.tsx
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { mockCars } from "@/lib/mockData";
 import CarCard from "@/components/CarCard";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Heart } from "lucide-react";
 import { useEffect } from "react";
+import { useAuthStore } from "@/stores/authStore"; // ⭐ NEW
+import { syncFavorites } from "@/services/carService"; // ⭐ NEW
 
 const Favorites = () => {
   const { user } = useAuth();
   const { favorites } = useFavorites();
   const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token); // ⭐ get token
 
   useEffect(() => {
     if (!user) {
       navigate("/auth?mode=login");
     }
   }, [user, navigate]);
+
+  // ⭐ Sync favorites to backend whenever they change
+  useEffect(() => {
+    const doSync = async () => {
+      if (!user || !token) return;
+
+      try {
+        await syncFavorites(favorites, token);
+      } catch (err) {
+        console.error("Failed to sync favorites:", err);
+      }
+    };
+
+    void doSync();
+  }, [favorites, user, token]);
 
   if (!user) {
     return null;
@@ -34,7 +53,8 @@ const Favorites = () => {
             <h1 className="text-4xl font-bold">My Favorites</h1>
           </div>
           <p className="text-muted-foreground">
-            {favoriteCars.length} {favoriteCars.length === 1 ? "car" : "cars"} saved
+            {favoriteCars.length}{" "}
+            {favoriteCars.length === 1 ? "car" : "cars"} saved
           </p>
         </div>
 

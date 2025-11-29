@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/api/scrape.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763932877658,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763932877658,
+            "name": "Commit-0",
+            "content": "import axios from \"axios\";\r\nimport { API_BASE_URL } from \"./cars\";\r\n\r\nexport interface FacebookPreview {\r\n  title: string;\r\n  description: string;\r\n  price: number | null;\r\n  images: string[];\r\n  location: string | null;\r\n  externalId?: string;\r\n}\r\n\r\nexport const previewFacebook = async (url: string) => {\r\n  const res = await axios.post(`${API_BASE_URL}/api/scrape/facebook/preview`, { url });\r\n  return res.data as FacebookPreview;\r\n};\r\n\r\nexport const importFacebook = async (url: string, token: string) => {\r\n  const res = await axios.post(\r\n    `${API_BASE_URL}/api/scrape/facebook/import`,\r\n    { url },\r\n    { headers: { Authorization: `Bearer ${token}` } }\r\n  );\r\n  return res.data;\r\n};\r\n"
+        }
+    ]
+}

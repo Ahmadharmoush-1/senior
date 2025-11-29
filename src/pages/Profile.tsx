@@ -7,27 +7,55 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { mockCars } from "@/lib/mockData";
 import { Mail, Edit, Trash2, Camera, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
+import { getMyCars, deleteCar } from "@/api/cars";
+import { mapApiCarToCar } from "@/utils/mapApiCarToCar";
+import type { Car as CarType } from "@/types/car";
+
+function getAxiosMessage(err: unknown, fallback = "Something went wrong.") {
+  if (err && typeof err === "object" && "response" in err) {
+    const e = err as { response?: { data?: { message?: string } } };
+    return e.response?.data?.message ?? fallback;
+  }
+  return fallback;
+}
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileName, setProfileName] = useState(user?.name || "");
   const [profileEmail, setProfileEmail] = useState(user?.email || "");
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/auth?mode=login");
+  const [userCars, setUserCars] = useState<CarType[]>([]);
+  const [loadingCars, setLoadingCars] = useState(true);
+
+  const fetchUserCars = async () => {
+    if (!user) return;
+    setLoadingCars(true);
+    try {
+      const apiCars = await getMyCars(user.token);
+      setUserCars(apiCars.map(mapApiCarToCar));
+    } catch (err) {
+      toast({
+        title: "Failed to load your cars",
+        description: getAxiosMessage(err),
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingCars(false);
     }
+  };
+
+  useEffect(() => {
+    if (!user) navigate("/auth?mode=login");
+    else fetchUserCars();
   }, [user, navigate]);
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   const handleProfilePictureUpload = () => {
     toast({
@@ -49,8 +77,21 @@ const Profile = () => {
     navigate("/auth?mode=login");
   };
 
-  // Mock user's listed cars (in real app, filter by user ID)
-  const userCars = mockCars.slice(0, 2);
+  const handleDeleteCar = async (carId: string) => {
+    if (!confirm("Are you sure you want to delete this listing?")) return;
+
+    try {
+      await deleteCar(carId, user.token);
+      toast({ title: "Car deleted successfully!" });
+      fetchUserCars();
+    } catch (err: unknown) {
+      toast({
+        title: "Error deleting car",
+        description: getAxiosMessage(err),
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -159,15 +200,16 @@ const Profile = () => {
                   </Button>
                 </div>
               </CardHeader>
+
               <CardContent className="space-y-4">
-                {userCars.length === 0 ? (
+                {loadingCars ? (
+                  <div className="py-12 text-center text-muted-foreground">
+                    Loading your listings...
+                  </div>
+                ) : userCars.length === 0 ? (
                   <div className="py-12 text-center">
                     <p className="text-muted-foreground">You haven't listed any cars yet.</p>
-                    <Button
-                      variant="default"
-                      className="mt-4"
-                      onClick={() => navigate("/sell")}
-                    >
+                    <Button className="mt-4" onClick={() => navigate("/sell")}>
                       List Your First Car
                     </Button>
                   </div>
@@ -182,7 +224,7 @@ const Profile = () => {
                             className="h-full w-full object-cover"
                           />
                         </div>
-                        
+
                         <div className="flex-1 space-y-2">
                           <div className="flex items-start justify-between">
                             <div>
@@ -195,11 +237,11 @@ const Profile = () => {
                               {car.condition}
                             </Badge>
                           </div>
-                          
+
                           <p className="text-sm text-muted-foreground line-clamp-2">
                             {car.description}
                           </p>
-                          
+
                           <div className="flex flex-wrap gap-2">
                             {car.platform.map((platform, index) => (
                               <Badge key={index} variant="secondary" className="text-xs">
@@ -207,13 +249,23 @@ const Profile = () => {
                               </Badge>
                             ))}
                           </div>
-                          
+
                           <div className="flex gap-2 pt-2">
-                            <Button variant="outline" size="sm" className="gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-2"
+                              onClick={() => navigate(`/edit-car/${car.id}`)}
+                            >
                               <Edit className="h-4 w-4" />
                               Edit
                             </Button>
-                            <Button variant="destructive" size="sm" className="gap-2">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="gap-2"
+                              onClick={() => handleDeleteCar(car.id)}
+                            >
                               <Trash2 className="h-4 w-4" />
                               Delete
                             </Button>

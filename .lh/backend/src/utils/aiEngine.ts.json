@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/utils/aiEngine.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764350451776,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764350451776,
+            "name": "Commit-0",
+            "content": "export const runFreeAI = async (prompt: string): Promise<string> => {\r\n  const HF_MODEL = \"Qwen/Qwen2.5-1.5B-Instruct\";\r\n\r\n  const response = await fetch(\r\n    `https://api-inference.huggingface.co/models/${HF_MODEL}`,\r\n    {\r\n      method: \"POST\",\r\n      headers: { \"Content-Type\": \"application/json\" },\r\n      body: JSON.stringify({\r\n        inputs: prompt,\r\n        parameters: {\r\n          max_new_tokens: 220,\r\n          temperature: 0.7,\r\n        },\r\n      }),\r\n    }\r\n  );\r\n\r\n  const data = await response.json();\r\n\r\n  const raw = data?.[0]?.generated_text || \"\";\r\n  return raw.replace(prompt, \"\").trim();\r\n};\r\n"
+        }
+    ]
+}

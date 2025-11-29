@@ -1,27 +1,43 @@
-// //protects routes like "Sell Car", "Buy Car"
-// import type { Request, Response, NextFunction } from 'express';
-// import jwt, { JwtPayload } from 'jsonwebtoken';
-// import dotenv from 'dotenv';
-// dotenv.config();
+import type { Request, Response, NextFunction } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-// const JWT_SECRET = process.env.JWT_SECRET!;
+export interface AuthUser {
+  id: string;
+  email: string;
+  role?: string;
+}
 
-// export interface AuthRequest extends Request {
-//   user?: string | JwtPayload;
-// }
+export interface AuthRequest extends Request {
+  user?: AuthUser;
+}
 
-// export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
-//   const authHeader = req.headers.authorization;
-//   if (!authHeader) return res.status(401).json({ message: 'Authorization header missing' });
+export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+  const header = req.headers.authorization;
+  if (!header) {
+    return res.status(401).json({ message: "Missing auth header" });
+  }
 
-//   const token = authHeader.split(' ')[1]; // "Bearer <token>"
-//   if (!token) return res.status(401).json({ message: 'Token missing' });
+  const token = header.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Token missing" });
+  }
 
-//   try {
-//     const decoded = jwt.verify(token, JWT_SECRET);
-//     req.user = decoded;
-//     next();
-//   } catch (err) {
-//     return res.status(401).json({ message: 'Invalid or expired token' });
-//   }
-// };
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload & {
+      id: string;
+      email: string;
+      role?: string;
+    };
+
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      role: decoded.role,
+    };
+
+    next();
+  } catch (err) {
+    console.error("JWT verify error:", err);
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};

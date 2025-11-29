@@ -1,0 +1,30 @@
+{
+    "sourceFile": "backend/src/controllers/chatController.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1764344832527,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764345617278,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,16 @@\n       completion.choices[0]?.message?.content ||\r\n       \"Sorry, I couldn't generate a response.\";\r\n \r\n     return res.json({ reply });\r\n-  } catch (err: any) {\r\n-    console.error(\"AI Chat Error:\", err?.response?.data || err.message);\r\n-    return res.status(500).json({ error: \"AI service failed\" });\r\n+  } catch (err: unknown) {\r\n+  if (err && typeof err === \"object\" && \"response\" in err) {\r\n+    const axiosErr = err as { response?: { data?: any }; message?: string };\r\n+    console.error(\"AI Chat Error:\", axiosErr.response?.data || axiosErr.message);\r\n+  } else {\r\n+    console.error(\"AI Chat Error:\", err);\r\n   }\r\n+\r\n+  return res.status(500).json({ error: \"AI service failed\" });\r\n+}\r\n+\r\n };\r\n"
+                },
+                {
+                    "date": 1764345625256,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,10 @@\n       completion.choices[0]?.message?.content ||\r\n       \"Sorry, I couldn't generate a response.\";\r\n \r\n     return res.json({ reply });\r\n-  } catch (err: any) {\r\n+  } catch (err: unknown) {\r\n+\r\n     console.error(\"AI Chat Error:\", err?.response?.data || err.message);\r\n     return res.status(500).json({ error: \"AI service failed\" });\r\n   }\r\n };\r\n"
+                },
+                {
+                    "date": 1764345632985,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,10 @@\n       completion.choices[0]?.message?.content ||\r\n       \"Sorry, I couldn't generate a response.\";\r\n \r\n     return res.json({ reply });\r\n-  } catch (err: any) {\r\n-    console.error(\"AI Chat Error:\", err?.response?.data || err.message);\r\n-    return res.status(500).json({ error: \"AI service failed\" });\r\n-  }\r\n+  } catch (err: Error | any) {\r\n+  console.error(\"AI Chat Error:\", err.message);\r\n+  return res.status(500).json({ error: \"AI service failed\" });\r\n+}\r\n+\r\n };\r\n"
+                }
+            ],
+            "date": 1764344832527,
+            "name": "Commit-0",
+            "content": "import { Request, Response } from \"express\";\r\nimport { OpenAI } from \"openai\";\r\n\r\nconst openai = new OpenAI({\r\n  apiKey: process.env.OPENAI_API_KEY!,\r\n});\r\n\r\nexport const chatWithAI = async (req: Request, res: Response) => {\r\n  try {\r\n    const { message, history } = req.body;\r\n\r\n    if (!message) {\r\n      return res.status(400).json({ error: \"Message is required\" });\r\n    }\r\n\r\n    const messages = [\r\n      {\r\n        role: \"system\",\r\n        content:\r\n          \"You are an AI customer support assistant for a car selling platform. \" +\r\n          \"Help users find cars, answer questions about brands, prices, conditions, and general platform info.\",\r\n      },\r\n      ...(history || []),\r\n      { role: \"user\", content: message },\r\n    ];\r\n\r\n    const completion = await openai.chat.completions.create({\r\n      model: \"gpt-4.1-mini\",\r\n      messages,\r\n      max_tokens: 200,\r\n    });\r\n\r\n    const reply =\r\n      completion.choices[0]?.message?.content ||\r\n      \"Sorry, I couldn't generate a response.\";\r\n\r\n    return res.json({ reply });\r\n  } catch (err: any) {\r\n    console.error(\"AI Chat Error:\", err?.response?.data || err.message);\r\n    return res.status(500).json({ error: \"AI service failed\" });\r\n  }\r\n};\r\n"
+        }
+    ]
+}

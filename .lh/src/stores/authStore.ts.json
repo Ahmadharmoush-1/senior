@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/stores/authStore.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763154839760,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763202333781,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,27 @@\n+// src/stores/authStore.ts\r\n import { create } from \"zustand\";\r\n \r\n+export interface User {\r\n+  id: string;\r\n+  name: string;\r\n+  email: string;\r\n+  // Add more fields if your backend returns them\r\n+}\r\n+\r\n interface AuthState {\r\n   token: string | null;\r\n-  user: any | null;\r\n+  user: User | null;\r\n   setToken: (token: string | null) => void;\r\n-  setUser: (user: any | null) => void;\r\n+  setUser: (user: User | null) => void;\r\n   logout: () => void;\r\n }\r\n \r\n export const useAuthStore = create<AuthState>((set) => ({\r\n   token: null,\r\n   user: null,\r\n+\r\n   setToken: (token) => set({ token }),\r\n   setUser: (user) => set({ user }),\r\n+\r\n   logout: () => set({ token: null, user: null }),\r\n }));\r\n"
+                }
+            ],
+            "date": 1763154839760,
+            "name": "Commit-0",
+            "content": "import { create } from \"zustand\";\r\n\r\ninterface AuthState {\r\n  token: string | null;\r\n  user: any | null;\r\n  setToken: (token: string | null) => void;\r\n  setUser: (user: any | null) => void;\r\n  logout: () => void;\r\n}\r\n\r\nexport const useAuthStore = create<AuthState>((set) => ({\r\n  token: null,\r\n  user: null,\r\n  setToken: (token) => set({ token }),\r\n  setUser: (user) => set({ user }),\r\n  logout: () => set({ token: null, user: null }),\r\n}));\r\n"
+        }
+    ]
+}

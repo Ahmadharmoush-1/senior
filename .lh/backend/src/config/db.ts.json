@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 7,
+            "activePatchIndex": 10,
             "patches": [
                 {
                     "date": 1761149450434,
@@ -36,6 +36,18 @@
                 {
                     "date": 1762376165178,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,15 @@\n-import mongoose from 'mongoose';\r\n-import dotenv from 'dotenv';\r\n-dotenv.config();\r\n+import mongoose from \"mongoose\";\r\n \r\n+const connectDB = async () => {\r\n+  console.log(\"⏳ Connecting to MongoDB...\");\r\n \r\n-const MONGO_URI = process.env.MONGO_URI || '';\r\n+  try {\r\n+    await mongoose.connect(process.env.MONGO_URI!);\r\n+    console.log(\"✅ MongoDB connected successfully\");\r\n+  } catch (error) {\r\n+    console.error(\"❌ MongoDB connection error:\", error);\r\n+    process.exit(1);\r\n+  }\r\n+};\r\n\\ No newline at end of file\n \r\n-\r\n-export const connectDB = async () => {\r\n-try {\r\n-await mongoose.connect(MONGO_URI);\r\n-console.log('MongoDB connected');\r\n-} catch (err) {\r\n-console.error('MongoDB connection error:', err);\r\n-process.exit(1);\r\n-}\r\n-};\n+export default connectDB;\r\n"
+                },
+                {
+                    "date": 1763630268444,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,16 @@\n+// src/config/db.ts\r\n+import mongoose from \"mongoose\";\r\n+\r\n+const connectDB = async () => {\r\n+  console.log(\"⏳ Connecting to MongoDB...\");\r\n+\r\n+  try {\r\n+    await mongoose.connect(process.env.MONGO_URI!);\r\n+    console.log(\"✅ MongoDB connected successfully\");\r\n+  } catch (error) {\r\n+    console.error(\"❌ MongoDB connection error:\", error);\r\n+    process.exit(1);\r\n+  }\r\n+};\r\n+\r\n+export default connectDB;\r\n"
+                },
+                {
+                    "date": 1763651719968,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,31 +1,11 @@\n-// src/config/db.ts\r\n import mongoose from \"mongoose\";\r\n \r\n-const connectDB = async () => {\r\n-  console.log(\"⏳ Connecting to MongoDB...\");\r\n-\r\n+export const connectDB = async () => {\r\n   try {\r\n     await mongoose.connect(process.env.MONGO_URI!);\r\n-    console.log(\"✅ MongoDB connected successfully\");\r\n+    console.log(\"✅ MongoDB Connected\");\r\n   } catch (error) {\r\n-    console.error(\"❌ MongoDB connection error:\", error);\r\n+    console.error(\"❌ MongoDB Error:\", error);\r\n     process.exit(1);\r\n   }\r\n };\r\n-\r\n-export default connectDB;\r\n-import mongoose from \"mongoose\";\r\n-\r\n-const connectDB = async () => {\r\n-  console.log(\"⏳ Connecting to MongoDB...\");\r\n-\r\n-  try {\r\n-    await mongoose.connect(process.env.MONGO_URI!);\r\n-    console.log(\"✅ MongoDB connected successfully\");\r\n-  } catch (error) {\r\n-    console.error(\"❌ MongoDB connection error:\", error);\r\n-    process.exit(1);\r\n-  }\r\n\\ No newline at end of file\n-};\r\n-\r\n-export default connectDB;\n"
+                },
+                {
+                    "date": 1763652607564,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,13 @@\n import mongoose from \"mongoose\";\r\n \r\n-export const connectDB = async () => {\r\n+const connectDB = async () => {\r\n   try {\r\n     await mongoose.connect(process.env.MONGO_URI!);\r\n-    console.log(\"✅ MongoDB Connected\");\r\n-  } catch (error) {\r\n-    console.error(\"❌ MongoDB Error:\", error);\r\n+    console.log(\"✅ MongoDB connected\");\r\n+  } catch (err) {\r\n+    console.error(\"❌ MongoDB connection error:\", err);\r\n     process.exit(1);\r\n   }\r\n };\r\n+\r\n+export default connectDB;\r\n"
                 }
             ],
             "date": 1761149450434,

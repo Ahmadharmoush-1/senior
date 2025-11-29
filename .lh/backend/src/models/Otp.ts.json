@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/models/Otp.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1762459185329,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1762459185329,
+            "name": "Commit-0",
+            "content": "import mongoose from \"mongoose\";\r\n\r\nconst otpSchema = new mongoose.Schema({\r\n  email: { type: String, required: true },\r\n  otp: { type: String, required: true },\r\n  createdAt: { type: Date, default: Date.now, expires: 300 }, // expires after 5 min\r\n});\r\n\r\nexport const Otp = mongoose.model(\"Otp\", otpSchema);\r\n"
+        }
+    ]
+}

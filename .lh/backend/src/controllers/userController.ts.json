@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/controllers/userController.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764353543150,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764353543150,
+            "name": "Commit-0",
+            "content": "// src/controllers/userController.ts\r\nimport type { Response } from \"express\";\r\nimport mongoose from \"mongoose\";\r\nimport { User } from \"../models/User\";\r\nimport type { AuthRequest } from \"../middleware/authMiddleware\";\r\n\r\nexport const syncFavorites = async (req: AuthRequest, res: Response) => {\r\n  try {\r\n    const userId = req.user?.id;\r\n    const { carIds } = req.body as { carIds?: string[] };\r\n\r\n    if (!userId) {\r\n      return res.status(401).json({ message: \"Unauthorized\" });\r\n    }\r\n\r\n    if (!carIds || !Array.isArray(carIds)) {\r\n      return res.status(400).json({ message: \"carIds must be an array\" });\r\n    }\r\n\r\n    const user = await User.findById(userId);\r\n    if (!user) return res.status(404).json({ message: \"User not found\" });\r\n\r\n    const objectIds = carIds.map((id) => new mongoose.Types.ObjectId(id));\r\n    user.favorites = objectIds;\r\n\r\n    await user.save();\r\n\r\n    return res.json({\r\n      success: true,\r\n      favorites: user.favorites.map((id) => id.toString()),\r\n    });\r\n  } catch (err) {\r\n    console.error(\"syncFavorites error:\", err);\r\n    return res.status(500).json({ message: \"Server error\" });\r\n  }\r\n};\r\n\r\nexport const getFavorites = async (req: AuthRequest, res: Response) => {\r\n  try {\r\n    const userId = req.user?.id;\r\n\r\n    if (!userId) {\r\n      return res.status(401).json({ message: \"Unauthorized\" });\r\n    }\r\n\r\n    const user = await User.findById(userId).populate(\"favorites\");\r\n\r\n    if (!user) return res.status(404).json({ message: \"User not found\" });\r\n\r\n    return res.json({ favorites: user.favorites });\r\n  } catch (err) {\r\n    console.error(\"getFavorites error:\", err);\r\n    return res.status(500).json({ message: \"Server error\" });\r\n  }\r\n};\r\n"
+        }
+    ]
+}

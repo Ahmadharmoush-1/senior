@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/pages/OtpPage.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1762459277120,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1762459277120,
+            "name": "Commit-0",
+            "content": "import { useState } from \"react\";\r\n\r\nconst OtpPage = () => {\r\n  const [email, setEmail] = useState(\"\");\r\n  const [otp, setOtp] = useState(\"\");\r\n  const [sent, setSent] = useState(false);\r\n\r\n  const sendOtp = async () => {\r\n    const res = await fetch(\"http://localhost:5000/api/otp/send\", {\r\n      method: \"POST\",\r\n      headers: { \"Content-Type\": \"application/json\" },\r\n      body: JSON.stringify({ email }),\r\n    });\r\n    const data = await res.json();\r\n    alert(data.message);\r\n    if (res.ok) setSent(true);\r\n  };\r\n\r\n  const verifyOtp = async () => {\r\n    const res = await fetch(\"http://localhost:5000/api/otp/verify\", {\r\n      method: \"POST\",\r\n      headers: { \"Content-Type\": \"application/json\" },\r\n      body: JSON.stringify({ email, otp }),\r\n    });\r\n    const data = await res.json();\r\n    alert(data.message);\r\n  };\r\n\r\n  return (\r\n    <div className=\"flex flex-col items-center gap-4 mt-10\">\r\n      {!sent ? (\r\n        <>\r\n          <h2 className=\"text-xl font-bold\">Send OTP</h2>\r\n          <input\r\n            type=\"email\"\r\n            value={email}\r\n            onChange={(e) => setEmail(e.target.value)}\r\n            placeholder=\"Enter your email\"\r\n            className=\"border p-2 rounded\"\r\n          />\r\n          <button onClick={sendOtp} className=\"bg-blue-500 text-white p-2 rounded\">\r\n            Send OTP\r\n          </button>\r\n        </>\r\n      ) : (\r\n        <>\r\n          <h2 className=\"text-xl font-bold\">Verify OTP</h2>\r\n          <input\r\n            type=\"text\"\r\n            value={otp}\r\n            onChange={(e) => setOtp(e.target.value)}\r\n            placeholder=\"Enter the 6-digit OTP\"\r\n            className=\"border p-2 rounded\"\r\n          />\r\n          <button onClick={verifyOtp} className=\"bg-green-500 text-white p-2 rounded\">\r\n            Verify OTP\r\n          </button>\r\n        </>\r\n      )}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default OtpPage;\r\n"
+        }
+    ]
+}

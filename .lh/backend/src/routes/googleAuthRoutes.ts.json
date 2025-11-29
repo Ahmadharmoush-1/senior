@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/routes/googleAuthRoutes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763050887890,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763050887890,
+            "name": "Commit-0",
+            "content": "import express from \"express\";\r\nimport passport from \"passport\";\r\n\r\nconst router = express.Router();\r\n\r\nrouter.get(\r\n  \"/google\",\r\n  passport.authenticate(\"google\", { scope: [\"profile\", \"email\"] })\r\n);\r\n\r\nrouter.get(\r\n  \"/google/callback\",\r\n  passport.authenticate(\"google\", { failureRedirect: \"/login\" }),\r\n  (req, res) => {\r\n    const user = req.user;\r\n    res.redirect(\r\n      `http://localhost:8081/google-callback?user=${encodeURIComponent(\r\n        JSON.stringify(user)\r\n      )}`\r\n    );\r\n  }\r\n);\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

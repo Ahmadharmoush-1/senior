@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/routes/userRoutes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764353561005,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764353561005,
+            "name": "Commit-0",
+            "content": "// src/routes/userRoutes.ts\r\nimport { Router } from \"express\";\r\nimport { verifyToken } from \"../middleware/authMiddleware\";\r\nimport {\r\n  syncFavorites,\r\n  getFavorites,\r\n} from \"../controllers/userController\";\r\n\r\nconst router = Router();\r\n\r\n// Sync all favorites from frontend → DB\r\nrouter.post(\"/favorites/sync\", verifyToken, syncFavorites);\r\n\r\n// (Optional) Get favorites from DB\r\nrouter.get(\"/favorites\", verifyToken, getFavorites);\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}
