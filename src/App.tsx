@@ -25,6 +25,7 @@ import EditCar from "./pages/EditCar";
 
 /* ⭐ IMPORT CHATBOT ⭐ */
 import { ChatBot } from "@/components/ui/ChatBot";
+// import AIChat from "./pages/AIChat";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,8 @@ const App = () => {
                     <Route path="/sell" element={<SellCar />} />
                     <Route path="/edit-car/:id" element={<EditCar />} />
                     <Route path="/compare" element={<Compare />} />
+                    {/* <Route path="/ai" element={<AIChat />} /> */}
+
                     <Route path="/favorites" element={<Favorites />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>

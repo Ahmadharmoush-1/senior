@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/src/controllers/aiCompareController.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1764589742626,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1764589742626,
+            "name": "Commit-0",
+            "content": "import { Request, Response } from \"express\";\r\nimport { openrouter } from \"../services/openrouterService\";\r\n\r\nexport const compareCars = async (req: Request, res: Response) => {\r\n  try {\r\n    const { carA, carB } = req.body;\r\n\r\n    const prompt = `\r\nYou are a professional car analyst. Compare the following two cars\r\nand provide an objective comparison.\r\n\r\nCar A:\r\nBrand: ${carA.brand}\r\nModel: ${carA.model}\r\nYear: ${carA.year}\r\nMileage: ${carA.mileage}\r\nPrice: ${carA.price}\r\nCondition: ${carA.condition}\r\n\r\nCar B:\r\nBrand: ${carB.brand}\r\nModel: ${carB.model}\r\nYear: ${carB.year}\r\nMileage: ${carB.mileage}\r\nPrice: ${carB.price}\r\nCondition: ${carB.condition}\r\n\r\nRespond ONLY in JSON format like this:\r\n\r\n{\r\n  \"betterCar\": \"A or B\",\r\n  \"reason\": \"string\",\r\n  \"detailedComparison\": {\r\n    \"performance\": \"string\",\r\n    \"reliability\": \"string\",\r\n    \"fuelEconomy\": \"string\",\r\n    \"comfort\": \"string\",\r\n    \"valueForMoney\": \"string\"\r\n  }\r\n}\r\n`;\r\n\r\n    const response = await openrouter.post(\"/chat/completions\", {\r\n      model: process.env.OPENROUTER_MODEL,\r\n      messages: [{ role: \"user\", content: prompt }],\r\n      response_format: { type: \"json_object\" }\r\n    });\r\n\r\n    const content = response.data.choices?.[0]?.message?.content ?? \"{}\";\r\n    const result = JSON.parse(content);\r\n\r\n    return res.json(result);\r\n\r\n  } catch (error) {\r\n    console.error(\"AI Compare Error:\", error);\r\n    res.status(500).json({ message: \"AI comparison failed.\" });\r\n  }\r\n};\r\n"
+        }
+    ]
+}

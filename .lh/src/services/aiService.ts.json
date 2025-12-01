@@ -1,0 +1,42 @@
+{
+    "sourceFile": "src/services/aiService.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 6,
+            "patches": [
+                {
+                    "date": 1764431634497,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764509267502,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,11 @@\n-import axios from \"@/lib/axios\";\r\n+import axios from \"../lib/axios\";\r\n \r\n-export async function askAI(message: string) {\r\n-  const res = await axios.post(\"/chat\", { message });\r\n-  return res.data.reply;\r\n-}\r\n+export const predictCarPrice = async (carData: any) => {\r\n+  try {\r\n+    const res = await axios.post(\"/ai/price\", carData);\r\n+    return res.data;\r\n+  } catch (err) {\r\n+    console.error(\"AI Price Prediction Error:\", err);\r\n+    throw err;\r\n+  }\r\n+};\r\n"
+                },
+                {
+                    "date": 1764509607710,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,12 @@\n import axios from \"../lib/axios\";\r\n+import type { AiPriceInput, AiPriceResult } from \"./types\"; // you'll create this\r\n \r\n-export const predictCarPrice = async (carData: any) => {\r\n+export const predictCarPrice = async (\r\n+  carData: AiPriceInput\r\n+): Promise<AiPriceResult> => {\r\n   try {\r\n-    const res = await axios.post(\"/ai/price\", carData);\r\n+    const res = await axios.post<AiPriceResult>(\"/ai/price\", carData);\r\n     return res.data;\r\n   } catch (err) {\r\n     console.error(\"AI Price Prediction Error:\", err);\r\n     throw err;\r\n"
+                },
+                {
+                    "date": 1764509618735,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,9 @@\n import axios from \"../lib/axios\";\r\n-import type { AiPriceInput, AiPriceResult } from \"./types\"; // you'll create this\r\n \r\n-export const predictCarPrice = async (\r\n-  carData: AiPriceInput\r\n-): Promise<AiPriceResult> => {\r\n+export const predictCarPrice = async (carData: any) => {\r\n   try {\r\n-    const res = await axios.post<AiPriceResult>(\"/ai/price\", carData);\r\n+    const res = await axios.post(\"/ai/price\", carData);\r\n     return res.data;\r\n   } catch (err) {\r\n     console.error(\"AI Price Prediction Error:\", err);\r\n     throw err;\r\n"
+                },
+                {
+                    "date": 1764509643720,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n-import axios from \"../lib/axios\";\r\n-\r\n-export const predictCarPrice = async (carData: any) => {\r\n+export const predictCarPrice = async (\r\n+  carData: AiPriceInput\r\n+): Promise<AiPriceResult> => {\r\n   try {\r\n-    const res = await axios.post(\"/ai/price\", carData);\r\n+    const res = await axios.post<AiPriceResult>(\"/ai/price\", carData);\r\n     return res.data;\r\n   } catch (err) {\r\n     console.error(\"AI Price Prediction Error:\", err);\r\n     throw err;\r\n"
+                },
+                {
+                    "date": 1764509648880,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,14 @@\n import axios from \"../lib/axios\";\r\n \r\n-export const predictCarPrice = async (carData: any) => {\r\n+export const predictCarPrice = async (\r\n+  carData: AiPriceInput\r\n+): Promise<AiPriceResult> => {\r\n   try {\r\n-    const res = await axios.post(\"/ai/price\", carData);\r\n+    const res = await axios.post<AiPriceResult>(\"/ai/price\", carData);\r\n     return res.data;\r\n   } catch (err) {\r\n     console.error(\"AI Price Prediction Error:\", err);\r\n     throw err;\r\n   }\r\n };\r\n+\r\n"
+                },
+                {
+                    "date": 1764509661194,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,29 @@\n+import axios from \"../lib/axios\";\r\n+\r\n+type AiPriceInput = {\r\n+  brand: string;\r\n+  model: string;\r\n+  year: number | string;\r\n+  mileage: number | string;\r\n+  condition: string;\r\n+};\r\n+\r\n+type AiPriceResult = {\r\n+  minPrice: number;\r\n+  maxPrice: number;\r\n+  recommendedPrice: number;\r\n+  marketSummary: string;\r\n+};\r\n+\r\n+export const predictCarPrice = async (\r\n+  carData: AiPriceInput\r\n+): Promise<AiPriceResult> => {\r\n+  try {\r\n+    const res = await axios.post<AiPriceResult>(\"/ai/price\", carData);\r\n+    return res.data;\r\n+  } catch (err) {\r\n+    console.error(\"AI Price Prediction Error:\", err);\r\n+    throw err;\r\n+  }\r\n+};\r\n+\r\n"
+                }
+            ],
+            "date": 1764431634497,
+            "name": "Commit-0",
+            "content": "import axios from \"@/lib/axios\";\r\n\r\nexport async function askAI(message: string) {\r\n  const res = await axios.post(\"/chat\", { message });\r\n  return res.data.reply;\r\n}\r\n"
+        }
+    ]
+}

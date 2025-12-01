@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/src/routes/aiRoutes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1764509238496,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764590982474,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,18 @@\n+// src/routes/aiRoutes.ts\r\n import express from \"express\";\r\n import { predictPrice } from \"../controllers/aiController\";\r\n+import { compareCars } from \"../controllers/aiCompareController\";\r\n+import { estimateMaintenance } from \"../controllers/aiMaintenanceController\";\r\n \r\n const router = express.Router();\r\n \r\n+// AI Price\r\n router.post(\"/price\", predictPrice);\r\n \r\n+// AI Car Comparison\r\n+router.post(\"/compare\", compareCars);\r\n+\r\n+// AI Maintenance\r\n+router.post(\"/maintenance\", estimateMaintenance);\r\n+\r\n export default router;\r\n"
+                }
+            ],
+            "date": 1764509238496,
+            "name": "Commit-0",
+            "content": "import express from \"express\";\r\nimport { predictPrice } from \"../controllers/aiController\";\r\n\r\nconst router = express.Router();\r\n\r\nrouter.post(\"/price\", predictPrice);\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

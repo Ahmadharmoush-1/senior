@@ -40,7 +40,8 @@ const CarDetail = () => {
   const { user } = useAuth();
 
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { isInComparison, addToComparison, removeFromComparison } = useComparison();
+  const { isInComparison, addToComparison, removeFromComparison } =
+    useComparison();
 
   const [car, setCar] = useState<CarType | null>(null);
   const [similarCars, setSimilarCars] = useState<CarType[]>([]);
@@ -64,7 +65,6 @@ const CarDetail = () => {
         setLoading(false);
       }
     };
-
     fetchCar();
   }, [id]);
 
@@ -87,46 +87,52 @@ const CarDetail = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold">Loading car details...</h1>
+      <div className="container mx-auto px-3 py-20 text-center">
+        <h1 className="text-xl font-bold">Loading car details...</h1>
       </div>
     );
   }
 
   if (!car) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold">Car Not Found</h1>
-        <Button onClick={() => navigate("/")}>Back to Dashboard</Button>
+      <div className="container mx-auto px-3 py-20 text-center">
+        <h1 className="text-xl font-bold">Car Not Found</h1>
+        <Button size="sm" onClick={() => navigate("/")}>
+          Back to Dashboard
+        </Button>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 py-6">
+
         <Button
           variant="ghost"
+          size="sm"
           onClick={() => navigate("/")}
-          className="mb-6 gap-2"
+          className="mb-4 gap-1 text-sm"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to Listings
+          <ArrowLeft className="h-4 w-4" /> Back
         </Button>
 
-        {/* ✅ OWNER ACTIONS */}
+        {/* OWNER ACTIONS */}
         {isOwner && (
           <div className="flex gap-2 mb-4">
-            <Button onClick={() => navigate(`/edit-car/${car.id}`)} className="gap-2">
-              <Edit className="h-4 w-4" /> Edit Listing
+            <Button size="sm" onClick={() => navigate(`/edit-car/${car.id}`)} className="gap-1 text-sm">
+              <Edit className="h-4 w-4" /> Edit
             </Button>
-            <Button variant="destructive" onClick={handleDelete} className="gap-2">
-              <Trash2 className="h-4 w-4" /> Delete Listing
+            <Button size="sm" variant="destructive" onClick={handleDelete} className="gap-1 text-sm">
+              <Trash2 className="h-4 w-4" /> Delete
             </Button>
           </div>
         )}
 
-        <div className="mb-6 flex gap-2">
+        {/* ACTION BUTTONS */}
+        <div className="mb-4 flex gap-2">
           <Button
+            size="sm"
             variant={isFavorite(car.id) ? "default" : "outline"}
             onClick={() => {
               toggleFavorite(car.id);
@@ -136,13 +142,14 @@ const CarDetail = () => {
                   : "Added to favorites",
               });
             }}
-            className="gap-2"
+            className="gap-2 text-xs"
           >
-            <Heart className={`h-4 w-4 ${isFavorite(car.id) ? "fill-current" : ""}`} />
+            <Heart className="h-4 w-4" />
             {isFavorite(car.id) ? "Saved" : "Save"}
           </Button>
 
           <Button
+            size="sm"
             variant={isInComparison(car.id) ? "default" : "outline"}
             onClick={() => {
               if (isInComparison(car.id)) {
@@ -151,19 +158,20 @@ const CarDetail = () => {
               } else {
                 const added = addToComparison(car);
                 toast({
-                  title: added ? "Added to comparison" : "Comparison limit reached",
+                  title: added ? "Added to comparison" : "Comparison full",
                 });
               }
             }}
-            className="gap-2"
+            className="gap-2 text-xs"
           >
             <GitCompare className="h-4 w-4" />
             {isInComparison(car.id) ? "In Comparison" : "Compare"}
           </Button>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* LEFT SIDE */}
+          <div className="lg:col-span-2 space-y-4">
             <Card className="overflow-hidden">
               <ImageCarousel images={car.images} alt={car.title} />
             </Card>
@@ -172,24 +180,25 @@ const CarDetail = () => {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-3xl">{car.title}</CardTitle>
-                    <p className="mt-2 text-2xl font-bold text-primary">
+                    <CardTitle className="text-xl">{car.title}</CardTitle>
+                    <p className="mt-1 text-lg font-bold text-primary">
                       ${car.price.toLocaleString()}
                     </p>
                   </div>
                   <Badge
                     variant={car.condition === "new" ? "default" : "outline"}
-                    className="capitalize text-base px-4 py-1"
+                    className="capitalize text-xs px-2 py-1"
                   >
                     {car.condition}
                   </Badge>
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <CardContent className="space-y-4 text-sm">
+
+                <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="h-5 w-5" />
+                    <Calendar className="h-4 w-4" />
                     <div>
                       <p className="text-xs">Year</p>
                       <p className="font-semibold">{car.year}</p>
@@ -197,7 +206,7 @@ const CarDetail = () => {
                   </div>
 
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Gauge className="h-5 w-5" />
+                    <Gauge className="h-4 w-4" />
                     <div>
                       <p className="text-xs">Mileage</p>
                       <p className="font-semibold">{car.mileage.toLocaleString()} mi</p>
@@ -208,42 +217,44 @@ const CarDetail = () => {
                 <Separator />
 
                 <div>
-                  <h3 className="font-semibold text-lg mb-3">Description</h3>
-                  <p className="text-muted-foreground">{car.description}</p>
+                  <h3 className="font-semibold text-base mb-2">Description</h3>
+                  <p className="text-muted-foreground text-sm">{car.description}</p>
                 </div>
 
                 <Separator />
 
                 <div>
-                  <h3 className="font-semibold text-lg mb-3">Listed On</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <h3 className="font-semibold text-base mb-2">Listed On</h3>
+                  <div className="flex flex-wrap gap-1">
                     {car.platform.map((p, i) => (
-                      <Badge key={i} variant="secondary" className="px-3 py-1">
+                      <Badge key={i} variant="secondary" className="px-2 py-1 text-xs">
                         {p.name}
                       </Badge>
                     ))}
                   </div>
                 </div>
+
               </CardContent>
             </Card>
           </div>
 
-          <div className="lg:col-span-1 space-y-6">
-            <Card className="sticky top-24">
+          {/* RIGHT SIDE: SELLER CARD */}
+          <div className="lg:col-span-1 space-y-4">
+            <Card className="sticky top-20">
               <CardHeader>
-                <CardTitle>Seller Information</CardTitle>
+                <CardTitle className="text-base">Seller Information</CardTitle>
               </CardHeader>
 
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 text-sm">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
+                  <Avatar className="h-10 w-10">
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       {car.seller.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold">{car.seller.name}</p>
-                    <p className="text-sm text-muted-foreground">Private Seller</p>
+                    <p className="font-semibold text-sm">{car.seller.name}</p>
+                    <p className="text-xs text-muted-foreground">Private Seller</p>
                   </div>
                 </div>
 
@@ -251,36 +262,38 @@ const CarDetail = () => {
 
                 <a
                   href={`mailto:${car.seller.email}`}
-                  className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
+                  className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
                 >
                   <Mail className="h-4 w-4" /> {car.seller.email}
                 </a>
 
                 <a
                   href={`tel:${car.seller.phone}`}
-                  className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
+                  className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
                 >
                   <Phone className="h-4 w-4" /> {car.seller.phone || "N/A"}
                 </a>
 
                 <Separator />
 
-                <Button className="w-full">Contact Seller</Button>
+                <Button size="sm" className="w-full text-sm">Contact Seller</Button>
               </CardContent>
             </Card>
           </div>
         </div>
 
+        {/* SIMILAR CARS */}
         {similarCars.length > 0 && (
-          <section className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Similar Cars You May Like</h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <section className="mt-10">
+            <h2 className="text-xl font-bold mb-4">Similar Cars</h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {similarCars.map((c) => (
-                <CarCard key={c.id} car={c} />
+                <CarCard key={c.id} car={c}  />
               ))}
             </div>
           </section>
         )}
+
       </div>
     </div>
   );

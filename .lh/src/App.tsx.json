@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1759428094349,
@@ -28,6 +28,22 @@
                 {
                     "date": 1764345279404,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,14 +20,13 @@\n import SellCar from \"./pages/SellCar\";\r\n import Compare from \"./pages/Compare\";\r\n import Favorites from \"./pages/Favorites\";\r\n import NotFound from \"./pages/NotFound\";\r\n+import EditCar from \"./pages/EditCar\";\r\n \r\n-/* ⭐ NEW IMPORT FOR EDIT PAGE ⭐ */\r\n-import EditCar from \"./pages/EditCar\";\r\n+/* ⭐ IMPORT CHATBOT ⭐ */\r\n import { ChatBot } from \"@/components/ui/ChatBot\";\r\n \r\n-\r\n const queryClient = new QueryClient();\r\n \r\n const App = () => {\r\n   const [showSplash, setShowSplash] = useState(() => {\r\n@@ -64,18 +63,18 @@\n                     <Route path=\"/car/:id\" element={<CarDetail />} />\r\n                     <Route path=\"/auth\" element={<Auth />} />\r\n                     <Route path=\"/profile\" element={<Profile />} />\r\n                     <Route path=\"/sell\" element={<SellCar />} />\r\n-\r\n-                    {/* ⭐ NEW EDIT ROUTE ⭐ */}\r\n                     <Route path=\"/edit-car/:id\" element={<EditCar />} />\r\n-\r\n                     <Route path=\"/compare\" element={<Compare />} />\r\n                     <Route path=\"/favorites\" element={<Favorites />} />\r\n-\r\n                     <Route path=\"*\" element={<NotFound />} />\r\n                   </Routes>\r\n                 </BrowserRouter>\r\n+\r\n+                {/* ⭐ AI CHATBOT FLOATING BUTTON ⭐ */}\r\n+                <ChatBot />\r\n+\r\n               </ComparisonProvider>\r\n             </FavoritesProvider>\r\n           </AuthProvider>\r\n         </ThemeProvider>\r\n"
+                },
+                {
+                    "date": 1764431699889,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -65,8 +65,10 @@\n                     <Route path=\"/profile\" element={<Profile />} />\r\n                     <Route path=\"/sell\" element={<SellCar />} />\r\n                     <Route path=\"/edit-car/:id\" element={<EditCar />} />\r\n                     <Route path=\"/compare\" element={<Compare />} />\r\n+                    <Route path=\"/ai\" element={<AIChat />} />\r\n+\r\n                     <Route path=\"/favorites\" element={<Favorites />} />\r\n                     <Route path=\"*\" element={<NotFound />} />\r\n                   </Routes>\r\n                 </BrowserRouter>\r\n"
+                },
+                {
+                    "date": 1764431705502,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,9 @@\n import EditCar from \"./pages/EditCar\";\r\n \r\n /* ⭐ IMPORT CHATBOT ⭐ */\r\n import { ChatBot } from \"@/components/ui/ChatBot\";\r\n+import AIChat from \"./pages/AIChat\";\r\n \r\n const queryClient = new QueryClient();\r\n \r\n const App = () => {\r\n"
+                },
+                {
+                    "date": 1764511468118,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n import EditCar from \"./pages/EditCar\";\r\n \r\n /* ⭐ IMPORT CHATBOT ⭐ */\r\n import { ChatBot } from \"@/components/ui/ChatBot\";\r\n-import AIChat from \"./pages/AIChat\";\r\n+// import AIChat from \"./pages/AIChat\";\r\n \r\n const queryClient = new QueryClient();\r\n \r\n const App = () => {\r\n"
+                },
+                {
+                    "date": 1764511645273,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,9 +66,9 @@\n                     <Route path=\"/profile\" element={<Profile />} />\r\n                     <Route path=\"/sell\" element={<SellCar />} />\r\n                     <Route path=\"/edit-car/:id\" element={<EditCar />} />\r\n                     <Route path=\"/compare\" element={<Compare />} />\r\n-                    <Route path=\"/ai\" element={<AIChat />} />\r\n+                    {/* <Route path=\"/ai\" element={<AIChat />} /> */}\r\n \r\n                     <Route path=\"/favorites\" element={<Favorites />} />\r\n                     <Route path=\"*\" element={<NotFound />} />\r\n                   </Routes>\r\n"
                 }
             ],
             "date": 1759428094349,

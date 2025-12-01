@@ -1,11 +1,14 @@
-// src/pages/SellCar.tsx
+// src/pages/SellCar.tsx (MOBILE OPTIMIZED)
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+
 import {
   Card,
   CardContent,
@@ -13,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import {
   Select,
   SelectContent,
@@ -20,11 +24,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Upload, X, Link2, Loader2 } from "lucide-react";
+
+import {
+  ArrowLeft,
+  Upload,
+  X,
+  Link2,
+  Loader2,
+} from "lucide-react";
+
 import { createCar } from "@/api/cars";
 import axios from "axios";
+import { predictCarPrice } from "@/services/aiService";
 
 const platforms = [
   { id: "edmunds", name: "Edmunds" },
@@ -34,10 +48,8 @@ const platforms = [
   { id: "cars", name: "Cars.com" },
 ];
 
-// ✅ CHANGE THIS if your backend route is different
 const FB_SCRAPE_URL = "http://127.0.0.1:5000/api/scrape/facebook";
 
-// Expected response shape from backend scraper
 type FacebookScrapeResult = Partial<{
   brand: string;
   model: string;
@@ -46,11 +58,16 @@ type FacebookScrapeResult = Partial<{
   mileage: number | string;
   condition: "new" | "used" | "certified" | string;
   description: string;
-  // images as URLs from Facebook
   images: string[];
-  // optional platforms array from scraper
   platforms: string[];
 }>;
+
+type AiPriceResult = {
+  minPrice: number;
+  maxPrice: number;
+  recommendedPrice: number;
+  marketSummary: string;
+};
 
 const SellCar = () => {
   const { user } = useAuth();
@@ -73,9 +90,11 @@ const SellCar = () => {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  // ✅ Facebook import state
   const [fbUrl, setFbUrl] = useState("");
   const [isImportingFb, setIsImportingFb] = useState(false);
+
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResult, setAiResult] = useState<AiPriceResult | null>(null);
 
   useEffect(() => {
     if (!user) navigate("/auth?mode=login");
@@ -83,18 +102,20 @@ const SellCar = () => {
 
   if (!user) return null;
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  // --------------------------
+  // Helpers
+  // --------------------------
 
-  const handlePlatformToggle = (platformId: string) => {
+  const handleInputChange = (field: string, value: string) =>
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
+  const handlePlatformToggle = (platformId: string) =>
     setFormData((prev) => ({
       ...prev,
       platforms: prev.platforms.includes(platformId)
         ? prev.platforms.filter((p) => p !== platformId)
         : [...prev.platforms, platformId],
     }));
-  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -105,11 +126,6 @@ const SellCar = () => {
 
     const previews = newFiles.map((file) => URL.createObjectURL(file));
     setSelectedImages((prev) => [...prev, ...previews]);
-
-    toast({
-      title: "Images added",
-      description: `${newFiles.length} image(s) ready for upload.`,
-    });
   };
 
   const removeImage = (index: number) => {
@@ -117,42 +133,65 @@ const SellCar = () => {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleNext = () => {
-    if (step === 1) {
-      if (
-        !formData.brand ||
-        !formData.model ||
-        !formData.year ||
-        !formData.condition
-      ) {
-        return toast({
-          title: "Missing information",
-          description: "Please fill in all required fields.",
-          variant: "destructive",
-        });
-      }
+  // --------------------------
+  // AI PRICE PREDICTION
+  // --------------------------
+  const handleAIPredict = async () => {
+    if (
+      !formData.brand ||
+      !formData.model ||
+      !formData.year ||
+      !formData.mileage ||
+      !formData.condition
+    ) {
+      return toast({
+        title: "Missing info",
+        description: "Fill all car fields first.",
+        variant: "destructive",
+      });
     }
 
-    if (step === 2) {
-      if (!formData.price || !formData.mileage) {
-        return toast({
-          title: "Missing information",
-          description: "Please fill in all required fields.",
-          variant: "destructive",
-        });
-      }
-    }
+    try {
+      setAiLoading(true);
 
-    setStep((prev) => prev + 1);
+      const result = await predictCarPrice({
+        brand: formData.brand,
+        model: formData.model,
+        year: formData.year,
+        mileage: formData.mileage,
+        condition: formData.condition,
+      });
+
+      setAiResult(result);
+
+      setFormData((prev) => ({
+        ...prev,
+        price: String(result.recommendedPrice),
+      }));
+
+      toast({
+        title: "AI Prediction Ready",
+        description: "Price has been recommended automatically.",
+      });
+    } catch (error) {
+      toast({
+        title: "AI Error",
+        description: "Could not estimate price.",
+        variant: "destructive",
+      });
+    } finally {
+      setAiLoading(false);
+    }
   };
 
-  // ✅ Import from Facebook Marketplace
+  // --------------------------
+  // FACEBOOK IMPORT
+  // --------------------------
   const handleImportFromFacebook = async () => {
     if (!fbUrl.trim()) {
       return toast({
         title: "Missing URL",
-        description: "Paste a Facebook Marketplace car link first.",
-        variant: "destructive",
+        description: "Paste Facebook car link first.",
       });
     }
 
@@ -169,25 +208,15 @@ const SellCar = () => {
         ...prev,
         brand: data.brand ?? prev.brand,
         model: data.model ?? prev.model,
-        year:
-          data.year !== undefined && data.year !== null
-            ? String(data.year)
-            : prev.year,
-        price:
-          data.price !== undefined && data.price !== null
-            ? String(data.price)
-            : prev.price,
-        mileage:
-          data.mileage !== undefined && data.mileage !== null
-            ? String(data.mileage)
-            : prev.mileage,
+        year: data.year ? String(data.year) : prev.year,
+        price: data.price ? String(data.price) : prev.price,
+        mileage: data.mileage ? String(data.mileage) : prev.mileage,
         condition:
-  data.condition === "new" ||
-  data.condition === "used" ||
-  data.condition === "certified"
-    ? data.condition
-    : prev.condition,
-
+          data.condition === "new" ||
+          data.condition === "used" ||
+          data.condition === "certified"
+            ? data.condition
+            : prev.condition,
         description: data.description ?? prev.description,
         platforms:
           data.platforms && data.platforms.length > 0
@@ -197,34 +226,21 @@ const SellCar = () => {
             : [...prev.platforms, "facebook"],
       }));
 
-      // show imported image URLs as previews
       if (data.images?.length) {
-        setSelectedImages((prevImgs) => [
+        setSelectedImages((prev) => [
           ...data.images!,
-          ...prevImgs.filter((x) => !data.images!.includes(x)),
+          ...prev.filter((i) => !data.images!.includes(i)),
         ]);
-
-        toast({
-          title: "Facebook images imported",
-          description:
-            "Images were added as previews. Please upload at least one real image before listing.",
-        });
       }
 
       toast({
-        title: "Imported from Facebook",
-        description: "Fields auto-filled successfully.",
+        title: "Imported",
+        description: "Fields have been auto-filled.",
       });
-    } catch (err: unknown) {
-      const message =
-        err && typeof err === "object" && "response" in err
-          ? (err as { response?: { data?: { message?: string } } }).response?.data
-              ?.message || "Failed to import Facebook listing."
-          : "Failed to import Facebook listing.";
-
+    } catch {
       toast({
         title: "Import failed",
-        description: message,
+        description: "Could not scrape this listing.",
         variant: "destructive",
       });
     } finally {
@@ -232,21 +248,22 @@ const SellCar = () => {
     }
   };
 
+  // --------------------------
+  // SUBMIT
+  // --------------------------
   const handleSubmit = async () => {
     if (!formData.description || formData.platforms.length === 0) {
       return toast({
-        title: "Missing information",
-        description: "Please complete all required fields.",
+        title: "Missing data",
+        description: "Fill all required fields.",
         variant: "destructive",
       });
     }
 
-    // still require real files because backend expects multipart images
     if (selectedFiles.length === 0) {
       return toast({
         title: "Missing images",
-        description:
-          "Please upload at least one real image (Facebook previews don't count).",
+        description: "Upload at least one real image.",
         variant: "destructive",
       });
     }
@@ -256,30 +273,24 @@ const SellCar = () => {
     try {
       const fd = new FormData();
 
-      fd.append("brand", formData.brand);
-      fd.append("model", formData.model);
-      fd.append("year", formData.year);
-      fd.append("mileage", formData.mileage);
-      fd.append("price", formData.price);
-      fd.append("condition", formData.condition);
-      fd.append("description", formData.description);
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "platforms") {
+          formData.platforms.forEach((p) => fd.append("platforms", p));
+        } else {
+          fd.append(key, value as string);
+        }
+      });
 
-      formData.platforms.forEach((p) => fd.append("platforms", p));
       selectedFiles.forEach((file) => fd.append("images", file));
 
       await createCar(fd, user.token);
 
-      toast({
-        title: "Success!",
-        description: "Your car has been listed successfully.",
-      });
-
+      toast({ title: "Car Listed!" });
       navigate("/profile");
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
-        description:
-          error instanceof Error ? error.message : "Something went wrong.",
+        description: "Could not list your car.",
         variant: "destructive",
       });
     }
@@ -287,79 +298,93 @@ const SellCar = () => {
     setIsSubmitting(false);
   };
 
+  // --------------------------
+  // UI (MOBILE OPTIMIZED)
+  // --------------------------
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 py-6">
+        
         <Button
           variant="ghost"
+          size="sm"
           onClick={() => navigate(-1)}
-          className="mb-6 gap-2"
+          className="mb-4 gap-1 text-sm"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back
+          <ArrowLeft className="h-4 w-4" /> Back
         </Button>
 
-        <div className="mx-auto max-w-2xl">
-          <div className="mb-8 text-center">
-            <h1 className="text-4xl font-bold">Sell Your Car</h1>
-            <p className="mt-2 text-muted-foreground">Step {step} of 3</p>
+        <div className="mx-auto max-w-xl">
+          {/* Heading */}
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold">Sell Your Car</h1>
+            <p className="text-xs mt-1 text-muted-foreground">Step {step} of 3</p>
           </div>
 
-          <div className="mb-8 flex gap-2">
+          {/* Steps bar */}
+          <div className="mb-6 flex gap-1">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`h-2 flex-1 rounded-full ${
+                className={`h-1 flex-1 rounded-full ${
                   s <= step ? "bg-primary" : "bg-muted"
                 }`}
               />
             ))}
           </div>
 
-          <Card className="shadow-card">
-            {/* Step 1 */}
+          {/* Card */}
+          <Card className="shadow-sm border rounded-xl">
+            {/* ---------------- STEP 1 ---------------- */}
             {step === 1 && (
               <>
-                <CardHeader>
-                  <CardTitle>Car Details</CardTitle>
-                  <CardDescription>Tell us about your car</CardDescription>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Car Details</CardTitle>
+                  <CardDescription className="text-xs">
+                    Tell us about your car
+                  </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-5">
-                  {/* ✅ Facebook Import Box */}
-                  <div className="rounded-lg border bg-card p-4 space-y-3">
-                    <Label className="flex items-center gap-2">
+                <CardContent className="space-y-4 text-sm">
+                  
+                  {/* Facebook import */}
+                  <div className="rounded-lg border p-3 space-y-2">
+                    <Label className="flex items-center gap-2 text-sm">
                       <Link2 className="h-4 w-4" />
-                      Import from Facebook Marketplace (optional)
+                      Import from Facebook (optional)
                     </Label>
 
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col gap-2 sm:flex-row">
                       <Input
                         value={fbUrl}
                         onChange={(e) => setFbUrl(e.target.value)}
-                        placeholder="Paste Facebook Marketplace car link..."
+                        placeholder="Paste car link..."
+                        className="text-sm"
                       />
+
                       <Button
                         type="button"
+                        size="sm"
                         onClick={handleImportFromFacebook}
                         disabled={isImportingFb}
-                        className="gap-2"
+                        className="gap-1"
                       >
-                        {isImportingFb && (
+                        {isImportingFb ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Import"
                         )}
-                        {isImportingFb ? "Importing..." : "Import"}
                       </Button>
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      This will auto-fill brand, model, year, price, mileage,
-                      description, platforms, and preview images if available.
+                      Auto-fills brand, year, mileage, description & images.
                     </p>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
+                  {/* BRAND / MODEL */}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1">
                       <Label>Brand *</Label>
                       <Input
                         value={formData.brand}
@@ -367,10 +392,11 @@ const SellCar = () => {
                           handleInputChange("brand", e.target.value)
                         }
                         placeholder="e.g., Toyota"
+                        className="text-sm"
                       />
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <Label>Model *</Label>
                       <Input
                         value={formData.model}
@@ -378,12 +404,14 @@ const SellCar = () => {
                           handleInputChange("model", e.target.value)
                         }
                         placeholder="e.g., Camry"
+                        className="text-sm"
                       />
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
+                  {/* YEAR / CONDITION */}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1">
                       <Label>Year *</Label>
                       <Input
                         type="number"
@@ -392,10 +420,11 @@ const SellCar = () => {
                           handleInputChange("year", e.target.value)
                         }
                         placeholder="2020"
+                        className="text-sm"
                       />
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <Label>Condition *</Label>
                       <Select
                         value={formData.condition}
@@ -403,8 +432,8 @@ const SellCar = () => {
                           handleInputChange("condition", value)
                         }
                       >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select condition" />
+                        <SelectTrigger className="text-sm">
+                          <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="new">New</SelectItem>
@@ -417,24 +446,30 @@ const SellCar = () => {
                     </div>
                   </div>
 
-                  <Button onClick={handleNext} className="w-full">
+                  <Button
+                    onClick={() => setStep(2)}
+                    size="sm"
+                    className="w-full text-sm"
+                  >
                     Continue
                   </Button>
                 </CardContent>
               </>
             )}
 
-            {/* Step 2 — Pricing */}
+            {/* ---------------- STEP 2 ---------------- */}
             {step === 2 && (
               <>
-                <CardHeader>
-                  <CardTitle>Pricing</CardTitle>
-                  <CardDescription>Set your price and mileage</CardDescription>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Pricing</CardTitle>
+                  <CardDescription className="text-xs">
+                    Set your price and mileage
+                  </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
+                <CardContent className="space-y-4 text-sm">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1">
                       <Label>Price ($) *</Label>
                       <Input
                         type="number"
@@ -442,30 +477,72 @@ const SellCar = () => {
                         onChange={(e) =>
                           handleInputChange("price", e.target.value)
                         }
+                        className="text-sm"
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label>Mileage (miles) *</Label>
+                    <div className="space-y-1">
+                      <Label>Mileage (mi) *</Label>
                       <Input
                         type="number"
                         value={formData.mileage}
                         onChange={(e) =>
                           handleInputChange("mileage", e.target.value)
                         }
+                        className="text-sm"
                       />
                     </div>
                   </div>
 
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleAIPredict}
+                    disabled={aiLoading}
+                    className="w-full bg-green-600 hover:bg-green-700 text-sm"
+                  >
+                    {aiLoading ? (
+                      <div className="flex items-center gap-1">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Predicting...
+                      </div>
+                    ) : (
+                      "AI Predict Price"
+                    )}
+                  </Button>
+
+                  {aiResult && (
+                    <div className="mt-3 p-3 rounded-lg border bg-muted/20 text-sm">
+                      <h3 className="font-semibold text-base">
+                        AI Price Estimate
+                      </h3>
+                      <p><strong>Min:</strong> ${aiResult.minPrice}</p>
+                      <p><strong>Max:</strong> ${aiResult.maxPrice}</p>
+                      <p>
+                        <strong>Recommended:</strong> $
+                        {aiResult.recommendedPrice}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {aiResult.marketSummary}
+                      </p>
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <Button
+                      size="sm"
                       variant="outline"
                       onClick={() => setStep(1)}
-                      className="w-full"
+                      className="w-full text-sm"
                     >
                       Back
                     </Button>
-                    <Button onClick={handleNext} className="w-full">
+
+                    <Button
+                      size="sm"
+                      onClick={() => setStep(3)}
+                      className="w-full text-sm"
+                    >
                       Continue
                     </Button>
                   </div>
@@ -473,65 +550,58 @@ const SellCar = () => {
               </>
             )}
 
-            {/* Step 3 */}
+            {/* ---------------- STEP 3 ---------------- */}
             {step === 3 && (
               <>
-                <CardHeader>
-                  <CardTitle>Description & Platforms</CardTitle>
-                  <CardDescription>
-                    Add details and where to list
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Description & Images</CardTitle>
+                  <CardDescription className="text-xs">
+                    Add details & upload photos
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-6">
-                  <div className="space-y-2">
+                <CardContent className="space-y-5 text-sm">
+                  
+                  {/* Description */}
+                  <div>
                     <Label>Description *</Label>
                     <Textarea
-                      rows={4}
+                      rows={3}
+                      className="text-sm"
+                      placeholder="Describe your car..."
                       value={formData.description}
                       onChange={(e) =>
                         handleInputChange("description", e.target.value)
                       }
-                      placeholder="Describe your car..."
                     />
                   </div>
 
-                  <div className="space-y-3">
+                  {/* Platforms */}
+                  <div>
                     <Label>List on Platforms *</Label>
-                    <div className="space-y-3 rounded-lg border p-4">
-                      {platforms.map((platform) => (
-                        <div
-                          key={platform.id}
-                          className="flex items-center space-x-2"
-                        >
+                    <div className="rounded-lg border p-3 space-y-2">
+                      {platforms.map((p) => (
+                        <div key={p.id} className="flex items-center gap-2">
                           <Checkbox
-                            checked={formData.platforms.includes(platform.id)}
-                            onCheckedChange={() =>
-                              handlePlatformToggle(platform.id)
-                            }
+                            checked={formData.platforms.includes(p.id)}
+                            onCheckedChange={() => handlePlatformToggle(p.id)}
                           />
-                          <label className="text-sm font-medium">
-                            {platform.name}
-                          </label>
+                          <span className="text-sm">{p.name}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="space-y-3">
+                  {/* Images */}
+                  <div>
                     <Label>Upload Images *</Label>
 
                     <label
                       htmlFor="image-upload"
-                      className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-8 text-center hover:border-primary hover:bg-primary/5"
+                      className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-center hover:border-primary"
                     >
-                      <div>
-                        <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                        <p className="text-sm">Click to upload car images</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Upload up to 10 images
-                        </p>
-                      </div>
+                      <Upload className="h-6 w-6 text-muted-foreground mb-1" />
+                      <p className="text-xs">Click to upload</p>
                     </label>
 
                     <input
@@ -544,20 +614,19 @@ const SellCar = () => {
                     />
 
                     {selectedImages.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {selectedImages.map((img, index) => (
-                          <div key={index} className="relative group">
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mt-3">
+                        {selectedImages.map((img, i) => (
+                          <div key={i} className="relative group">
                             <img
                               src={img}
-                              className="h-24 w-full rounded-lg object-cover"
-                              alt={`car-${index}`}
+                              className="h-20 w-full rounded-lg object-cover"
                             />
                             <button
                               type="button"
-                              onClick={() => removeImage(index)}
-                              className="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100"
+                              onClick={() => removeImage(i)}
+                              className="absolute -top-1 -right-1 bg-red-600 text-white h-5 w-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"
                             >
-                              <X className="h-4 w-4" />
+                              <X className="h-3 w-3" />
                             </button>
                           </div>
                         ))}
@@ -565,22 +634,26 @@ const SellCar = () => {
                     )}
                   </div>
 
+                  {/* Submit */}
                   <div className="flex gap-2">
                     <Button
+                      size="sm"
                       variant="outline"
                       onClick={() => setStep(2)}
-                      className="w-full"
+                      className="w-full text-sm"
                     >
                       Back
                     </Button>
                     <Button
+                      size="sm"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="w-full"
+                      className="w-full text-sm"
                     >
                       {isSubmitting ? "Listing..." : "List Car"}
                     </Button>
                   </div>
+
                 </CardContent>
               </>
             )}

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "backend/src/controllers/aiController.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1764509219900,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764510083975,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,10 +43,12 @@\n       messages: [{ role: \"user\", content: prompt }],\r\n       response_format: { type: \"json_object\" }\r\n     });\r\n \r\n-    const priceData = JSON.parse(completion.choices[0].message.content);\r\n+   const content = completion.choices[0].message.content ?? \"{}\";\r\n+const priceData = JSON.parse(content);\r\n \r\n+\r\n     return res.json(priceData);\r\n \r\n   } catch (error) {\r\n     console.error(\"AI Price Prediction Error:\", error);\r\n"
+                },
+                {
+                    "date": 1764589153548,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,54 +1,40 @@\n import { Request, Response } from \"express\";\r\n-import { openai } from \"../services/openaiService\";\r\n+import { openrouter } from \"../services/openrouterService\";\r\n \r\n export const predictPrice = async (req: Request, res: Response) => {\r\n   try {\r\n     const { brand, model, year, mileage, condition } = req.body;\r\n \r\n-    if (!brand || !model || !year || !mileage || !condition) {\r\n-      return res.status(400).json({\r\n-        message: \"Please provide brand, model, year, mileage, and condition.\",\r\n-      });\r\n-    }\r\n-\r\n     const prompt = `\r\n-You are an automotive market pricing expert.\r\n+You are a car market pricing expert.\r\n \r\n Given the following car details:\r\n Brand: ${brand}\r\n Model: ${model}\r\n Year: ${year}\r\n-Mileage: ${mileage} km\r\n+Mileage: ${mileage}\r\n Condition: ${condition}\r\n \r\n-Provide a professional price estimate with:\r\n+Provide JSON ONLY in this format:\r\n \r\n-1. **Price Range (Minimum - Maximum)**\r\n-2. **Recommended Listing Price**\r\n-3. **Market Summary** explaining the year, mileage, and brand factors.\r\n-4. Keep the output in clean JSON EXACTLY like this:\r\n-\r\n {\r\n-  \"minPrice\": 15000,\r\n-  \"maxPrice\": 17000,\r\n-  \"recommendedPrice\": 16000,\r\n-  \"marketSummary\": \"....\"\r\n+  \"minPrice\": number,\r\n+  \"maxPrice\": number,\r\n+  \"recommendedPrice\": number,\r\n+  \"marketSummary\": \"string\"\r\n }\r\n+`;\r\n \r\n-Return ONLY valid JSON. \r\n-    `;\r\n-\r\n-    const completion = await openai.chat.completions.create({\r\n-      model: \"gpt-4o-mini\",\r\n+    const response = await openrouter.post(\"/chat/completions\", {\r\n+      model: process.env.OPENROUTER_MODEL,\r\n       messages: [{ role: \"user\", content: prompt }],\r\n       response_format: { type: \"json_object\" }\r\n     });\r\n \r\n-   const content = completion.choices[0].message.content ?? \"{}\";\r\n-const priceData = JSON.parse(content);\r\n+    const content = response.data.choices[0].message.content ?? \"{}\";\r\n+    const priceData = JSON.parse(content);\r\n \r\n-\r\n     return res.json(priceData);\r\n \r\n   } catch (error) {\r\n     console.error(\"AI Price Prediction Error:\", error);\r\n"
+                }
+            ],
+            "date": 1764509219900,
+            "name": "Commit-0",
+            "content": "import { Request, Response } from \"express\";\r\nimport { openai } from \"../services/openaiService\";\r\n\r\nexport const predictPrice = async (req: Request, res: Response) => {\r\n  try {\r\n    const { brand, model, year, mileage, condition } = req.body;\r\n\r\n    if (!brand || !model || !year || !mileage || !condition) {\r\n      return res.status(400).json({\r\n        message: \"Please provide brand, model, year, mileage, and condition.\",\r\n      });\r\n    }\r\n\r\n    const prompt = `\r\nYou are an automotive market pricing expert.\r\n\r\nGiven the following car details:\r\nBrand: ${brand}\r\nModel: ${model}\r\nYear: ${year}\r\nMileage: ${mileage} km\r\nCondition: ${condition}\r\n\r\nProvide a professional price estimate with:\r\n\r\n1. **Price Range (Minimum - Maximum)**\r\n2. **Recommended Listing Price**\r\n3. **Market Summary** explaining the year, mileage, and brand factors.\r\n4. Keep the output in clean JSON EXACTLY like this:\r\n\r\n{\r\n  \"minPrice\": 15000,\r\n  \"maxPrice\": 17000,\r\n  \"recommendedPrice\": 16000,\r\n  \"marketSummary\": \"....\"\r\n}\r\n\r\nReturn ONLY valid JSON. \r\n    `;\r\n\r\n    const completion = await openai.chat.completions.create({\r\n      model: \"gpt-4o-mini\",\r\n      messages: [{ role: \"user\", content: prompt }],\r\n      response_format: { type: \"json_object\" }\r\n    });\r\n\r\n    const priceData = JSON.parse(completion.choices[0].message.content);\r\n\r\n    return res.json(priceData);\r\n\r\n  } catch (error) {\r\n    console.error(\"AI Price Prediction Error:\", error);\r\n    res.status(500).json({ message: \"AI price prediction failed.\" });\r\n  }\r\n};\r\n"
+        }
+    ]
+}

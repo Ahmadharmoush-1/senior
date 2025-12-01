@@ -1,0 +1,30 @@
+{
+    "sourceFile": "backend/src/routes/aiMaintenanceRoutes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1764590572833,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764590751514,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,9 @@\n+// src/routes/aiMaintenanceRoutes.ts\r\n+import express from \"express\";\r\n+import { estimateMaintenance } from \"../controllers/aiMaintenanceController\";\r\n+\r\n+const router = express.Router();\r\n+\r\n+router.post(\"/maintenance\", estimateMaintenanceCost);\r\n+\r\n+export default router;\r\n"
+                },
+                {
+                    "date": 1764590757115,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,16 +3,7 @@\n import { estimateMaintenance } from \"../controllers/aiMaintenanceController\";\r\n \r\n const router = express.Router();\r\n \r\n-router.post(\"/maintenance\", estimateMaintenanceCost);\r\n+router.post(\"/maintenance\", estimateMaintenance);\r\n \r\n export default router;\r\n-// src/routes/aiMaintenanceRoutes.ts\r\n-import express from \"express\";\r\n-import { estimateMaintenanceCost } from \"../controllers/aiMaintenanceController\";\r\n-\r\n-const router = express.Router();\r\n-\r\n-router.post(\"/maintenance\", estimateMaintenanceCost);\r\n-\r\n-export default router;\r\n"
+                },
+                {
+                    "date": 1764590994246,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n-// src/routes/aiMaintenanceRoutes.ts\r\n-import express from \"express\";\r\n-import { estimateMaintenance } from \"../controllers/aiMaintenanceController\";\r\n+// // src/routes/aiMaintenanceRoutes.ts\r\n+// import express from \"express\";\r\n+// import { estimateMaintenance } from \"../controllers/aiMaintenanceController\";\r\n \r\n-const router = express.Router();\r\n+// const router = express.Router();\r\n \r\n-router.post(\"/maintenance\", estimateMaintenance);\r\n+// router.post(\"/maintenance\", estimateMaintenance);\r\n \r\n-export default router;\r\n+// export default router;\r\n"
+                }
+            ],
+            "date": 1764590572833,
+            "name": "Commit-0",
+            "content": "// src/routes/aiMaintenanceRoutes.ts\r\nimport express from \"express\";\r\nimport { estimateMaintenanceCost } from \"../controllers/aiMaintenanceController\";\r\n\r\nconst router = express.Router();\r\n\r\nrouter.post(\"/maintenance\", estimateMaintenanceCost);\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

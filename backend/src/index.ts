@@ -11,9 +11,13 @@ import authRoutes from "./routes/authRoutes";
 import carRoutes from "./routes/carRoutes";
 import scrapeRoutes from "./routes/scrapeRoutes";
 import facebookRoutes from "./routes/facebookRoutes";
-import chatRoutes from "./routes/chatRoutes"; // still here, OK
+
 import userRoutes from "./routes/userRoutes"; // ⭐ NEW
 import comparisonRoutes from "./routes/comparisonRoutes"; // ⭐ NEW
+import aiRoutes from "./routes/aiRoutes";
+// import aiCompareRoutes from "./routes/aiCompareRoutes";
+// import aiMaintenanceRoutes from "./routes/aiMaintenanceRoutes";
+
 
 const app = express();
 
@@ -48,11 +52,14 @@ app.use("/api/auth", authRoutes);
 app.use("/api/cars", carRoutes);
 app.use("/api/scrape", scrapeRoutes);
 app.use("/api/facebook", facebookRoutes);
-app.use("/api", chatRoutes); // AI route (you can remove later if not used)
+app.use("/api/ai", aiRoutes);
+
 
 // ⭐ NEW:
 app.use("/api/user", userRoutes);
 app.use("/api/comparisons", comparisonRoutes);
+// app.use("/api/ai", aiCompareRoutes);
+// app.use("/api/ai", aiMaintenanceRoutes);
 
 const PORT = process.env.PORT || 5000;
 
