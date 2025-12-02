@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1759427976051,
@@ -12,6 +12,10 @@
                 {
                     "date": 1759428246011,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n   sortBy: \"price-asc\" | \"price-desc\" | \"year-desc\" | \"mileage-asc\" | \"newest\";\r\n }\r\n \r\n export const filterCars = (cars: Car[], filters: FilterOptions): Car[] => {\r\n-  let filtered = cars.filter((car) => {\r\n+  const filtered = cars.filter((car) => {\r\n     // Search term\r\n     if (\r\n       filters.searchTerm &&\r\n       !car.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&\r\n"
+                },
+                {
+                    "date": 1764678911008,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,86 @@\n+// src/lib/filterUtils.ts\r\n+import { Car } from \"@/types/car\";\r\n+\r\n+export interface FilterOptions {\r\n+  searchTerm: string;\r\n+  brands: string[];\r\n+  minPrice: number;\r\n+  maxPrice: number;\r\n+  minYear: number;\r\n+  maxYear: number;\r\n+  minMileage: number;\r\n+  maxMileage: number;\r\n+  conditions: string[];\r\n+  fuelTypes: string[];\r\n+  transmissions: string[];\r\n+  sortBy: \"price-asc\" | \"price-desc\" | \"year-desc\" | \"mileage-asc\" | \"newest\";\r\n+}\r\n+\r\n+export const filterCars = (cars: Car[], filters: FilterOptions): Car[] => {\r\n+  const filtered = cars.filter((car) => {\r\n+    const year = Number(car.year);\r\n+    const price = Number(car.price);\r\n+    const mileage = Number(car.mileage);\r\n+\r\n+    // 🔍 Search\r\n+    if (\r\n+      filters.searchTerm &&\r\n+      !car.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&\r\n+      !car.brand.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&\r\n+      !car.model.toLowerCase().includes(filters.searchTerm.toLowerCase())\r\n+    ) {\r\n+      return false;\r\n+    }\r\n+\r\n+    // Brand\r\n+    if (filters.brands.length > 0 && !filters.brands.includes(car.brand)) {\r\n+      return false;\r\n+    }\r\n+\r\n+    // Price\r\n+    if (price < filters.minPrice || price > filters.maxPrice) {\r\n+      return false;\r\n+    }\r\n+\r\n+    // Year\r\n+    if (year < filters.minYear || year > filters.maxYear) {\r\n+      return false;\r\n+    }\r\n+\r\n+    // Mileage\r\n+    if (mileage < filters.minMileage || mileage > filters.maxMileage) {\r\n+      return false;\r\n+    }\r\n+\r\n+    // Condition\r\n+    if (filters.conditions.length > 0 && !filters.conditions.includes(car.condition)) {\r\n+      return false;\r\n+    }\r\n+\r\n+    return true;\r\n+  });\r\n+\r\n+  // Sorting\r\n+  switch (filters.sortBy) {\r\n+    case \"price-asc\":\r\n+      filtered.sort((a, b) => Number(a.price) - Number(b.price));\r\n+      break;\r\n+    case \"price-desc\":\r\n+      filtered.sort((a, b) => Number(b.price) - Number(a.price));\r\n+      break;\r\n+    case \"year-desc\":\r\n+      filtered.sort((a, b) => Number(b.year) - Number(a.year));\r\n+      break;\r\n+    case \"mileage-asc\":\r\n+      filtered.sort((a, b) => Number(a.mileage) - Number(b.mileage));\r\n+      break;\r\n+    case \"newest\":\r\n+      filtered.sort(\r\n+        (a, b) =>\r\n+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()\r\n+      );\r\n+      break;\r\n+  }\r\n+\r\n+  return filtered;\r\n+};\r\n"
                 }
             ],
             "date": 1759427976051,

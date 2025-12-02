@@ -11,8 +11,6 @@ export interface ICar {
   condition: "new" | "used" | "certified";
   images: string[];
   seller: mongoose.Types.ObjectId;
-
-  // ✅ optional FB marketplace link
   facebookUrl?: string;
 }
 
@@ -24,7 +22,9 @@ const carSchema = new Schema<ICar>(
     price: { type: Number, required: true },
     mileage: { type: Number, required: true },
 
-    platforms: [{ type: String, required: true }],
+    // ❌ FIXED: remove required
+    platforms: [{ type: String }],
+
     description: { type: String, required: true },
 
     condition: {
@@ -33,7 +33,8 @@ const carSchema = new Schema<ICar>(
       required: true,
     },
 
-    images: [{ type: String, required: true }],
+    // ❌ FIXED: remove required
+    images: [{ type: String }],
 
     seller: {
       type: mongoose.Schema.Types.ObjectId,
@@ -41,7 +42,7 @@ const carSchema = new Schema<ICar>(
       required: true,
     },
 
-    facebookUrl: { type: String, required: false },
+    facebookUrl: { type: String },
   },
   { timestamps: true }
 );

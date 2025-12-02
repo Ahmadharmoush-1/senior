@@ -1,5 +1,4 @@
-// src/pages/SellCar.tsx (MOBILE OPTIMIZED)
-
+// src/pages/SellCar.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,18 +27,13 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 
-import {
-  ArrowLeft,
-  Upload,
-  X,
-  Link2,
-  Loader2,
-} from "lucide-react";
+import { ArrowLeft, Upload, X, Link2, Loader2 } from "lucide-react";
 
 import { createCar } from "@/api/cars";
 import axios from "axios";
 import { predictCarPrice } from "@/services/aiService";
 
+// Platforms used in UI
 const platforms = [
   { id: "edmunds", name: "Edmunds" },
   { id: "olx", name: "OLX" },
@@ -105,7 +99,6 @@ const SellCar = () => {
   // --------------------------
   // Helpers
   // --------------------------
-
   const handleInputChange = (field: string, value: string) =>
     setFormData((prev) => ({ ...prev, [field]: value }));
 
@@ -126,6 +119,11 @@ const SellCar = () => {
 
     const previews = newFiles.map((file) => URL.createObjectURL(file));
     setSelectedImages((prev) => [...prev, ...previews]);
+
+    toast({
+      title: "Images added",
+      description: `${newFiles.length} image(s) ready for upload.`,
+    });
   };
 
   const removeImage = (index: number) => {
@@ -145,8 +143,9 @@ const SellCar = () => {
       !formData.condition
     ) {
       return toast({
-        title: "Missing info",
-        description: "Fill all car fields first.",
+        title: "Missing information",
+        description:
+          "Please fill car details first (brand, model, year, mileage, condition).",
         variant: "destructive",
       });
     }
@@ -170,13 +169,13 @@ const SellCar = () => {
       }));
 
       toast({
-        title: "AI Prediction Ready",
-        description: "Price has been recommended automatically.",
+        title: "AI Price Estimated",
+        description: "A smart price recommendation has been generated.",
       });
     } catch (error) {
       toast({
         title: "AI Error",
-        description: "Could not estimate price.",
+        description: "Failed to predict price. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -191,7 +190,8 @@ const SellCar = () => {
     if (!fbUrl.trim()) {
       return toast({
         title: "Missing URL",
-        description: "Paste Facebook car link first.",
+        description: "Paste a Facebook Marketplace car link first.",
+        variant: "destructive",
       });
     }
 
@@ -227,20 +227,24 @@ const SellCar = () => {
       }));
 
       if (data.images?.length) {
-        setSelectedImages((prev) => [
+        setSelectedImages((prevImgs) => [
           ...data.images!,
-          ...prev.filter((i) => !data.images!.includes(i)),
+          ...prevImgs.filter((x) => !data.images!.includes(x)),
         ]);
+        toast({
+          title: "Facebook images imported",
+          description: "Preview images added.",
+        });
       }
 
       toast({
-        title: "Imported",
-        description: "Fields have been auto-filled.",
+        title: "Imported successfully",
+        description: "Fields auto-filled from Facebook.",
       });
-    } catch {
+    } catch (err) {
       toast({
         title: "Import failed",
-        description: "Could not scrape this listing.",
+        description: "Could not import from Facebook.",
         variant: "destructive",
       });
     } finally {
@@ -252,10 +256,21 @@ const SellCar = () => {
   // SUBMIT
   // --------------------------
   const handleSubmit = async () => {
-    if (!formData.description || formData.platforms.length === 0) {
+    // 🔥 Extra validation so we don't store 0/empty values
+    if (
+      !formData.brand ||
+      !formData.model ||
+      !formData.year ||
+      !formData.price ||
+      !formData.mileage ||
+      !formData.condition ||
+      !formData.description ||
+      formData.platforms.length === 0
+    ) {
       return toast({
-        title: "Missing data",
-        description: "Fill all required fields.",
+        title: "Missing information",
+        description:
+          "Please fill all required fields: brand, model, year, price, mileage, condition, description, platforms.",
         variant: "destructive",
       });
     }
@@ -263,7 +278,7 @@ const SellCar = () => {
     if (selectedFiles.length === 0) {
       return toast({
         title: "Missing images",
-        description: "Upload at least one real image.",
+        description: "Please upload at least one real image.",
         variant: "destructive",
       });
     }
@@ -285,12 +300,16 @@ const SellCar = () => {
 
       await createCar(fd, user.token);
 
-      toast({ title: "Car Listed!" });
+      toast({
+        title: "Success!",
+        description: "Your car has been listed.",
+      });
+
       navigate("/profile");
-    } catch {
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Could not list your car.",
+        description: "Something went wrong.",
         variant: "destructive",
       });
     }
@@ -299,92 +318,80 @@ const SellCar = () => {
   };
 
   // --------------------------
-  // UI (MOBILE OPTIMIZED)
+  // UI
   // --------------------------
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-3 py-6">
-        
+      <div className="container mx-auto px-4 py-8">
         <Button
           variant="ghost"
-          size="sm"
           onClick={() => navigate(-1)}
-          className="mb-4 gap-1 text-sm"
+          className="mb-6 gap-2"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
 
-        <div className="mx-auto max-w-xl">
-          {/* Heading */}
-          <div className="mb-6 text-center">
-            <h1 className="text-2xl font-bold">Sell Your Car</h1>
-            <p className="text-xs mt-1 text-muted-foreground">Step {step} of 3</p>
+        <div className="mx-auto max-w-2xl">
+          <div className="mb-8 text-center">
+            <h1 className="text-4xl font-bold">Sell Your Car</h1>
+            <p className="mt-2 text-muted-foreground">Step {step} of 3</p>
           </div>
 
-          {/* Steps bar */}
-          <div className="mb-6 flex gap-1">
+          <div className="mb-8 flex gap-2">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`h-1 flex-1 rounded-full ${
+                className={`h-2 flex-1 rounded-full ${
                   s <= step ? "bg-primary" : "bg-muted"
                 }`}
               />
             ))}
           </div>
 
-          {/* Card */}
-          <Card className="shadow-sm border rounded-xl">
-            {/* ---------------- STEP 1 ---------------- */}
+          <Card className="shadow-card">
+            {/* STEP 1 */}
             {step === 1 && (
               <>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Car Details</CardTitle>
-                  <CardDescription className="text-xs">
-                    Tell us about your car
-                  </CardDescription>
+                <CardHeader>
+                  <CardTitle>Car Details</CardTitle>
+                  <CardDescription>Tell us about your car</CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-4 text-sm">
-                  
-                  {/* Facebook import */}
-                  <div className="rounded-lg border p-3 space-y-2">
-                    <Label className="flex items-center gap-2 text-sm">
+                <CardContent className="space-y-5">
+                  {/* FACEBOOK IMPORT */}
+                  <div className="rounded-lg border bg-card p-4 space-y-3">
+                    <Label className="flex items-center gap-2">
                       <Link2 className="h-4 w-4" />
-                      Import from Facebook (optional)
+                      Import from Facebook Marketplace (optional)
                     </Label>
 
-                    <div className="flex flex-col gap-2 sm:flex-row">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Input
                         value={fbUrl}
                         onChange={(e) => setFbUrl(e.target.value)}
-                        placeholder="Paste car link..."
-                        className="text-sm"
+                        placeholder="Paste Facebook Marketplace car link..."
                       />
-
                       <Button
                         type="button"
-                        size="sm"
                         onClick={handleImportFromFacebook}
                         disabled={isImportingFb}
-                        className="gap-1"
+                        className="gap-2"
                       >
-                        {isImportingFb ? (
+                        {isImportingFb && (
                           <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          "Import"
                         )}
+                        {isImportingFb ? "Importing..." : "Import"}
                       </Button>
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Auto-fills brand, year, mileage, description & images.
+                      Auto-fills year, mileage, price, description, and images.
                     </p>
                   </div>
 
                   {/* BRAND / MODEL */}
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-1">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
                       <Label>Brand *</Label>
                       <Input
                         value={formData.brand}
@@ -392,11 +399,10 @@ const SellCar = () => {
                           handleInputChange("brand", e.target.value)
                         }
                         placeholder="e.g., Toyota"
-                        className="text-sm"
                       />
                     </div>
 
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       <Label>Model *</Label>
                       <Input
                         value={formData.model}
@@ -404,14 +410,13 @@ const SellCar = () => {
                           handleInputChange("model", e.target.value)
                         }
                         placeholder="e.g., Camry"
-                        className="text-sm"
                       />
                     </div>
                   </div>
 
                   {/* YEAR / CONDITION */}
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-1">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
                       <Label>Year *</Label>
                       <Input
                         type="number"
@@ -420,11 +425,10 @@ const SellCar = () => {
                           handleInputChange("year", e.target.value)
                         }
                         placeholder="2020"
-                        className="text-sm"
                       />
                     </div>
 
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       <Label>Condition *</Label>
                       <Select
                         value={formData.condition}
@@ -432,8 +436,8 @@ const SellCar = () => {
                           handleInputChange("condition", value)
                         }
                       >
-                        <SelectTrigger className="text-sm">
-                          <SelectValue placeholder="Select" />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select condition" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="new">New</SelectItem>
@@ -446,30 +450,26 @@ const SellCar = () => {
                     </div>
                   </div>
 
-                  <Button
-                    onClick={() => setStep(2)}
-                    size="sm"
-                    className="w-full text-sm"
-                  >
+                  <Button onClick={() => setStep(2)} className="w-full">
                     Continue
                   </Button>
                 </CardContent>
               </>
             )}
 
-            {/* ---------------- STEP 2 ---------------- */}
+            {/* STEP 2 */}
             {step === 2 && (
               <>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Pricing</CardTitle>
-                  <CardDescription className="text-xs">
+                <CardHeader>
+                  <CardTitle>Pricing</CardTitle>
+                  <CardDescription>
                     Set your price and mileage
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-4 text-sm">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-1">
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
                       <Label>Price ($) *</Label>
                       <Input
                         type="number"
@@ -477,34 +477,30 @@ const SellCar = () => {
                         onChange={(e) =>
                           handleInputChange("price", e.target.value)
                         }
-                        className="text-sm"
                       />
                     </div>
-
-                    <div className="space-y-1">
-                      <Label>Mileage (mi) *</Label>
+                    <div className="space-y-2">
+                      <Label>Mileage (miles) *</Label>
                       <Input
                         type="number"
                         value={formData.mileage}
                         onChange={(e) =>
                           handleInputChange("mileage", e.target.value)
                         }
-                        className="text-sm"
                       />
                     </div>
                   </div>
 
                   <Button
                     type="button"
-                    size="sm"
                     onClick={handleAIPredict}
                     disabled={aiLoading}
-                    className="w-full bg-green-600 hover:bg-green-700 text-sm"
+                    className="w-full bg-green-600 hover:bg-green-700"
                   >
                     {aiLoading ? (
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-2">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Predicting...
+                        Predicting Price...
                       </div>
                     ) : (
                       "AI Predict Price"
@@ -512,17 +508,23 @@ const SellCar = () => {
                   </Button>
 
                   {aiResult && (
-                    <div className="mt-3 p-3 rounded-lg border bg-muted/20 text-sm">
-                      <h3 className="font-semibold text-base">
+                    <div className="mt-4 p-4 rounded-lg border bg-muted/40 shadow-sm">
+                      <h3 className="text-lg font-semibold mb-2">
                         AI Price Estimate
                       </h3>
-                      <p><strong>Min:</strong> ${aiResult.minPrice}</p>
-                      <p><strong>Max:</strong> ${aiResult.maxPrice}</p>
+                      <p>
+                        <strong>Min:</strong> ${aiResult.minPrice}
+                      </p>
+                      <p>
+                        <strong>Max:</strong> ${aiResult.maxPrice}
+                      </p>
                       <p>
                         <strong>Recommended:</strong> $
                         {aiResult.recommendedPrice}
                       </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
+                      <p className="mt-2 text-gray-700">
+                        <strong>Market Summary:</strong>
+                        <br />
                         {aiResult.marketSummary}
                       </p>
                     </div>
@@ -530,19 +532,13 @@ const SellCar = () => {
 
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
                       variant="outline"
                       onClick={() => setStep(1)}
-                      className="w-full text-sm"
+                      className="w-full"
                     >
                       Back
                     </Button>
-
-                    <Button
-                      size="sm"
-                      onClick={() => setStep(3)}
-                      className="w-full text-sm"
-                    >
+                    <Button onClick={() => setStep(3)} className="w-full">
                       Continue
                     </Button>
                   </div>
@@ -550,58 +546,68 @@ const SellCar = () => {
               </>
             )}
 
-            {/* ---------------- STEP 3 ---------------- */}
+            {/* STEP 3 */}
             {step === 3 && (
               <>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Description & Images</CardTitle>
-                  <CardDescription className="text-xs">
-                    Add details & upload photos
+                <CardHeader>
+                  <CardTitle>Description & Platforms</CardTitle>
+                  <CardDescription>
+                    Add details and where to list
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-5 text-sm">
-                  
-                  {/* Description */}
-                  <div>
+                <CardContent className="space-y-6">
+                  {/* DESCRIPTION */}
+                  <div className="space-y-2">
                     <Label>Description *</Label>
                     <Textarea
-                      rows={3}
-                      className="text-sm"
-                      placeholder="Describe your car..."
+                      rows={4}
                       value={formData.description}
                       onChange={(e) =>
                         handleInputChange("description", e.target.value)
                       }
+                      placeholder="Describe your car..."
                     />
                   </div>
 
-                  {/* Platforms */}
-                  <div>
+                  {/* PLATFORMS */}
+                  <div className="space-y-3">
                     <Label>List on Platforms *</Label>
-                    <div className="rounded-lg border p-3 space-y-2">
-                      {platforms.map((p) => (
-                        <div key={p.id} className="flex items-center gap-2">
+                    <div className="space-y-3 rounded-lg border p-4">
+                      {platforms.map((platform) => (
+                        <div
+                          key={platform.id}
+                          className="flex items-center space-x-2"
+                        >
                           <Checkbox
-                            checked={formData.platforms.includes(p.id)}
-                            onCheckedChange={() => handlePlatformToggle(p.id)}
+                            checked={formData.platforms.includes(platform.id)}
+                            onCheckedChange={() =>
+                              handlePlatformToggle(platform.id)
+                            }
                           />
-                          <span className="text-sm">{p.name}</span>
+                          <label className="text-sm font-medium">
+                            {platform.name}
+                          </label>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Images */}
-                  <div>
+                  {/* IMAGES */}
+                  <div className="space-y-3">
                     <Label>Upload Images *</Label>
 
                     <label
                       htmlFor="image-upload"
-                      className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-center hover:border-primary"
+                      className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-8 text-center hover:border-primary hover:bg-primary/5"
                     >
-                      <Upload className="h-6 w-6 text-muted-foreground mb-1" />
-                      <p className="text-xs">Click to upload</p>
+                      <div>
+                        <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm">Click to upload car images</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Upload up to 10 images
+                        </p>
+                      </div>
                     </label>
 
                     <input
@@ -614,19 +620,20 @@ const SellCar = () => {
                     />
 
                     {selectedImages.length > 0 && (
-                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mt-3">
-                        {selectedImages.map((img, i) => (
-                          <div key={i} className="relative group">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {selectedImages.map((img, index) => (
+                          <div key={index} className="relative group">
                             <img
                               src={img}
-                              className="h-20 w-full rounded-lg object-cover"
+                              className="h-24 w-full rounded-lg object-cover"
+                              alt={`car-${index}`}
                             />
                             <button
                               type="button"
-                              onClick={() => removeImage(i)}
-                              className="absolute -top-1 -right-1 bg-red-600 text-white h-5 w-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"
+                              onClick={() => removeImage(index)}
+                              className="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100"
                             >
-                              <X className="h-3 w-3" />
+                              <X className="h-4 w-4" />
                             </button>
                           </div>
                         ))}
@@ -634,28 +641,25 @@ const SellCar = () => {
                     )}
                   </div>
 
-                  {/* Submit */}
+                  {/* SUBMIT */}
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
                       variant="outline"
                       onClick={() => setStep(2)}
-                      className="w-full text-sm"
+                      className="w-full"
                     >
                       Back
                     </Button>
                     <Button
-                      size="sm"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="w-full text-sm"
+                      className="w-full"
                     >
                       {isSubmitting ? "Listing..." : "List Car"}
                     </Button>
                   </div>
-
                 </CardContent>
-              </>
+              </> 
             )}
           </Card>
         </div>
