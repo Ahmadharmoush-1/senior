@@ -1,3 +1,4 @@
+// UPDATED Compare.tsx (fully fixed, cleaned, working)
 import { useNavigate } from "react-router-dom";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { Button } from "@/components/ui/button";
@@ -19,9 +20,7 @@ import {
   type MaintenanceEstimate,
 } from "@/services/aiMaintenanceService";
 
-// ---------------------------------------------
-// TYPES
-// ---------------------------------------------
+// -----------------------------
 interface Platform {
   name: string;
 }
@@ -36,6 +35,12 @@ interface Car {
   condition: string;
   fuelType?: string;
   transmission?: string;
+  color?: string;
+  engineSize?: string;
+  doors?: number;
+  cylinders?: number;
+  drivetrain?: string;
+  bodyType?: string;
   location?: string;
   platform: Platform[];
 }
@@ -47,17 +52,20 @@ type CarSpecKey =
   | "condition"
   | "fuelType"
   | "transmission"
+  | "color"
+  | "engineSize"
+  | "doors"
+  | "cylinders"
+  | "drivetrain"
+  | "bodyType"
   | "location";
 
 interface SpecItem {
   label: string;
   key: CarSpecKey;
-  format?: (value: string | number | undefined) => string;
 }
 
-// ---------------------------------------------
-// MAIN COMPONENT
-// ---------------------------------------------
+// -----------------------------
 const Compare = () => {
   const navigate = useNavigate();
   const { comparisonList, removeFromComparison, clearComparison } =
@@ -66,38 +74,25 @@ const Compare = () => {
 
   const [hasSaved, setHasSaved] = useState(false);
 
-  // AI Compare
+  // AI
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState<CarCompareResult | null>(null);
 
   // AI Maintenance
   const [maintLoading, setMaintLoading] = useState(false);
-  const [maintenanceA, setMaintenanceA] = useState<MaintenanceEstimate | null>(
-    null
-  );
-  const [maintenanceB, setMaintenanceB] = useState<MaintenanceEstimate | null>(
-    null
-  );
+  const [maintenanceA, setMaintenanceA] = useState<MaintenanceEstimate | null>(null);
+  const [maintenanceB, setMaintenanceB] = useState<MaintenanceEstimate | null>(null);
 
-  // ---------------------------------------------
-  // SAVE COMPARISON ONE TIME
-  // ---------------------------------------------
+  // Save comparison once
   useEffect(() => {
     const doSave = async () => {
       if (!token) return;
       if (comparisonList.length < 2) return;
       if (hasSaved) return;
 
-      const [carA, carB] = comparisonList;
-
-      try {
-        await saveComparison(carA.id, carB.id, token);
-        setHasSaved(true);
-      } catch (err) {
-        console.error("Failed to save comparison:", err);
-      }
+      await saveComparison(comparisonList[0].id, comparisonList[1].id, token);
+      setHasSaved(true);
     };
-
     void doSave();
   }, [comparisonList, token, hasSaved]);
 
@@ -105,9 +100,6 @@ const Compare = () => {
     return (
       <div className="container mx-auto px-3 py-20 text-center">
         <h1 className="mb-3 text-xl font-bold">No Cars to Compare</h1>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Add cars to your comparison list to see them side by side.
-        </p>
         <Button size="sm" onClick={() => navigate("/")}>
           Browse Cars
         </Button>
@@ -115,109 +107,36 @@ const Compare = () => {
     );
   }
 
-  // ---------------------------------------------
-  // BUILD INPUT HELPERS
-  // ---------------------------------------------
-  const buildCompareInput = (car: Car) => {
-    const parts = car.title.split(" ");
-    return {
-      brand: parts[0],
-      model: parts.slice(1).join(" ") || parts[0],
-      year: car.year,
-      mileage: car.mileage,
-      price: car.price,
-      condition: car.condition,
-    };
-  };
-
-  const buildMaintenanceInput = (car: Car) => {
-    const parts = car.title.split(" ");
-    return {
-      brand: parts[0],
-      model: parts.slice(1).join(" ") || parts[0],
-      year: car.year,
-      mileage: car.mileage,
-      price: car.price,
-      condition: car.condition,
-      fuelType: car.fuelType,
-      transmission: car.transmission,
-    };
-  };
-
-  // ---------------------------------------------
-  // AI HANDLERS
-  // ---------------------------------------------
-  const handleAICompare = async () => {
-    if (comparisonList.length < 2) {
-      alert("Add at least two cars for AI comparison.");
-      return;
-    }
-
-    const [carA, carB] = comparisonList;
-
-    try {
-      setAiLoading(true);
-      setAiResult(null);
-      setAiResult(
-        await compareCarsAI(buildCompareInput(carA), buildCompareInput(carB))
-      );
-    } catch (err) {
-      console.error(err);
-      alert("AI comparison failed.");
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const handleAIMaintenance = async () => {
-    try {
-      setMaintLoading(true);
-      setMaintenanceA(null);
-      setMaintenanceB(null);
-
-      const resA = await estimateMaintenanceCost(
-        buildMaintenanceInput(comparisonList[0])
-      );
-      setMaintenanceA(resA);
-
-      if (comparisonList[1]) {
-        const resB = await estimateMaintenanceCost(
-          buildMaintenanceInput(comparisonList[1])
-        );
-        setMaintenanceB(resB);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("AI maintenance estimate failed.");
-    } finally {
-      setMaintLoading(false);
-    }
-  };
-
-  // ---------------------------------------------
-  // SPECS
-  // ---------------------------------------------
+  // -----------------------------
+  // SPEC TABLE (NEW FIELDS INCLUDED)
+  // -----------------------------
   const specs: SpecItem[] = [
-    { label: "Price", key: "price", format: (v) => (typeof v === "number" ? `$${v}` : "N/A") },
+    { label: "Price", key: "price" },
     { label: "Year", key: "year" },
-    { label: "Mileage", key: "mileage", format: (v) => `${v} mi` },
+    { label: "Mileage", key: "mileage" },
     { label: "Condition", key: "condition" },
     { label: "Fuel Type", key: "fuelType" },
     { label: "Transmission", key: "transmission" },
+    { label: "Color", key: "color" },
+    { label: "Engine Size", key: "engineSize" },
+    { label: "Doors", key: "doors" },
+    { label: "Cylinders", key: "cylinders" },
+    { label: "Drivetrain", key: "drivetrain" },
+    { label: "Body Type", key: "bodyType" },
     { label: "Location", key: "location" },
   ];
 
   const primaryA = comparisonList[0];
   const primaryB = comparisonList[1];
 
-  // ---------------------------------------------
+  // -----------------------------
   // UI
-  // ---------------------------------------------
+  // -----------------------------
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-2 py-4">
 
-        {/* HEADER */}
+        {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <Button
             size="sm"
@@ -230,7 +149,15 @@ const Compare = () => {
           </Button>
 
           <div className="flex gap-1">
-            <Button size="sm" className="text-xs" onClick={handleAICompare}>
+            <Button
+              size="sm"
+              className="text-xs"
+              onClick={async () => {
+                setAiLoading(true);
+                setAiResult(await compareCarsAI(primaryA, primaryB));
+                setAiLoading(false);
+              }}
+            >
               {aiLoading ? "..." : "AI Compare"}
             </Button>
 
@@ -238,7 +165,12 @@ const Compare = () => {
               size="sm"
               className="text-xs"
               variant="outline"
-              onClick={handleAIMaintenance}
+              onClick={async () => {
+                setMaintLoading(true);
+                setMaintenanceA(await estimateMaintenanceCost(primaryA));
+                setMaintenanceB(await estimateMaintenanceCost(primaryB));
+                setMaintLoading(false);
+              }}
             >
               {maintLoading ? "..." : "AI Maintenance"}
             </Button>
@@ -254,27 +186,21 @@ const Compare = () => {
           </div>
         </div>
 
-        {/* TITLE */}
+        {/* Title */}
         <h1 className="text-lg font-bold mb-3">Compare Cars</h1>
 
         <div className="overflow-x-auto">
           <div className="min-w-[650px]">
 
-            {/* IMAGES */}
+            {/* IMAGE GRID */}
             <div
               className="mb-4 grid gap-2"
-              style={{
-                gridTemplateColumns: `repeat(${comparisonList.length}, 1fr)`,
-              }}
+              style={{ gridTemplateColumns: `repeat(${comparisonList.length}, 1fr)` }}
             >
               {comparisonList.map((car) => (
                 <Card key={car.id}>
                   <div className="relative aspect-[4/3] bg-muted">
-                    <img
-                      src={car.images[0]}
-                      alt={car.title}
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={car.images[0]} className="h-full w-full object-cover" />
 
                     <Button
                       variant="secondary"
@@ -293,7 +219,7 @@ const Compare = () => {
               ))}
             </div>
 
-            {/* SPECS */}
+            {/* SPECS TABLE */}
             <Card>
               <CardContent className="p-0 text-xs">
                 {specs.map((spec, idx) => (
@@ -302,26 +228,17 @@ const Compare = () => {
 
                     <div
                       className="grid"
-                      style={{
-                        gridTemplateColumns: `120px repeat(${comparisonList.length}, 1fr)`,
-                      }}
+                      style={{ gridTemplateColumns: `120px repeat(${comparisonList.length}, 1fr)` }}
                     >
-                      {/* LABEL */}
                       <div className="border-r p-2 font-semibold bg-muted/50">
                         {spec.label}
                       </div>
 
-                      {/* VALUES */}
-                      {comparisonList.map((car) => {
-                        const v = car[spec.key];
-                        const display = spec.format ? spec.format(v) : v || "N/A";
-
-                        return (
-                          <div key={car.id} className="p-2">
-                            {display}
-                          </div>
-                        );
-                      })}
+                      {comparisonList.map((car) => (
+                        <div key={car.id} className="p-2">
+                          {car[spec.key] ?? "N/A"}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -331,23 +248,19 @@ const Compare = () => {
                 {/* PLATFORMS */}
                 <div
                   className="grid"
-                  style={{
-                    gridTemplateColumns: `120px repeat(${comparisonList.length}, 1fr)`,
-                  }}
+                  style={{ gridTemplateColumns: `120px repeat(${comparisonList.length}, 1fr)` }}
                 >
                   <div className="border-r p-2 font-semibold bg-muted/50">
                     Platforms
                   </div>
 
                   {comparisonList.map((car) => (
-                    <div key={car.id} className="p-2">
-                      <div className="flex flex-wrap gap-1">
-                        {car.platform.map((p, i) => (
-                          <Badge key={i} variant="secondary" className="text-[10px]">
-                            {p.name}
-                          </Badge>
-                        ))}
-                      </div>
+                    <div key={car.id} className="p-2 flex flex-wrap gap-1">
+                      {car.platform.map((p, i) => (
+                        <Badge key={i} variant="secondary" className="text-[10px]">
+                          {p.name}
+                        </Badge>
+                      ))}
                     </div>
                   ))}
                 </div>
@@ -357,13 +270,9 @@ const Compare = () => {
                 {/* ACTIONS */}
                 <div
                   className="grid"
-                  style={{
-                    gridTemplateColumns: `120px repeat(${comparisonList.length}, 1fr)`,
-                  }}
+                  style={{ gridTemplateColumns: `120px repeat(${comparisonList.length}, 1fr)` }}
                 >
-                  <div className="border-r p-2 font-semibold bg-muted/50">
-                    Actions
-                  </div>
+                  <div className="border-r p-2 font-semibold bg-muted/50">Actions</div>
 
                   {comparisonList.map((car) => (
                     <div key={car.id} className="p-2">
@@ -380,8 +289,8 @@ const Compare = () => {
               </CardContent>
             </Card>
 
-            {/* AI COMPARISON */}
-            {aiResult && primaryA && primaryB && (
+            {/* AI RESULTS */}
+            {aiResult && (
               <Card className="mt-4 text-xs">
                 <CardHeader>
                   <CardTitle className="text-sm">AI Comparison Result</CardTitle>
@@ -397,25 +306,20 @@ const Compare = () => {
 
                   <Separator />
 
-                  {Object.entries(aiResult.detailedComparison).map(
-                    ([k, v]) => (
-                      <div key={k}>
-                        <strong>{k}:</strong>
-                        <p className="text-muted-foreground">{v}</p>
-                      </div>
-                    )
-                  )}
+                  {Object.entries(aiResult.detailedComparison).map(([k, v]) => (
+                    <div key={k}>
+                      <strong>{k}:</strong>
+                      <p className="text-muted-foreground">{v}</p>
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
             )}
 
-            {/* AI MAINTENANCE */}
             {(maintenanceA || maintenanceB) && (
               <Card className="mt-4 text-xs">
                 <CardHeader>
-                  <CardTitle className="text-sm">
-                    AI Maintenance Estimate
-                  </CardTitle>
+                  <CardTitle className="text-sm">AI Maintenance Estimate</CardTitle>
                 </CardHeader>
 
                 <CardContent className="grid gap-3">
@@ -493,7 +397,6 @@ const Compare = () => {
 
           </div>
         </div>
-
       </div>
     </div>
   );

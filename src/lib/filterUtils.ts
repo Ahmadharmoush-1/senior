@@ -22,7 +22,7 @@ export const filterCars = (cars: Car[], filters: FilterOptions): Car[] => {
     const price = Number(car.price);
     const mileage = Number(car.mileage);
 
-    // 🔍 Search
+    // Search
     if (
       filters.searchTerm &&
       !car.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&
@@ -38,23 +38,27 @@ export const filterCars = (cars: Car[], filters: FilterOptions): Car[] => {
     }
 
     // Price
-    if (price < filters.minPrice || price > filters.maxPrice) {
-      return false;
-    }
+    if (price < filters.minPrice || price > filters.maxPrice) return false;
 
     // Year
-    if (year < filters.minYear || year > filters.maxYear) {
-      return false;
-    }
+    if (year < filters.minYear || year > filters.maxYear) return false;
 
     // Mileage
-    if (mileage < filters.minMileage || mileage > filters.maxMileage) {
-      return false;
-    }
+    if (mileage < filters.minMileage || mileage > filters.maxMileage) return false;
 
     // Condition
     if (filters.conditions.length > 0 && !filters.conditions.includes(car.condition)) {
       return false;
+    }
+
+    // Fuel Type
+    if (filters.fuelTypes.length > 0 && car.fuelType) {
+      if (!filters.fuelTypes.includes(car.fuelType.toLowerCase())) return false;
+    }
+
+    // Transmission
+    if (filters.transmissions.length > 0 && car.transmission) {
+      if (!filters.transmissions.includes(car.transmission.toLowerCase())) return false;
     }
 
     return true;
@@ -77,7 +81,8 @@ export const filterCars = (cars: Car[], filters: FilterOptions): Car[] => {
     case "newest":
       filtered.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.createdAt).getTime() -
+          new Date(a.createdAt).getTime()
       );
       break;
   }

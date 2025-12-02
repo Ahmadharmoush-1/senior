@@ -4,7 +4,8 @@ import { AuthRequest } from "../middleware/authMiddleware";
 
 export const createCar = async (req: AuthRequest, res: Response) => {
   try {
-    if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
+    if (!req.user?.id)
+      return res.status(401).json({ message: "Unauthorized" });
 
     const {
       brand,
@@ -15,11 +16,27 @@ export const createCar = async (req: AuthRequest, res: Response) => {
       platforms,
       description,
       condition,
-      facebookUrl, // ✅ accept optional
+      facebookUrl,
+
+      // optional specs
+      fuelType,
+      transmission,
+      color,
+      engineSize,
+      doors,
+      cylinder,
+      drivetrain,
+      bodyType,
+
+      // NEW FIELD
+      phone,
     } = req.body;
 
+    // images
     const images = req.files
-      ? (req.files as Express.Multer.File[]).map((f) => `/uploads/${f.filename}`)
+      ? (req.files as Express.Multer.File[]).map(
+          (f) => `/uploads/${f.filename}`
+        )
       : [];
 
     const car = await Car.create({
@@ -34,16 +51,30 @@ export const createCar = async (req: AuthRequest, res: Response) => {
       images,
       facebookUrl,
       seller: req.user.id,
+
+      // optional fields
+      fuelType,
+      transmission,
+      color,
+      engineSize,
+      doors,
+      cylinder,
+      drivetrain,
+      bodyType,
+
+      // NEW FIELD (save phone)
+      phone,
     });
 
     const populated = await car.populate("seller", "name email");
-
     res.status(201).json(populated);
   } catch (err) {
     console.error("Create Car Error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 export const getAllCars = async (_req: Request, res: Response) => {
   try {

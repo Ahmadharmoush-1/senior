@@ -1,3 +1,4 @@
+// src/components/CarCard.tsx
 import { Link } from "react-router-dom";
 import { Car as CarType } from "@/types/car";
 import { Badge } from "@/components/ui/badge";
@@ -31,65 +32,50 @@ const CarCard = ({ car }: CarCardProps) => {
       toast({ title: "Removed from comparison" });
     } else {
       const added = addToComparison(car);
-      if (added) {
-        toast({ title: "Added to comparison" });
-      } else {
-        toast({
-          title: "Comparison limit reached",
-          description: "You can only compare up to 3 cars at a time.",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: added ? "Added to comparison" : "Comparison full (max 3)",
+        variant: added ? "default" : "destructive",
+      });
     }
   };
 
   return (
     <Link to={`/car/${car.id}`}>
-      <Card className="group overflow-hidden transition-smooth hover:shadow-card-hover">
+      <Card className="group overflow-hidden transition hover:shadow-card-hover">
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           <img
             src={car.images[0]}
             alt={car.title}
-            className="h-full w-full object-cover transition-smooth group-hover:scale-105"
+            className="h-full w-full object-cover transition group-hover:scale-105"
           />
+
+          {/* Platforms */}
           <div className="absolute right-2 top-2 flex flex-wrap gap-1">
-            {car.platform.map((platform, index) => (
-              <Badge key={index} variant="secondary" className="bg-card/90 backdrop-blur-sm">
-                {platform.name}
+            {car.platform.map((p, i) => (
+              <Badge key={i} variant="secondary" className="bg-card/90 backdrop-blur-sm">
+                {p.name}
               </Badge>
             ))}
           </div>
+
+          {/* Favorite + Compare */}
           <div className="absolute left-2 top-2 flex gap-1">
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-8 w-8 bg-card/90 backdrop-blur-sm hover:bg-card"
-              onClick={handleFavoriteClick}
-            >
-              <Heart
-                className={`h-4 w-4 ${isFavorite(car.id) ? "fill-red-500 text-red-500" : ""}`}
-              />
+            <Button variant="secondary" size="icon" className="h-8 w-8" onClick={handleFavoriteClick}>
+              <Heart className={`h-4 w-4 ${isFavorite(car.id) ? "fill-red-500 text-red-500" : ""}`} />
             </Button>
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-8 w-8 bg-card/90 backdrop-blur-sm hover:bg-card"
-              onClick={handleComparisonClick}
-            >
-              <GitCompare
-                className={`h-4 w-4 ${isInComparison(car.id) ? "text-primary" : ""}`}
-              />
+            <Button variant="secondary" size="icon" className="h-8 w-8" onClick={handleComparisonClick}>
+              <GitCompare className={`h-4 w-4 ${isInComparison(car.id) ? "text-primary" : ""}`} />
             </Button>
           </div>
         </div>
 
         <CardContent className="p-4">
-          <h3 className="mb-2 text-lg font-semibold text-foreground line-clamp-1">{car.title}</h3>
-          
+          <h3 className="mb-2 text-lg font-semibold">{car.title}</h3>
+
           <div className="mb-3 flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
-              <span className="line-clamp-1">{car.location}</span>
+              <span>{car.location}</span>
             </div>
             <div className="flex items-center gap-1">
               <Gauge className="h-4 w-4" />

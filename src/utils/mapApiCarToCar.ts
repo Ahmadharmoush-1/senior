@@ -10,7 +10,6 @@ export const mapApiCarToCar = (c: ApiCar): Car => {
     brand: c.brand,
     model: c.model,
 
-    // convert string → number (IMPORTANT FIX)
     year: Number(c.year),
     price: Number(c.price),
     mileage: Number(c.mileage),
@@ -18,26 +17,28 @@ export const mapApiCarToCar = (c: ApiCar): Car => {
     condition: c.condition,
     description: c.description,
 
-    // STATIC FIX: prepend server URL
     images: c.images?.map((img) => `http://127.0.0.1:5000${img}`) || [],
 
-    // platforms → objects
     platform: c.platforms?.map((p) => ({ name: p })) || [],
 
-    // seller info
     seller: {
       id: c.seller?._id || "",
       name: c.seller?.name || "Unknown",
       email: c.seller?.email || "",
-      phone: "", // backend does not give phone
+      phone: c.phone || "",   // <-- FIXED
     },
 
-    // createdAt for sorting
     createdAt: c.createdAt || "",
-
     location: "Lebanon",
 
-    fuelType: undefined,
-    transmission: undefined,
+    fuelType: c.fuelType,
+    transmission: c.transmission,
+    color: c.color,
+    engineSize: c.engineSize,
+    doors: c.doors ? Number(c.doors) : undefined,
+    cylinders: c.cylinders ? Number(c.cylinders) : undefined,
+    drivetrain: c.drivetrain,
+    bodyType: c.bodyType,
   };
 };
+

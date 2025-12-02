@@ -1,3 +1,4 @@
+// src/components/FilterPanel.tsx
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -17,37 +18,16 @@ interface FilterPanelProps {
 const FilterPanel = ({ filters, onFiltersChange, availableBrands }: FilterPanelProps) => {
   const [localFilters, setLocalFilters] = useState(filters);
 
-  const handleBrandToggle = (brand: string) => {
-    const newBrands = localFilters.brands.includes(brand)
-      ? localFilters.brands.filter((b) => b !== brand)
-      : [...localFilters.brands, brand];
-    setLocalFilters({ ...localFilters, brands: newBrands });
+  const toggle = (key: string, value: string) => {
+    const list = localFilters[key as keyof FilterOptions] as string[];
+    const updated = list.includes(value)
+      ? list.filter((v) => v !== value)
+      : [...list, value];
+
+    setLocalFilters({ ...localFilters, [key]: updated });
   };
 
-  const handleConditionToggle = (condition: string) => {
-    const newConditions = localFilters.conditions.includes(condition)
-      ? localFilters.conditions.filter((c) => c !== condition)
-      : [...localFilters.conditions, condition];
-    setLocalFilters({ ...localFilters, conditions: newConditions });
-  };
-
-  const handleFuelTypeToggle = (fuelType: string) => {
-    const newFuelTypes = localFilters.fuelTypes.includes(fuelType)
-      ? localFilters.fuelTypes.filter((f) => f !== fuelType)
-      : [...localFilters.fuelTypes, fuelType];
-    setLocalFilters({ ...localFilters, fuelTypes: newFuelTypes });
-  };
-
-  const handleTransmissionToggle = (transmission: string) => {
-    const newTransmissions = localFilters.transmissions.includes(transmission)
-      ? localFilters.transmissions.filter((t) => t !== transmission)
-      : [...localFilters.transmissions, transmission];
-    setLocalFilters({ ...localFilters, transmissions: newTransmissions });
-  };
-
-  const applyFilters = () => {
-    onFiltersChange(localFilters);
-  };
+  const applyFilters = () => onFiltersChange(localFilters);
 
   const resetFilters = () => {
     const defaultFilters: FilterOptions = {
@@ -55,10 +35,10 @@ const FilterPanel = ({ filters, onFiltersChange, availableBrands }: FilterPanelP
       brands: [],
       minPrice: 0,
       maxPrice: 100000,
-      minYear: 2015,
-      maxYear: 2025,
+      minYear: 2000,
+      maxYear: new Date().getFullYear(),
       minMileage: 0,
-      maxMileage: 150000,
+      maxMileage: 200000,
       conditions: [],
       fuelTypes: [],
       transmissions: [],
@@ -87,41 +67,37 @@ const FilterPanel = ({ filters, onFiltersChange, availableBrands }: FilterPanelP
           )}
         </Button>
       </SheetTrigger>
+
       <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Filter Cars</SheetTitle>
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
+          
           {/* Brand */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">Brand</Label>
-            <div className="space-y-2">
-              {availableBrands.map((brand) => (
-                <div key={brand} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`brand-${brand}`}
-                    checked={localFilters.brands.includes(brand)}
-                    onCheckedChange={() => handleBrandToggle(brand)}
-                  />
-                  <label htmlFor={`brand-${brand}`} className="text-sm cursor-pointer">
-                    {brand}
-                  </label>
-                </div>
-              ))}
-            </div>
+            {availableBrands.map((brand) => (
+              <div key={brand} className="flex items-center space-x-2">
+                <Checkbox
+                  checked={localFilters.brands.includes(brand)}
+                  onCheckedChange={() => toggle("brands", brand)}
+                />
+                <label className="text-sm cursor-pointer">{brand}</label>
+              </div>
+            ))}
           </div>
 
-          {/* Price Range */}
+          {/* Price */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">
-              Price Range: ${localFilters.minPrice.toLocaleString()} - $
-              {localFilters.maxPrice.toLocaleString()}
+              Price: ${localFilters.minPrice.toLocaleString()} - ${localFilters.maxPrice.toLocaleString()}
             </Label>
             <Slider
               min={0}
               max={100000}
-              step={5000}
+              step={1000}
               value={[localFilters.minPrice, localFilters.maxPrice]}
               onValueChange={(value) =>
                 setLocalFilters({ ...localFilters, minPrice: value[0], maxPrice: value[1] })
@@ -129,14 +105,14 @@ const FilterPanel = ({ filters, onFiltersChange, availableBrands }: FilterPanelP
             />
           </div>
 
-          {/* Year Range */}
+          {/* Year */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">
               Year: {localFilters.minYear} - {localFilters.maxYear}
             </Label>
             <Slider
-              min={2015}
-              max={2025}
+              min={1990}
+              max={new Date().getFullYear()}
               step={1}
               value={[localFilters.minYear, localFilters.maxYear]}
               onValueChange={(value) =>
@@ -145,15 +121,14 @@ const FilterPanel = ({ filters, onFiltersChange, availableBrands }: FilterPanelP
             />
           </div>
 
-          {/* Mileage Range */}
+          {/* Mileage */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">
-              Mileage: {localFilters.minMileage.toLocaleString()} -{" "}
-              {localFilters.maxMileage.toLocaleString()} mi
+              Mileage: {localFilters.minMileage.toLocaleString()} - {localFilters.maxMileage.toLocaleString()} mi
             </Label>
             <Slider
               min={0}
-              max={150000}
+              max={200000}
               step={5000}
               value={[localFilters.minMileage, localFilters.maxMileage]}
               onValueChange={(value) =>
@@ -165,68 +140,52 @@ const FilterPanel = ({ filters, onFiltersChange, availableBrands }: FilterPanelP
           {/* Condition */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">Condition</Label>
-            <div className="space-y-2">
-              {["new", "used", "certified"].map((condition) => (
-                <div key={condition} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`condition-${condition}`}
-                    checked={localFilters.conditions.includes(condition)}
-                    onCheckedChange={() => handleConditionToggle(condition)}
-                  />
-                  <label htmlFor={`condition-${condition}`} className="text-sm cursor-pointer capitalize">
-                    {condition}
-                  </label>
-                </div>
-              ))}
-            </div>
+            {["new", "used", "certified"].map((c) => (
+              <div key={c} className="flex items-center space-x-2">
+                <Checkbox
+                  checked={localFilters.conditions.includes(c)}
+                  onCheckedChange={() => toggle("conditions", c)}
+                />
+                <label className="capitalize text-sm cursor-pointer">{c}</label>
+              </div>
+            ))}
           </div>
 
           {/* Fuel Type */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">Fuel Type</Label>
-            <div className="space-y-2">
-              {["gasoline", "diesel", "electric", "hybrid"].map((fuel) => (
-                <div key={fuel} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`fuel-${fuel}`}
-                    checked={localFilters.fuelTypes.includes(fuel)}
-                    onCheckedChange={() => handleFuelTypeToggle(fuel)}
-                  />
-                  <label htmlFor={`fuel-${fuel}`} className="text-sm cursor-pointer capitalize">
-                    {fuel}
-                  </label>
-                </div>
-              ))}
-            </div>
+            {["gasoline", "diesel", "electric", "hybrid"].map((fuel) => (
+              <div key={fuel} className="flex items-center space-x-2">
+                <Checkbox
+                  checked={localFilters.fuelTypes.includes(fuel)}
+                  onCheckedChange={() => toggle("fuelTypes", fuel)}
+                />
+                <label className="capitalize text-sm cursor-pointer">{fuel}</label>
+              </div>
+            ))}
           </div>
 
           {/* Transmission */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">Transmission</Label>
-            <div className="space-y-2">
-              {["automatic", "manual"].map((trans) => (
-                <div key={trans} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`trans-${trans}`}
-                    checked={localFilters.transmissions.includes(trans)}
-                    onCheckedChange={() => handleTransmissionToggle(trans)}
-                  />
-                  <label htmlFor={`trans-${trans}`} className="text-sm cursor-pointer capitalize">
-                    {trans}
-                  </label>
-                </div>
-              ))}
-            </div>
+            {["automatic", "manual"].map((t) => (
+              <div key={t} className="flex items-center space-x-2">
+                <Checkbox
+                  checked={localFilters.transmissions.includes(t)}
+                  onCheckedChange={() => toggle("transmissions", t)}
+                />
+                <label className="capitalize text-sm cursor-pointer">{t}</label>
+              </div>
+            ))}
           </div>
 
-          {/* Action Buttons */}
+          {/* Buttons */}
           <div className="flex gap-3 pt-4">
             <Button variant="outline" onClick={resetFilters} className="flex-1">
-              <X className="h-4 w-4 mr-2" />
-              Reset
+              <X className="h-4 w-4 mr-2" /> Reset
             </Button>
             <Button variant="default" onClick={applyFilters} className="flex-1">
-              Apply Filters
+              Apply
             </Button>
           </div>
         </div>

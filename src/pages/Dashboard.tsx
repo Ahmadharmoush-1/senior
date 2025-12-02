@@ -22,11 +22,11 @@ const Dashboard = () => {
     searchTerm: "",
     brands: [],
     minPrice: 0,
-    maxPrice: 1_000_000, // 🔥 widened so nothing disappears by price
-    minYear: 0, // 🔥 allow all years
+    maxPrice: 1_000_000,
+    minYear: 0,
     maxYear: new Date().getFullYear() + 1,
     minMileage: 0,
-    maxMileage: 1_000_000, // 🔥 widened mileage
+    maxMileage: 1_000_000,
     conditions: [],
     fuelTypes: [],
     transmissions: [],
@@ -39,9 +39,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const apiCars = await getAllCars(); // ApiCar[]
+        const apiCars = await getAllCars();
         console.log("🚗 API cars:", apiCars);
-        const mapped = apiCars.map(mapApiCarToCar); // Car[]
+        const mapped = apiCars.map(mapApiCarToCar);
         console.log("🚗 Mapped cars:", mapped);
         setCars(mapped);
       } catch (err) {
@@ -103,20 +103,14 @@ const Dashboard = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="price-asc">
-                    Price: Low to High
-                  </SelectItem>
-                  <SelectItem value="price-desc">
-                    Price: High to Low
-                  </SelectItem>
+                  <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                  <SelectItem value="price-desc">Price: High to Low</SelectItem>
                   <SelectItem value="year-desc">Year: Newest</SelectItem>
-                  <SelectItem value="mileage-asc">
-                    Mileage: Lowest
-                  </SelectItem>
+                  <SelectItem value="mileage-asc">Mileage: Lowest</SelectItem>
                 </SelectContent>
               </Select>
 
-              {/* Filters button/panel */}
+              {/* Filters */}
               <FilterPanel
                 filters={filters}
                 onFiltersChange={setFilters}
@@ -132,9 +126,7 @@ const Dashboard = () => {
         <div className="mb-8">
           <h2 className="text-3xl font-bold">Available Cars</h2>
           <p className="mt-2 text-muted-foreground">
-            {loading
-              ? "Loading cars..."
-              : `${filteredCars.length} cars found`}
+            {loading ? "Loading cars..." : `${filteredCars.length} cars found`}
           </p>
         </div>
 

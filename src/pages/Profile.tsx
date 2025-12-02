@@ -98,7 +98,6 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-3 py-6 animate-fade-in">
         <div className="grid gap-6 lg:grid-cols-3">
-          
           {/* LEFT PANEL — PROFILE */}
           <div className="lg:col-span-1">
             <Card className="shadow-card">
@@ -213,7 +212,10 @@ const Profile = () => {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl">My Listings</CardTitle>
-                  <Button onClick={() => navigate("/sell")} className="h-8 px-3 text-sm">
+                  <Button
+                    onClick={() => navigate("/sell")}
+                    className="h-8 px-3 text-sm"
+                  >
                     Add Listing
                   </Button>
                 </div>
@@ -229,7 +231,10 @@ const Profile = () => {
                     <p className="text-muted-foreground text-sm">
                       You have no listings yet.
                     </p>
-                    <Button className="mt-3" onClick={() => navigate("/sell")}>
+                    <Button
+                      className="mt-3"
+                      onClick={() => navigate("/sell")}
+                    >
                       List Your First Car
                     </Button>
                   </div>
@@ -250,12 +255,17 @@ const Profile = () => {
                         <div className="flex-1 space-y-1">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="text-base font-semibold">{car.title}</h3>
+                              <h3 className="text-base font-semibold">
+                                {car.title}
+                              </h3>
                               <p className="text-xl font-semibold text-primary">
                                 ${car.price.toLocaleString()}
                               </p>
                             </div>
-                            <Badge variant="outline" className="capitalize text-xs">
+                            <Badge
+                              variant="outline"
+                              className="capitalize text-xs"
+                            >
                               {car.condition}
                             </Badge>
                           </div>
@@ -266,7 +276,11 @@ const Profile = () => {
 
                           <div className="flex flex-wrap gap-1">
                             {car.platform.map((p, i) => (
-                              <Badge key={i} variant="secondary" className="text-[10px] px-2">
+                              <Badge
+                                key={i}
+                                variant="secondary"
+                                className="text-[10px] px-2"
+                              >
                                 {p.name}
                               </Badge>
                             ))}

@@ -12,6 +12,19 @@ export interface ICar {
   images: string[];
   seller: mongoose.Types.ObjectId;
   facebookUrl?: string;
+
+  // optional specs
+  fuelType?: string;
+  transmission?: string;
+  color?: string;
+  engineSize?: number;
+  doors?: number;
+  cylinder?: number;
+  drivetrain?: string;
+  bodyType?: string;
+
+  // ✅ NEW FIELD
+  phone?: string;
 }
 
 const carSchema = new Schema<ICar>(
@@ -22,9 +35,7 @@ const carSchema = new Schema<ICar>(
     price: { type: Number, required: true },
     mileage: { type: Number, required: true },
 
-    // ❌ FIXED: remove required
     platforms: [{ type: String }],
-
     description: { type: String, required: true },
 
     condition: {
@@ -33,7 +44,6 @@ const carSchema = new Schema<ICar>(
       required: true,
     },
 
-    // ❌ FIXED: remove required
     images: [{ type: String }],
 
     seller: {
@@ -43,8 +53,22 @@ const carSchema = new Schema<ICar>(
     },
 
     facebookUrl: { type: String },
+
+    // NEW FIELD
+    phone: { type: String },
+
+    // OPTIONAL SPECS
+    fuelType: { type: String },
+    transmission: { type: String },
+    color: { type: String },
+    engineSize: { type: Number },
+    doors: { type: Number },
+    cylinder: { type: Number },
+    drivetrain: { type: String },
+    bodyType: { type: String },
   },
   { timestamps: true }
 );
+
 
 export const Car = model<ICar>("Car", carSchema);

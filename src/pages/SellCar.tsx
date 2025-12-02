@@ -77,6 +77,17 @@ const SellCar = () => {
     mileage: "",
     price: "",
     condition: "",
+    // NEW FIELDS
+    fuelType: "",
+    transmission: "",
+    color: "",
+    engineSize: "",
+    doors: "",
+    cylinders: "",
+    drivetrain: "",
+    bodyType: "",
+    phone: "",
+    // existing
     description: "",
     platforms: [] as string[],
   });
@@ -256,7 +267,7 @@ const SellCar = () => {
   // SUBMIT
   // --------------------------
   const handleSubmit = async () => {
-    // 🔥 Extra validation so we don't store 0/empty values
+    // Extra validation so we don't store 0/empty values
     if (
       !formData.brand ||
       !formData.model ||
@@ -265,12 +276,13 @@ const SellCar = () => {
       !formData.mileage ||
       !formData.condition ||
       !formData.description ||
+      !formData.phone ||
       formData.platforms.length === 0
     ) {
       return toast({
         title: "Missing information",
         description:
-          "Please fill all required fields: brand, model, year, price, mileage, condition, description, platforms.",
+          "Please fill all required fields: brand, model, year, price, mileage, condition, description, phone, platforms.",
         variant: "destructive",
       });
     }
@@ -290,7 +302,7 @@ const SellCar = () => {
 
       Object.entries(formData).forEach(([key, value]) => {
         if (key === "platforms") {
-          formData.platforms.forEach((p) => fd.append("platforms", p));
+          (value as string[]).forEach((p) => fd.append("platforms", p));
         } else {
           fd.append(key, value as string);
         }
@@ -450,6 +462,47 @@ const SellCar = () => {
                     </div>
                   </div>
 
+                  {/* FUEL / TRANSMISSION (optional) */}
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label>Fuel Type (optional)</Label>
+                      <Select
+                        value={formData.fuelType}
+                        onValueChange={(value) =>
+                          handleInputChange("fuelType", value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select fuel type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="gasoline">Gasoline</SelectItem>
+                          <SelectItem value="diesel">Diesel</SelectItem>
+                          <SelectItem value="hybrid">Hybrid</SelectItem>
+                          <SelectItem value="electric">Electric</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Transmission (optional)</Label>
+                      <Select
+                        value={formData.transmission}
+                        onValueChange={(value) =>
+                          handleInputChange("transmission", value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select transmission" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="automatic">Automatic</SelectItem>
+                          <SelectItem value="manual">Manual</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
                   <Button onClick={() => setStep(2)} className="w-full">
                     Continue
                   </Button>
@@ -550,13 +603,102 @@ const SellCar = () => {
             {step === 3 && (
               <>
                 <CardHeader>
-                  <CardTitle>Description & Platforms</CardTitle>
+                  <CardTitle>Description, Contact & Platforms</CardTitle>
                   <CardDescription>
                     Add details and where to list
                   </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
+                  {/* CONTACT PHONE */}
+                  <div className="space-y-2">
+                    <Label>Contact Phone *</Label>
+                    <Input
+                      value={formData.phone}
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
+                      placeholder="e.g., +961 70 123 456"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      This number will be used for call & WhatsApp buttons.
+                    </p>
+                  </div>
+
+                  {/* ADDITIONAL SPECS (optional) */}
+                  <div className="space-y-2">
+                    <Label>Additional Specifications (optional)</Label>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="space-y-1">
+                        <Label className="text-xs">Color</Label>
+                        <Input
+                          value={formData.color}
+                          onChange={(e) =>
+                            handleInputChange("color", e.target.value)
+                          }
+                          placeholder="e.g., White"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label className="text-xs">Engine Size</Label>
+                        <Input
+                          value={formData.engineSize}
+                          onChange={(e) =>
+                            handleInputChange("engineSize", e.target.value)
+                          }
+                          placeholder="e.g., 2.0L"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label className="text-xs">Doors</Label>
+                        <Input
+                          type="number"
+                          value={formData.doors}
+                          onChange={(e) =>
+                            handleInputChange("doors", e.target.value)
+                          }
+                          placeholder="e.g., 4"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label className="text-xs">Cylinders</Label>
+                        <Input
+                          type="number"
+                          value={formData.cylinders}
+                          onChange={(e) =>
+                            handleInputChange("cylinders", e.target.value)
+                          }
+                          placeholder="e.g., 4"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label className="text-xs">Drivetrain</Label>
+                        <Input
+                          value={formData.drivetrain}
+                          onChange={(e) =>
+                            handleInputChange("drivetrain", e.target.value)
+                          }
+                          placeholder="e.g., FWD, RWD, AWD"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label className="text-xs">Body Type</Label>
+                        <Input
+                          value={formData.bodyType}
+                          onChange={(e) =>
+                            handleInputChange("bodyType", e.target.value)
+                          }
+                          placeholder="e.g., Sedan, SUV"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   {/* DESCRIPTION */}
                   <div className="space-y-2">
                     <Label>Description *</Label>
@@ -659,7 +801,7 @@ const SellCar = () => {
                     </Button>
                   </div>
                 </CardContent>
-              </> 
+              </>
             )}
           </Card>
         </div>

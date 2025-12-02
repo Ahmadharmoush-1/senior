@@ -1,3 +1,4 @@
+// src/api/cars.ts
 import axios from "axios";
 
 export const API_BASE_URL = "http://127.0.0.1:5000";
@@ -7,23 +8,38 @@ export interface ApiCar {
   _id: string;
   brand: string;
   model: string;
-  year: number;
-  price: number;
-  mileage: number;
+  year: number | string;
+  price: number | string;
+  mileage: number | string;
   description: string;
   condition: "new" | "used" | "certified";
   images: string[];
   platforms: string[];
+  phone?: string; // <-- ADD THIS
   facebookUrl?: string;
+  
+
+  // NEW OPTIONAL FIELDS (from backend)
+  fuelType?: string;
+  transmission?: string;
+  color?: string;
+  engineSize?: string;
+  doors?: number | string;
+  cylinders?: number | string;
+  drivetrain?: string;
+  bodyType?: string;
+
   seller?: {
     _id?: string;
     name?: string;
     email?: string;
   };
+
   createdAt?: string;
   updatedAt?: string;
 }
 
+// CREATE CAR
 export const createCar = async (formData: FormData, token: string) => {
   const res = await axios.post(API_URL, formData, {
     headers: {
@@ -34,17 +50,19 @@ export const createCar = async (formData: FormData, token: string) => {
   return res.data;
 };
 
+// GET ALL CARS
 export const getAllCars = async (): Promise<ApiCar[]> => {
   const res = await axios.get(API_URL);
   return res.data;
 };
 
+// GET CAR BY ID
 export const getCarById = async (id: string): Promise<ApiCar> => {
   const res = await axios.get(`${API_URL}/${id}`);
   return res.data;
 };
 
-// ✅ my listings
+// MY CARS
 export const getMyCars = async (token: string): Promise<ApiCar[]> => {
   const res = await axios.get(`${API_URL}/me/listings`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -52,7 +70,7 @@ export const getMyCars = async (token: string): Promise<ApiCar[]> => {
   return res.data;
 };
 
-// ✅ update listing
+// UPDATE CAR
 export const updateCar = async (id: string, formData: FormData, token: string) => {
   const res = await axios.put(`${API_URL}/${id}`, formData, {
     headers: {
@@ -63,7 +81,7 @@ export const updateCar = async (id: string, formData: FormData, token: string) =
   return res.data;
 };
 
-// ✅ delete listing
+// DELETE CAR
 export const deleteCar = async (id: string, token: string) => {
   const res = await axios.delete(`${API_URL}/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
