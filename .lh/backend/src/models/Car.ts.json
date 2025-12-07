@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 20,
+            "activePatchIndex": 22,
             "patches": [
                 {
                     "date": 1763055887524,
@@ -88,6 +88,14 @@
                 {
                     "date": 1764686991805,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,8 @@\n     price: { type: Number, required: true },\r\n     mileage: { type: Number, required: true },\r\n \r\n     platforms: [{ type: String }],\r\n-\r\n     description: { type: String, required: true },\r\n \r\n     condition: {\r\n       type: String,\r\n@@ -54,20 +53,22 @@\n     },\r\n \r\n     facebookUrl: { type: String },\r\n \r\n+    // NEW FIELD\r\n+    phone: { type: String },\r\n+\r\n+    // OPTIONAL SPECS\r\n     fuelType: { type: String },\r\n     transmission: { type: String },\r\n     color: { type: String },\r\n     engineSize: { type: Number },\r\n     doors: { type: Number },\r\n     cylinder: { type: Number },\r\n     drivetrain: { type: String },\r\n     bodyType: { type: String },\r\n-\r\n-    // ✅ NEW OPTIONAL FIELD\r\n-    phone: { type: String },\r\n   },\r\n   { timestamps: true }\r\n );\r\n \r\n+\r\n export const Car = model<ICar>(\"Car\", carSchema);\r\n"
+                },
+                {
+                    "date": 1764776802138,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -67,8 +67,10 @@\n     drivetrain: { type: String },\r\n     bodyType: { type: String },\r\n   },\r\n   { timestamps: true }\r\n+  sold: { type: Boolean, default: false },\r\n+soldAt: { type: Date, default: null },\r\n );\r\n \r\n \r\n export const Car = model<ICar>(\"Car\", carSchema);\r\n"
+                },
+                {
+                    "date": 1764776809162,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,11 +66,10 @@\n     cylinder: { type: Number },\r\n     drivetrain: { type: String },\r\n     bodyType: { type: String },\r\n   },\r\n-  { timestamps: true },\r\n-  sold: { type: Boolean, default: false },\r\n-soldAt: { type: Date, default: null },\r\n+  { timestamps: true }\r\n+  \r\n );\r\n \r\n \r\n export const Car = model<ICar>(\"Car\", carSchema);\r\n"
                 }
             ],
             "date": 1763055887524,

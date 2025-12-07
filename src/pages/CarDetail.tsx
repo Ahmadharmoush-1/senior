@@ -189,9 +189,19 @@ const CarDetail = () => {
         <div className="grid gap-6 lg:grid-cols-3">
           {/* LEFT */}
           <div className="lg:col-span-2 space-y-4">
-            <Card className="overflow-hidden">
-              <ImageCarousel images={car.images} alt={car.title} />
-            </Card>
+          <Card className="relative overflow-hidden">
+  {/* ⭐ SOLD BADGE OVER IMAGE */}
+  {car.sold && (
+    <div className="absolute inset-0 bg-black/40 z-20 flex items-center justify-center">
+      <span className="bg-red-700 text-white px-6 py-2 text-3xl font-extrabold rounded-md shadow-lg rotate-[-10deg]">
+        SOLD
+      </span>
+    </div>
+  )}
+
+  <ImageCarousel images={car.images} alt={car.title} />
+</Card>
+
 
             <Card>
               <CardHeader>

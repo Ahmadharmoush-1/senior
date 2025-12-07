@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 9,
+            "activePatchIndex": 11,
             "patches": [
                 {
                     "date": 1759428094349,
@@ -44,6 +44,14 @@
                 {
                     "date": 1764511645273,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,9 +66,9 @@\n                     <Route path=\"/profile\" element={<Profile />} />\r\n                     <Route path=\"/sell\" element={<SellCar />} />\r\n                     <Route path=\"/edit-car/:id\" element={<EditCar />} />\r\n                     <Route path=\"/compare\" element={<Compare />} />\r\n-                    <Route path=\"/ai\" element={<AIChat />} />\r\n+                    {/* <Route path=\"/ai\" element={<AIChat />} /> */}\r\n \r\n                     <Route path=\"/favorites\" element={<Favorites />} />\r\n                     <Route path=\"*\" element={<NotFound />} />\r\n                   </Routes>\r\n"
+                },
+                {
+                    "date": 1764775773514,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,11 @@\n import Compare from \"./pages/Compare\";\r\n import Favorites from \"./pages/Favorites\";\r\n import NotFound from \"./pages/NotFound\";\r\n import EditCar from \"./pages/EditCar\";\r\n+import ForgotPassword from \"@/pages/ForgotPassword\";\r\n+import VerifyForgotOtp from \"@/pages/VerifyForgotOtp\";\r\n+import ResetPassword from \"@/pages/ResetPassword\";\r\n \r\n /* ⭐ IMPORT CHATBOT ⭐ */\r\n import { ChatBot } from \"@/components/ui/ChatBot\";\r\n // import AIChat from \"./pages/AIChat\";\r\n"
+                },
+                {
+                    "date": 1764775782679,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -70,8 +70,11 @@\n                     <Route path=\"/sell\" element={<SellCar />} />\r\n                     <Route path=\"/edit-car/:id\" element={<EditCar />} />\r\n                     <Route path=\"/compare\" element={<Compare />} />\r\n                     {/* <Route path=\"/ai\" element={<AIChat />} /> */}\r\n+                    <Route path=\"/forgot-password\" element={<ForgotPassword />} />\r\n+<Route path=\"/verify-forgot-otp\" element={<VerifyForgotOtp />} />\r\n+<Route path=\"/reset-password\" element={<ResetPassword />} />\r\n \r\n                     <Route path=\"/favorites\" element={<Favorites />} />\r\n                     <Route path=\"*\" element={<NotFound />} />\r\n                   </Routes>\r\n"
                 }
             ],
             "date": 1759428094349,

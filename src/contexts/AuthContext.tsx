@@ -4,6 +4,7 @@ import {
   login as apiLogin,
   verifyOtp as apiVerifyOtp,
   AuthSuccessResponse,
+  
 } from "../api/auth";
 
 interface User {
@@ -25,6 +26,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
+    saveUserSession: (data: AuthSuccessResponse) => void;
 }
 
 function getErrorMessage(error: unknown, fallback = "An error occurred") {
@@ -121,7 +123,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <AuthContext.Provider
-      value={{ user, requestOtpLogin, verifyOtpLogin, register, logout, isLoading }}
+     value={{
+  user,
+  requestOtpLogin,
+  verifyOtpLogin,
+  register,
+  logout,
+  isLoading,
+  saveUserSession, 
+}}
+
     >
       {children}
     </AuthContext.Provider>

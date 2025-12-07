@@ -15,11 +15,11 @@ export interface ApiCar {
   condition: "new" | "used" | "certified";
   images: string[];
   platforms: string[];
-  phone?: string; // <-- ADD THIS
+  phone?: string;
   facebookUrl?: string;
-  
+  sold?: boolean;
+  soldAt?: string;
 
-  // NEW OPTIONAL FIELDS (from backend)
   fuelType?: string;
   transmission?: string;
   color?: string;
@@ -86,5 +86,15 @@ export const deleteCar = async (id: string, token: string) => {
   const res = await axios.delete(`${API_URL}/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  return res.data;
+};
+
+// ⭐ MARK CAR AS SOLD
+export const markCarSold = async (id: string, token: string) => {
+  const res = await axios.put(
+    `${API_URL}/${id}/sold`,
+    {},
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return res.data;
 };

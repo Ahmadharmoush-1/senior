@@ -25,7 +25,7 @@ export const mapApiCarToCar = (c: ApiCar): Car => {
       id: c.seller?._id || "",
       name: c.seller?.name || "Unknown",
       email: c.seller?.email || "",
-      phone: c.phone || "",   // <-- FIXED
+      phone: c.phone || "",
     },
 
     createdAt: c.createdAt || "",
@@ -39,6 +39,9 @@ export const mapApiCarToCar = (c: ApiCar): Car => {
     cylinders: c.cylinders ? Number(c.cylinders) : undefined,
     drivetrain: c.drivetrain,
     bodyType: c.bodyType,
+
+    // ⭐ FIX: ADD SOLD DATA
+    sold: c.sold ?? false,
+    soldAt: c.soldAt || "",
   };
 };
-

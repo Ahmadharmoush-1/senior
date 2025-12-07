@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 13,
+            "activePatchIndex": 14,
             "patches": [
                 {
                     "date": 1763650513154,
@@ -60,6 +60,10 @@
                 {
                     "date": 1764687064376,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,8 @@\n+// src/utils/mapApiCarToCar.ts\r\n+import { ApiCar } from \"@/api/cars\";\r\n+import { Car } from \"@/types/car\";\r\n+\r\n export const mapApiCarToCar = (c: ApiCar): Car => {\r\n   return {\r\n     id: c._id,\r\n     title: `${c.brand} ${c.model}`.trim(),\r\n@@ -36,4 +40,5 @@\n     drivetrain: c.drivetrain,\r\n     bodyType: c.bodyType,\r\n   };\r\n };\r\n+\r\n"
+                },
+                {
+                    "date": 1764777872885,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n     seller: {\r\n       id: c.seller?._id || \"\",\r\n       name: c.seller?.name || \"Unknown\",\r\n       email: c.seller?.email || \"\",\r\n-      phone: c.phone || \"\",   // <-- FIXED\r\n+      phone: c.phone || \"\",\r\n     },\r\n \r\n     createdAt: c.createdAt || \"\",\r\n     location: \"Lebanon\",\r\n@@ -38,7 +38,10 @@\n     doors: c.doors ? Number(c.doors) : undefined,\r\n     cylinders: c.cylinders ? Number(c.cylinders) : undefined,\r\n     drivetrain: c.drivetrain,\r\n     bodyType: c.bodyType,\r\n+\r\n+    // ⭐ FIX: ADD SOLD DATA\r\n+    sold: c.sold ?? false,\r\n+    soldAt: c.soldAt || \"\",\r\n   };\r\n };\r\n-\r\n"
                 }
             ],
             "date": 1763650513154,

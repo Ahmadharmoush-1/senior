@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 19,
+            "activePatchIndex": 20,
             "patches": [
                 {
                     "date": 1763058187293,
@@ -84,6 +84,10 @@
                 {
                     "date": 1764687028866,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,8 +14,9 @@\n   description: string;\r\n   condition: \"new\" | \"used\" | \"certified\";\r\n   images: string[];\r\n   platforms: string[];\r\n+   phone?: string; // <-- ADD THIS\r\n   facebookUrl?: string;\r\n   \r\n \r\n   // NEW OPTIONAL FIELDS (from backend)\r\n"
+                },
+                {
+                    "date": 1764777206897,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,13 +14,13 @@\n   description: string;\r\n   condition: \"new\" | \"used\" | \"certified\";\r\n   images: string[];\r\n   platforms: string[];\r\n-   phone?: string; // <-- ADD THIS\r\n+  phone?: string;\r\n   facebookUrl?: string;\r\n-  \r\n+  sold?: boolean;\r\n+  soldAt?: string;\r\n \r\n-  // NEW OPTIONAL FIELDS (from backend)\r\n   fuelType?: string;\r\n   transmission?: string;\r\n   color?: string;\r\n   engineSize?: string;\r\n@@ -87,4 +87,14 @@\n     headers: { Authorization: `Bearer ${token}` },\r\n   });\r\n   return res.data;\r\n };\r\n+\r\n+// ⭐ MARK CAR AS SOLD\r\n+export const markCarSold = async (id: string, token: string) => {\r\n+  const res = await axios.put(\r\n+    `${API_URL}/${id}/sold`,\r\n+    {},\r\n+    { headers: { Authorization: `Bearer ${token}` } }\r\n+  );\r\n+  return res.data;\r\n+};\r\n"
                 }
             ],
             "date": 1763058187293,

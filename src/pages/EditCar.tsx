@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { getCarById, updateCar } from "@/api/cars";
+import { getCarById, updateCar, markCarSold } from "@/api/cars";
 import { mapApiCarToCar } from "@/utils/mapApiCarToCar";
 
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,8 @@ const EditCar = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [isSold, setIsSold] = useState(false);
+
   const [formData, setFormData] = useState({
     brand: "",
     model: "",
@@ -49,7 +51,6 @@ const EditCar = () => {
     if (!user) navigate("/auth?mode=login");
   }, [user]);
 
-  // Load car data
   useEffect(() => {
     const loadCar = async () => {
       try {
@@ -58,7 +59,6 @@ const EditCar = () => {
         const apiCar = await getCarById(id);
         const car = mapApiCarToCar(apiCar);
 
-        // Ownership check
         if (car.seller.id !== user?._id) {
           toast({ title: "Unauthorized", description: "This is not your car." });
           return navigate("/");
@@ -76,8 +76,8 @@ const EditCar = () => {
         });
 
         setExistingImages(car.images);
+        setIsSold(apiCar.sold || false);
       } catch (err) {
-        console.error(err);
         toast({ title: "Error loading car", variant: "destructive" });
       } finally {
         setLoading(false);
@@ -150,6 +150,16 @@ const EditCar = () => {
     setIsSubmitting(false);
   };
 
+  const handleMarkSold = async () => {
+    try {
+      await markCarSold(id!, user!.token);
+      toast({ title: "Car marked as SOLD" });
+      setIsSold(true);
+    } catch {
+      toast({ title: "Failed to mark sold", variant: "destructive" });
+    }
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto py-12 text-center">
@@ -168,25 +178,28 @@ const EditCar = () => {
         <div className="max-w-3xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle>Edit Listing</CardTitle>
+              <CardTitle>
+                Edit Listing {isSold && <span className="text-red-500 ml-2">(SOLD)</span>}
+              </CardTitle>
             </CardHeader>
+
             <CardContent className="space-y-6">
+              {/* SOLD BUTTON */}
+              {!isSold && (
+                <Button className="w-full bg-red-600 hover:bg-red-700" onClick={handleMarkSold}>
+                  Mark as SOLD
+                </Button>
+              )}
 
               {/* Brand + Model */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Brand</Label>
-                  <Input
-                    value={formData.brand}
-                    onChange={(e) => handleChange("brand", e.target.value)}
-                  />
+                  <Input value={formData.brand} onChange={(e) => handleChange("brand", e.target.value)} />
                 </div>
                 <div>
                   <Label>Model</Label>
-                  <Input
-                    value={formData.model}
-                    onChange={(e) => handleChange("model", e.target.value)}
-                  />
+                  <Input value={formData.model} onChange={(e) => handleChange("model", e.target.value)} />
                 </div>
               </div>
 
@@ -194,30 +207,18 @@ const EditCar = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Year</Label>
-                  <Input
-                    type="number"
-                    value={formData.year}
-                    onChange={(e) => handleChange("year", e.target.value)}
-                  />
+                  <Input type="number" value={formData.year} onChange={(e) => handleChange("year", e.target.value)} />
                 </div>
                 <div>
                   <Label>Mileage (mi)</Label>
-                  <Input
-                    type="number"
-                    value={formData.mileage}
-                    onChange={(e) => handleChange("mileage", e.target.value)}
-                  />
+                  <Input type="number" value={formData.mileage} onChange={(e) => handleChange("mileage", e.target.value)} />
                 </div>
               </div>
 
               {/* Price */}
               <div>
                 <Label>Price ($)</Label>
-                <Input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => handleChange("price", e.target.value)}
-                />
+                <Input type="number" value={formData.price} onChange={(e) => handleChange("price", e.target.value)} />
               </div>
 
               {/* Condition */}
@@ -237,11 +238,7 @@ const EditCar = () => {
               {/* Description */}
               <div>
                 <Label>Description</Label>
-                <Textarea
-                  rows={4}
-                  value={formData.description}
-                  onChange={(e) => handleChange("description", e.target.value)}
-                />
+                <Textarea rows={4} value={formData.description} onChange={(e) => handleChange("description", e.target.value)} />
               </div>
 
               {/* Platforms */}
@@ -250,10 +247,7 @@ const EditCar = () => {
                 <div className="border rounded-lg p-4 space-y-3">
                   {platformsList.map((p) => (
                     <div className="flex items-center gap-2" key={p.id}>
-                      <Checkbox
-                        checked={formData.platforms.includes(p.id)}
-                        onCheckedChange={() => togglePlatform(p.id)}
-                      />
+                      <Checkbox checked={formData.platforms.includes(p.id)} onCheckedChange={() => togglePlatform(p.id)} />
                       <span>{p.name}</span>
                     </div>
                   ))}
@@ -267,10 +261,7 @@ const EditCar = () => {
                 <div className="grid grid-cols-3 gap-3">
                   {existingImages.map((img, index) => (
                     <div key={index} className="relative group">
-                      <img
-                        src={img}
-                        className="h-24 w-full object-cover rounded-md"
-                      />
+                      <img src={img} className="h-24 w-full object-cover rounded-md" />
                       <button
                         type="button"
                         onClick={() => removeExistingImage(index)}
@@ -292,23 +283,13 @@ const EditCar = () => {
                   Upload Images
                 </label>
 
-                <input
-                  id="new-images"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageUpload}
-                />
+                <input id="new-images" type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
 
                 {previewImages.length > 0 && (
                   <div className="grid grid-cols-3 gap-3">
                     {previewImages.map((img, index) => (
                       <div key={index} className="relative group">
-                        <img
-                          src={img}
-                          className="h-24 w-full object-cover rounded-md"
-                        />
+                        <img src={img} className="h-24 w-full object-cover rounded-md" />
                         <button
                           onClick={() => removeNewImage(index)}
                           className="absolute -top-2 -right-2 bg-destructive text-white rounded-full h-6 w-6 opacity-0 group-hover:opacity-100"
@@ -323,22 +304,13 @@ const EditCar = () => {
 
               {/* Buttons */}
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => navigate("/profile")}
-                >
+                <Button variant="outline" className="w-full" onClick={() => navigate("/profile")}>
                   Cancel
                 </Button>
-                <Button
-                  className="w-full"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                >
+                <Button className="w-full" onClick={handleSubmit} disabled={isSubmitting}>
                   {isSubmitting ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
-
             </CardContent>
           </Card>
         </div>

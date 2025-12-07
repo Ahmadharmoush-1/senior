@@ -22,6 +22,9 @@ import Compare from "./pages/Compare";
 import Favorites from "./pages/Favorites";
 import NotFound from "./pages/NotFound";
 import EditCar from "./pages/EditCar";
+import ForgotPassword from "@/pages/ForgotPassword";
+import VerifyForgotOtp from "@/pages/VerifyForgotOtp";
+import ResetPassword from "@/pages/ResetPassword";
 
 /* ⭐ IMPORT CHATBOT ⭐ */
 import { ChatBot } from "@/components/ui/ChatBot";
@@ -68,6 +71,9 @@ const App = () => {
                     <Route path="/edit-car/:id" element={<EditCar />} />
                     <Route path="/compare" element={<Compare />} />
                     {/* <Route path="/ai" element={<AIChat />} /> */}
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/verify-forgot-otp" element={<VerifyForgotOtp />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
 
                     <Route path="/favorites" element={<Favorites />} />
                     <Route path="*" element={<NotFound />} />

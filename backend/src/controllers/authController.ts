@@ -9,12 +9,11 @@ const signToken = (id: string, email: string) => {
 };
 
 const generateOtp = () => {
-  // 6-digit OTP
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 // ---------------------------
-// REGISTER (same as before)
+// REGISTER
 // ---------------------------
 export const register = async (req: Request, res: Response) => {
   try {
@@ -40,7 +39,7 @@ export const register = async (req: Request, res: Response) => {
 };
 
 // ---------------------------------------------------
-// STEP 1 LOGIN: verify password, then SEND OTP
+// STEP 1 LOGIN → SEND OTP
 // ---------------------------------------------------
 export const login = async (req: Request, res: Response) => {
   try {
@@ -51,17 +50,22 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found. Please register first.",
+      });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-    // generate + hash otp
     const otp = generateOtp();
     const otpHash = await bcrypt.hash(otp, 10);
 
     user.otpHash = otpHash;
-    user.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+    user.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
     await sendEmail(
@@ -85,7 +89,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // ---------------------------------------------------
-// STEP 2 LOGIN: verify OTP, return token
+// STEP 2 LOGIN → VERIFY OTP
 // ---------------------------------------------------
 export const verifyOtpLogin = async (req: Request, res: Response) => {
   try {
@@ -96,11 +100,16 @@ export const verifyOtpLogin = async (req: Request, res: Response) => {
     }
 
     const user = await User.findOne({ email });
-    if (!user || !user.otpHash || !user.otpExpiresAt) {
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found. Please register first.",
+      });
+    }
+
+    if (!user.otpHash || !user.otpExpiresAt) {
       return res.status(400).json({ message: "OTP not requested or expired" });
     }
 
-    // expired?
     if (user.otpExpiresAt.getTime() < Date.now()) {
       user.otpHash = null;
       user.otpExpiresAt = null;
@@ -111,7 +120,6 @@ export const verifyOtpLogin = async (req: Request, res: Response) => {
     const ok = await bcrypt.compare(otp, user.otpHash);
     if (!ok) return res.status(400).json({ message: "Invalid OTP" });
 
-    // clear otp after success
     user.otpHash = null;
     user.otpExpiresAt = null;
     await user.save();
@@ -120,6 +128,79 @@ export const verifyOtpLogin = async (req: Request, res: Response) => {
     return res.json({ user, token });
   } catch (err) {
     console.error("Verify OTP error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ---------------------------------------------------
+// FORGOT PASSWORD → SEND OTP
+// ---------------------------------------------------
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email required" });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "No account found with this email" });
+
+    const otp = generateOtp();
+    user.otpHash = await bcrypt.hash(otp, 10);
+    user.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    await sendEmail(
+      email,
+      "Password Reset Code",
+      `<h1>Your OTP: ${otp}</h1><p>Valid for 10 minutes.</p>`
+    );
+
+    res.json({ message: "OTP sent to your email" });
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ---------------------------------------------------
+// FORGOT PASSWORD → VERIFY OTP
+// ---------------------------------------------------
+export const verifyForgotOtp = async (req: Request, res: Response) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (!user.otpHash) return res.status(400).json({ message: "OTP not requested" });
+
+    const ok = await bcrypt.compare(otp, user.otpHash);
+    if (!ok) return res.status(400).json({ message: "Invalid OTP" });
+
+    res.json({ message: "OTP verified" });
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ---------------------------------------------------
+// RESET PASSWORD
+// ---------------------------------------------------
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const hashed = await bcrypt.hash(password, 10);
+    user.password = hashed;
+    user.otpHash = null;
+    user.otpExpiresAt = null;
+    await user.save();
+
+    const token = signToken(user._id.toString(), user.email);
+
+    res.json({ user, token });
+  } catch {
     res.status(500).json({ message: "Server error" });
   }
 };

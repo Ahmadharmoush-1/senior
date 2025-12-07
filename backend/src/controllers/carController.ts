@@ -32,7 +32,6 @@ export const createCar = async (req: AuthRequest, res: Response) => {
       phone,
     } = req.body;
 
-    // images
     const images = req.files
       ? (req.files as Express.Multer.File[]).map(
           (f) => `/uploads/${f.filename}`
@@ -52,7 +51,7 @@ export const createCar = async (req: AuthRequest, res: Response) => {
       facebookUrl,
       seller: req.user.id,
 
-      // optional fields
+      // optional
       fuelType,
       transmission,
       color,
@@ -62,7 +61,6 @@ export const createCar = async (req: AuthRequest, res: Response) => {
       drivetrain,
       bodyType,
 
-      // NEW FIELD (save phone)
       phone,
     });
 
@@ -73,8 +71,6 @@ export const createCar = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
 
 export const getAllCars = async (_req: Request, res: Response) => {
   try {
@@ -98,7 +94,6 @@ export const getCarById = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ OWNER ONLY UPDATE
 export const updateCar = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
@@ -130,7 +125,6 @@ export const updateCar = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// ✅ OWNER ONLY DELETE
 export const deleteCar = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
@@ -150,7 +144,6 @@ export const deleteCar = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// ✅ Get cars by logged-in user
 export const getMyCars = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
@@ -161,6 +154,31 @@ export const getMyCars = async (req: AuthRequest, res: Response) => {
 
     res.json(cars);
   } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ⭐ NEW FEATURE — MARK AS SOLD
+export const markCarSold = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
+
+    const car = await Car.findById(req.params.id);
+    if (!car) return res.status(404).json({ message: "Car not found" });
+
+    if (car.seller.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    car.sold = true;
+    car.soldAt = new Date();
+    await car.save();
+
+    const populated = await car.populate("seller", "name email");
+
+    res.json({ message: "Car marked as sold", car: populated });
+  } catch (err) {
+    console.error("Mark Car Sold Error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };

@@ -33,6 +33,8 @@ export interface Car {
   // OPTIONAL SPECS
   fuelType?: string;
   transmission?: string;
+  sold?: boolean;
+  soldAt?: string;
   color?: string;
   engineSize?: string;
   doors?: number;

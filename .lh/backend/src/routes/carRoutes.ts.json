@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 12,
+            "activePatchIndex": 13,
             "patches": [
                 {
                     "date": 1760714592559,
@@ -56,6 +56,10 @@
                 {
                     "date": 1763933382823,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,39 +1,25 @@\n-// src/routes/carRoutes.ts\r\n import { Router } from \"express\";\r\n import {\r\n   createCar,\r\n   getAllCars,\r\n   getCarById,\r\n   updateCar,\r\n   deleteCar,\r\n+  getMyCars,\r\n } from \"../controllers/carController\";\r\n import { verifyToken } from \"../middleware/authMiddleware\";\r\n import { upload } from \"../middleware/uploadMiddleware\";\r\n \r\n const router = Router();\r\n \r\n+// public\r\n router.get(\"/\", getAllCars);\r\n router.get(\"/:id\", getCarById);\r\n \r\n+// private\r\n+router.get(\"/me/listings\", verifyToken, getMyCars);\r\n router.post(\"/\", verifyToken, upload.array(\"images\", 10), createCar);\r\n-\r\n router.put(\"/:id\", verifyToken, upload.array(\"images\", 10), updateCar);\r\n-\r\n router.delete(\"/:id\", verifyToken, deleteCar);\r\n \r\n export default router;\r\n-// src/routes/carRoutes.ts\r\n-import { Router } from \"express\";\r\n-import { createCar, getAllCars, getCarById } from \"../controllers/carController\";\r\n-import { verifyToken } from \"../middleware/authMiddleware\";\r\n-import { upload } from \"../middleware/uploadMiddleware\";\r\n-\r\n-const router = Router();\r\n-\r\n-router.get(\"/\", getAllCars);\r\n-router.get(\"/:id\", getCarById);\r\n-\r\n-router.post(\"/\", verifyToken, upload.array(\"images\", 10), createCar);\r\n-\r\n-\r\n-export default router;\r\n"
+                },
+                {
+                    "date": 1764777018628,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,21 +5,26 @@\n   getCarById,\r\n   updateCar,\r\n   deleteCar,\r\n   getMyCars,\r\n+  markCarSold,\r\n } from \"../controllers/carController\";\r\n+\r\n import { verifyToken } from \"../middleware/authMiddleware\";\r\n import { upload } from \"../middleware/uploadMiddleware\";\r\n \r\n const router = Router();\r\n \r\n-// public\r\n+// PUBLIC ROUTES\r\n router.get(\"/\", getAllCars);\r\n router.get(\"/:id\", getCarById);\r\n \r\n-// private\r\n+// PRIVATE ROUTES\r\n router.get(\"/me/listings\", verifyToken, getMyCars);\r\n router.post(\"/\", verifyToken, upload.array(\"images\", 10), createCar);\r\n router.put(\"/:id\", verifyToken, upload.array(\"images\", 10), updateCar);\r\n router.delete(\"/:id\", verifyToken, deleteCar);\r\n \r\n+// ⭐ NEW: MARK AS SOLD\r\n+router.put(\"/:id/sold\", verifyToken, markCarSold);\r\n+\r\n export default router;\r\n"
                 }
             ],
             "date": 1760714592559,

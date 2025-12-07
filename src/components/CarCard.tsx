@@ -49,6 +49,15 @@ const CarCard = ({ car }: CarCardProps) => {
             className="h-full w-full object-cover transition group-hover:scale-105"
           />
 
+          {/* SOLD BADGE */}
+          {car.sold && (
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <span className="bg-red-600 px-4 py-1 rounded-md text-white font-bold text-xl shadow-lg">
+                SOLD
+              </span>
+            </div>
+          )}
+
           {/* Platforms */}
           <div className="absolute right-2 top-2 flex flex-wrap gap-1">
             {car.platform.map((p, i) => (

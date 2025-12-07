@@ -288,7 +288,13 @@ const Auth = () => {
                   />
                   <span className="text-xs">Remember me</span>
                 </div>
-                <button className="text-xs text-primary">Forgot?</button>
+                <button
+  type="button"
+  onClick={() => navigate("/forgot-password")}
+  className="text-xs text-primary"
+>
+  Forgot?
+</button>
               </div>
             )}
 

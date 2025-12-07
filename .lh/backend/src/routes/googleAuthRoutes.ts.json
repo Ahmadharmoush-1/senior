@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1763050887890,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765125913457,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,24 +1,24 @@\n-import express from \"express\";\r\n-import passport from \"passport\";\r\n+// import express from \"express\";\r\n+// import passport from \"passport\";\r\n \r\n-const router = express.Router();\r\n+// const router = express.Router();\r\n \r\n-router.get(\r\n-  \"/google\",\r\n-  passport.authenticate(\"google\", { scope: [\"profile\", \"email\"] })\r\n-);\r\n+// router.get(\r\n+//   \"/google\",\r\n+//   passport.authenticate(\"google\", { scope: [\"profile\", \"email\"] })\r\n+// );\r\n \r\n-router.get(\r\n-  \"/google/callback\",\r\n-  passport.authenticate(\"google\", { failureRedirect: \"/login\" }),\r\n-  (req, res) => {\r\n-    const user = req.user;\r\n-    res.redirect(\r\n-      `http://localhost:8081/google-callback?user=${encodeURIComponent(\r\n-        JSON.stringify(user)\r\n-      )}`\r\n-    );\r\n-  }\r\n-);\r\n+// router.get(\r\n+//   \"/google/callback\",\r\n+//   passport.authenticate(\"google\", { failureRedirect: \"/login\" }),\r\n+//   (req, res) => {\r\n+//     const user = req.user;\r\n+//     res.redirect(\r\n+//       `http://localhost:8081/google-callback?user=${encodeURIComponent(\r\n+//         JSON.stringify(user)\r\n+//       )}`\r\n+//     );\r\n+//   }\r\n+// );\r\n \r\n-export default router;\r\n+// export default router;\r\n"
                 }
             ],
             "date": 1763050887890,

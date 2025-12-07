@@ -23,8 +23,12 @@ export interface ICar {
   drivetrain?: string;
   bodyType?: string;
 
-  // ✅ NEW FIELD
+  // NEW FIELD
   phone?: string;
+
+  // SOLD FEATURE
+  sold?: boolean;
+  soldAt?: Date | null;
 }
 
 const carSchema = new Schema<ICar>(
@@ -53,8 +57,6 @@ const carSchema = new Schema<ICar>(
     },
 
     facebookUrl: { type: String },
-
-    // NEW FIELD
     phone: { type: String },
 
     // OPTIONAL SPECS
@@ -66,9 +68,12 @@ const carSchema = new Schema<ICar>(
     cylinder: { type: Number },
     drivetrain: { type: String },
     bodyType: { type: String },
+
+    // SOLD FIELDS
+    sold: { type: Boolean, default: false },
+    soldAt: { type: Date, default: null },
   },
   { timestamps: true }
 );
-
 
 export const Car = model<ICar>("Car", carSchema);

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 8,
             "patches": [
                 {
                     "date": 1763991158505,
@@ -20,6 +20,26 @@
                 {
                     "date": 1763995909731,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,18 +1,25 @@\n import nodemailer from \"nodemailer\";\r\n \r\n export const sendEmail = async (to: string, subject: string, html: string) => {\r\n-  const transporter = nodemailer.createTransport({\r\n-    service: \"gmail\",\r\n-    auth: {\r\n-      user: process.env.EMAIL_USER,\r\n-      pass: process.env.EMAIL_PASS, // Gmail App Password\r\n-    },\r\n-  });\r\n+  try {\r\n+    const transporter = nodemailer.createTransport({\r\n+      service: \"gmail\",\r\n+      auth: {\r\n+        user: process.env.GMAIL_USER,\r\n+        pass: process.env.GMAIL_PASS,\r\n+      },\r\n+    });\r\n \r\n-  await transporter.sendMail({\r\n-    from: `\"CarFinderHub OTP\" <${process.env.EMAIL_USER}>`,\r\n-    to,\r\n-    subject,\r\n-    html,\r\n-  });\r\n+    await transporter.sendMail({\r\n+      from: `\"CarFinder Hub\" <${process.env.GMAIL_USER}>`,\r\n+      to,\r\n+      subject,\r\n+      html,\r\n+    });\r\n+\r\n+    console.log(\"📧 Email sent to:\", to);\r\n+  } catch (err) {\r\n+    console.error(\"❌ Email sending failed:\", err);\r\n+    throw err;\r\n+  }\r\n };\r\n"
+                },
+                {
+                    "date": 1764772995324,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,15 +4,15 @@\n   try {\r\n     const transporter = nodemailer.createTransport({\r\n       service: \"gmail\",\r\n       auth: {\r\n-        user: process.env.GMAIL_USER,\r\n-        pass: process.env.GMAIL_PASS,\r\n+        user: process.env.EMAIL_USER,\r\n+        pass: process.env.EMAIL_PASS,\r\n       },\r\n     });\r\n \r\n     await transporter.sendMail({\r\n-      from: `\"CarFinder Hub\" <${process.env.GMAIL_USER}>`,\r\n+      from: `\"CarFinder Hub\" <${process.env.EMAIL_USER}>`,\r\n       to,\r\n       subject,\r\n       html,\r\n     });\r\n"
+                },
+                {
+                    "date": 1764773138030,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,13 @@\n import nodemailer from \"nodemailer\";\r\n \r\n export const sendEmail = async (to: string, subject: string, html: string) => {\r\n   try {\r\n+    console.log(\"ENV CHECK →\", {\r\n+      EMAIL_USER: process.env.EMAIL_USER,\r\n+      EMAIL_PASS: process.env.EMAIL_PASS ? \"YES\" : \"NO\",\r\n+    });\r\n+\r\n     const transporter = nodemailer.createTransport({\r\n       service: \"gmail\",\r\n       auth: {\r\n         user: process.env.EMAIL_USER,\r\n@@ -17,9 +22,9 @@\n       html,\r\n     });\r\n \r\n     console.log(\"📧 Email sent to:\", to);\r\n-  } catch (err) {\r\n-    console.error(\"❌ Email sending failed:\", err);\r\n+  } catch (err: any) {\r\n+    console.error(\"❌ FULL EMAIL ERROR:\", err);\r\n     throw err;\r\n   }\r\n };\r\n"
+                },
+                {
+                    "date": 1764773192808,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,10 @@\n       html,\r\n     });\r\n \r\n     console.log(\"📧 Email sent to:\", to);\r\n-  } catch (err: any) {\r\n-    console.error(\"❌ FULL EMAIL ERROR:\", err);\r\n-    throw err;\r\n-  }\r\n+  } catch (err) {\r\n+  console.error(\"❌ FULL EMAIL ERROR:\", err);\r\n+  throw err;\r\n+}\r\n+\r\n };\r\n"
+                },
+                {
+                    "date": 1764773401312,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,32 @@\n+import nodemailer from \"nodemailer\";\r\n+\r\n+export const sendEmail = async (to: string, subject: string, html: string) => {\r\n+  try {\r\n+    console.log(\"EMAIL DEBUG:\", {\r\n+      EMAIL_USER: process.env.EMAIL_USER,\r\n+      EMAIL_PASS_LENGTH: process.env.EMAIL_PASS?.length || \"undefined\",\r\n+      SMTP_HOST: process.env.SMTP_HOST,\r\n+      SMTP_PORT: process.env.SMTP_PORT,\r\n+    });\r\n+\r\n+    const transporter = nodemailer.createTransport({\r\n+      service: \"gmail\",\r\n+      auth: {\r\n+        user: process.env.EMAIL_USER,\r\n+        pass: process.env.EMAIL_PASS,\r\n+      },\r\n+    });\r\n+\r\n+    await transporter.sendMail({\r\n+      from: `\"CarFinder Hub\" <${process.env.EMAIL_USER}>`,\r\n+      to,\r\n+      subject,\r\n+      html,\r\n+    });\r\n+\r\n+    console.log(\"📧 Email sent to:\", to);\r\n+  } catch (err) {\r\n+    console.error(\"❌ FULL EMAIL ERROR:\", err);\r\n+    throw err;\r\n+  }\r\n+};\r\n"
+                },
+                {
+                    "date": 1764773851405,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,30 @@\n+import nodemailer from \"nodemailer\";\r\n+\r\n+export const sendEmail = async (to: string, subject: string, html: string) => {\r\n+  try {\r\n+    console.log(\"ENV DEBUG:\", {\r\n+      GMAIL_USER: process.env.GMAIL_USER,\r\n+      GMAIL_PASS_LENGTH: process.env.GMAIL_PASS?.length || \"undefined\",\r\n+    });\r\n+\r\n+    const transporter = nodemailer.createTransport({\r\n+      service: \"gmail\",\r\n+      auth: {\r\n+        user: process.env.GMAIL_USER,\r\n+        pass: process.env.GMAIL_PASS,\r\n+      },\r\n+    });\r\n+\r\n+    await transporter.sendMail({\r\n+      from: `\"CarFinder Hub\" <${process.env.GMAIL_USER}>`,\r\n+      to,\r\n+      subject,\r\n+      html,\r\n+    });\r\n+\r\n+    console.log(\"📧 Email sent to:\", to);\r\n+  } catch (err) {\r\n+    console.error(\"❌ FULL EMAIL ERROR:\", err);\r\n+    throw err;\r\n+  }\r\n+};\r\n"
                 }
             ],
             "date": 1763991158505,

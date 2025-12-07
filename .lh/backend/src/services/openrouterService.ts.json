@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1764589143969,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1764697980356,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,9 @@\n+import axios from \"axios\";\r\n+\r\n+export const openrouter = axios.create({\r\n+  baseURL: process.env.OPENROUTER_BASE_URL,\r\n+  headers: {\r\n+    \"Content-Type\": \"application/json\",\r\n+    \"Authorization\": `Bearer ${process.env.OPENROUTER_API_KEY}`,\r\n+  },\r\n+});\r\n"
                 }
             ],
             "date": 1764589143969,
