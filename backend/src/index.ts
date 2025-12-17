@@ -17,10 +17,11 @@ import aiRoutes from "./routes/aiRoutes";
 
 const app = express();
 
-// ---------------- CORS ----------------
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:8081",
 ];
+
 
 if (process.env.CLIENT_URL) {
   allowedOrigins.push(process.env.CLIENT_URL);
@@ -36,20 +37,14 @@ app.use(
 
 
 app.options("*", cors());
-// --------------------------------------
 
-// JSON
 app.use(express.json());
 
-// Static uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
-// Health check
 app.get("/", (_req, res) => {
   res.json({ status: "ok", message: "API is running" });
 });
-
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/cars", carRoutes);
 app.use("/api/scrape", scrapeRoutes);
@@ -58,7 +53,6 @@ app.use("/api/ai", aiRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/comparisons", comparisonRoutes);
 
-// Server start
 const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {

@@ -24,7 +24,7 @@ router.post("/", verifyToken, upload.array("images", 10), createCar);
 router.put("/:id", verifyToken, upload.array("images", 10), updateCar);
 router.delete("/:id", verifyToken, deleteCar);
 
-// ⭐ NEW: MARK AS SOLD
+// NEW: MARK AS SOLD
 router.put("/:id/sold", verifyToken, markCarSold);
 
 export default router;

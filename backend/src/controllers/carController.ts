@@ -18,7 +18,6 @@ export const createCar = async (req: AuthRequest, res: Response) => {
       condition,
       facebookUrl,
 
-      // optional specs
       fuelType,
       transmission,
       color,
@@ -28,7 +27,6 @@ export const createCar = async (req: AuthRequest, res: Response) => {
       drivetrain,
       bodyType,
 
-      // NEW FIELD
       phone,
     } = req.body;
 

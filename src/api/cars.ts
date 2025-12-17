@@ -89,7 +89,7 @@ export const deleteCar = async (id: string, token: string) => {
   return res.data;
 };
 
-// ⭐ MARK CAR AS SOLD
+//  MARK CAR AS SOLD
 export const markCarSold = async (id: string, token: string) => {
   const res = await axios.put(
     `${API_URL}/${id}/sold`,

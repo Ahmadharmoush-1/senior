@@ -7,7 +7,7 @@ export interface IUser extends Document {
   password: string;
   otpHash: string | null;
   otpExpiresAt: Date | null;
-  favorites: mongoose.Types.ObjectId[]; // ⭐ NEW
+  favorites: mongoose.Types.ObjectId[]; 
 }
 
 const userSchema = new Schema<IUser>(
@@ -16,11 +16,10 @@ const userSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
 
-    // OTP fields (nullable)
     otpHash: { type: String, default: null },
     otpExpiresAt: { type: Date, default: null },
 
-    // ⭐ FAVORITE CARS (by Car ObjectId)
+   
     favorites: [
       {
         type: mongoose.Schema.Types.ObjectId,

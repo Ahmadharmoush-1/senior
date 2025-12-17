@@ -26,7 +26,7 @@ import ForgotPassword from "@/pages/ForgotPassword";
 import VerifyForgotOtp from "@/pages/VerifyForgotOtp";
 import ResetPassword from "@/pages/ResetPassword";
 
-/* ⭐ IMPORT CHATBOT ⭐ */
+/*  IMPORT CHATBOT  */
 import { ChatBot } from "@/components/ui/ChatBot";
 // import AIChat from "./pages/AIChat";
 
@@ -80,7 +80,7 @@ const App = () => {
                   </Routes>
                 </BrowserRouter>
 
-                {/* ⭐ AI CHATBOT FLOATING BUTTON ⭐ */}
+                {/*  AI CHATBOT FLOATING BUTTON */}
                 <ChatBot />
 
               </ComparisonProvider>

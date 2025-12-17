@@ -18,29 +18,26 @@ const generateOtp = () => {
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
+    console.log("Register request body:", req.body);
 
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: "Email already registered" });
 
     const hashed = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      name,
-      email,
-      password: hashed,
-    });
+    const user = new User({ name, email, password: hashed });
+    await user.save(); // ✅ make sure we await save
+    console.log("User saved:", user);
 
     const token = signToken(user._id.toString(), user.email);
-    res.json({ user, token });
-  } catch (err) {
+    res.status(201).json({ user, token });
+  } catch (err: any) {
     console.error("Register error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// ---------------------------------------------------
-// STEP 1 LOGIN → SEND OTP
-// ---------------------------------------------------
+
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -88,9 +85,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------------------------------
-// STEP 2 LOGIN → VERIFY OTP
-// ---------------------------------------------------
+
 export const verifyOtpLogin = async (req: Request, res: Response) => {
   try {
     const { email, otp } = req.body;
@@ -132,9 +127,7 @@ export const verifyOtpLogin = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------------------------------
-// FORGOT PASSWORD → SEND OTP
-// ---------------------------------------------------
+
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -160,9 +153,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------------------------------
-// FORGOT PASSWORD → VERIFY OTP
-// ---------------------------------------------------
 export const verifyForgotOtp = async (req: Request, res: Response) => {
   try {
     const { email, otp } = req.body;
@@ -181,9 +171,7 @@ export const verifyForgotOtp = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------------------------------
-// RESET PASSWORD
-// ---------------------------------------------------
+
 export const resetPassword = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;

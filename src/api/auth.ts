@@ -20,7 +20,6 @@ export const register = async (name: string, email: string, password: string) =>
   return res.data;
 };
 
-// STEP 1: password login → backend sends otp
 export const login = async (email: string, password: string) => {
   try {
     const res = await axios.post<{ message: string }>(`${API_URL}/login`, {
@@ -41,7 +40,6 @@ export const login = async (email: string, password: string) => {
 
 
 
-// STEP 2: verify otp → returns user+token
 export const verifyOtp = async (email: string, otp: string) => {
   try {
     const res = await axios.post<AuthSuccessResponse>(`${API_URL}/verify-otp`, {
@@ -57,7 +55,6 @@ export const verifyOtp = async (email: string, otp: string) => {
     throw new Error("Unexpected error");
   }
 };
-// SEND OTP for forgot password
 export const forgotPassword = async (email: string) => {
   try {
     const res = await axios.post<{ message: string }>(
@@ -73,7 +70,6 @@ export const forgotPassword = async (email: string) => {
   }
 };
 
-// VERIFY OTP for forgot password
 export const verifyForgotOtp = async (email: string, otp: string) => {
   try {
     const res = await axios.post<{ message: string }>(
@@ -89,7 +85,6 @@ export const verifyForgotOtp = async (email: string, otp: string) => {
   }
 };
 
-// RESET PASSWORD
 export const resetPassword = async (
   email: string,
   password: string

@@ -21,11 +21,7 @@ export const previewFacebookListing = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * ✅ Pro flow:
- * user sends FB URL -> scrape -> create "draft" car in DB
- * owner can later edit / delete normally
- */
+
 export const importFacebookListing = async (req: AuthRequest, res: Response) => {
   const { url } = req.body;
   if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
@@ -37,7 +33,6 @@ export const importFacebookListing = async (req: AuthRequest, res: Response) => 
   try {
     const data = await scrapeFacebookMarketplace(url);
 
-    // naive brand/model split from title
     const parts = data.title.split(" ");
     const brand = parts[0] || "Unknown";
     const model = parts.slice(1).join(" ") || "Unknown";
@@ -47,7 +42,7 @@ export const importFacebookListing = async (req: AuthRequest, res: Response) => 
       model,
       price: data.price ?? 0,
       mileage: 0,
-      year: new Date().getFullYear(), // user can edit later
+      year: new Date().getFullYear(),
       platforms: ["facebook"],
       description: data.description,
       condition: "used",

@@ -134,7 +134,7 @@ const Auth = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* --- LEFT HERO (hidden on mobile) --- */}
+      {/*  LEFT HERO (hidden on mobile)  */}
       <div className="hidden lg:flex lg:w-1/2 relative">
         <img
           src={authHero}
@@ -155,7 +155,7 @@ const Auth = () => {
         </div>
       </div>
 
-      {/* --- RIGHT FORM (compact mobile) --- */}
+      {/*  RIGHT FORM (compact mobile)  */}
       <div className="flex w-full items-center justify-center p-4 lg:w-1/2">
         <div className="w-full max-w-sm space-y-6">
           {/* Mobile logo */}

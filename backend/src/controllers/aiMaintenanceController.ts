@@ -13,9 +13,7 @@ export const estimateMaintenance = async (req: Request, res: Response) => {
 
     const car = req.body;
 
-    // -----------------------------
-    // 🔥 AI Prompt
-    // -----------------------------
+   
     const prompt = `
 You are an expert certified automotive mechanic AI.
 Estimate the yearly maintenance cost for the following car:
@@ -41,9 +39,7 @@ Return ONLY valid JSON in this exact format:
 }
     `;
 
-    // -----------------------------
-    // 🔥 OpenRouter Request
-    // -----------------------------
+    
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
@@ -68,12 +64,9 @@ Return ONLY valid JSON in this exact format:
       });
     }
 
-    // -----------------------------
-    // 🔥 Extract clean JSON from messy AI output
-    // -----------------------------
+
     const cleaned = content.trim();
 
-    // Extract the first {...} block
     const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
@@ -83,7 +76,6 @@ Return ONLY valid JSON in this exact format:
       });
     }
 
-    // Parse the extracted JSON
     let jsonData;
     try {
       jsonData = JSON.parse(jsonMatch[0]);
@@ -94,9 +86,7 @@ Return ONLY valid JSON in this exact format:
       });
     }
 
-    // -----------------------------
-    // 🔥 Final Response
-    // -----------------------------
+   
     return res.json(jsonData);
 
   } catch (error) {

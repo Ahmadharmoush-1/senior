@@ -20,7 +20,7 @@ import {
   type MaintenanceEstimate,
 } from "@/services/aiMaintenanceService";
 
-// -----------------------------
+
 interface Platform {
   name: string;
 }
@@ -65,7 +65,6 @@ interface SpecItem {
   key: CarSpecKey;
 }
 
-// -----------------------------
 const Compare = () => {
   const navigate = useNavigate();
   const { comparisonList, removeFromComparison, clearComparison } =
